@@ -20,6 +20,7 @@ find_package(VTK COMPONENTS
   RenderingOpenGL2
   RenderingLICOpenGL2
         ImagingCore
+        IOLegacy
   IOXML
   REQUIRED
 )
@@ -28,10 +29,10 @@ message(STATUS "VTK_VERSION: ${VTK_VERSION}")
 
 
 # Main library; can be used by e.g. executables
-add_library(prototype_lib)
+add_library(prototype_lib lib/Slider.cpp lib/SliderObserver.h lib/LIC.cpp PipelineDefs/Filter.h PipelineDefs/Source.h PipelineDefs/Renderer.h lib/ImageRenderer.cpp lib/ImageRenderer.h lib/Source4D.h lib/LIC.h lib/Slider.h lib/Subspace.cpp lib/Subspace.h lib/CriticalPointsTrivial.cpp lib/CriticalPointsTrivial.h)
 target_compile_features(prototype_lib PUBLIC cxx_std_14)
 target_sources(prototype_lib
-        PRIVATE lib/4DSource.cxx
+        PRIVATE lib/Source4D.cpp
         )
 target_link_libraries(
         prototype_lib PRIVATE ${VTK_LIBRARIES}
@@ -49,7 +50,7 @@ vtk_module_autoinit(
 
 
 # Executable for demonstration purposes
-add_executable(Prototype)
+add_executable(Prototype PipelineDefs/HasOutput.h)
 target_sources(Prototype PRIVATE src/Main.cxx )
 target_link_libraries(
         Prototype ${VTK_LIBRARIES} prototype_lib
