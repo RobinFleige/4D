@@ -18,10 +18,8 @@ public:
         if(input_connection_){
             input_connection_->Update();
         }
-        if(updatable_){
-            InternalUpdate();
-            updatable_ = false;
-        }
+        InternalUpdate();
+        updatable_ = false;
     }
 
     virtual S GetOutput() {

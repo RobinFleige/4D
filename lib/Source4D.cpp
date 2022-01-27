@@ -1,27 +1,21 @@
 #include <Source4D.h>
 
 float Source4D::x_function(int x, int y, int s, int t){
-    double xd = x;
-    double yd = y;
-    double sd = s;
-    double td = t;
+    double xd = normalize(x);
+    double yd = normalize(y);
+    double sd = normalize(s);
+    double td = normalize(t);
 
-    return (xd/25-2)*(xd/25-2)+(td/25-2);
+    return xd*xd+td;
 }
 
 float Source4D::y_function(int x, int y, int s, int t){
-    double xd = x;
-    double yd = y;
-    double sd = s;
-    double td = t;
+    double xd = normalize(x);
+    double yd = normalize(y);
+    double sd = normalize(s);
+    double td = normalize(t);
 
-    return -(yd/25-2);
-}
-void Source4D::SetWidth(int width){
-    width_ = width;
-}
-void Source4D::SetParamWidth(int param_width){
-    param_width_ = param_width;
+    return -yd+sd;
 }
 
 void Source4D::InternalUpdate(){
@@ -53,7 +47,14 @@ std::vector<std::vector<vtkSmartPointer<vtkImageData>>> Source4D::GetInternalOut
     return vector_field;
 }
 
-Source4D::Source4D(){
-    width_ = 100;
-    param_width_ = 100;
+double Source4D::normalize(int i) {
+    return i*step_+min_;
+}
+
+Source4D::Source4D(int width, double min, double max){
+    width_ = width;
+    param_width_ = width;
+    min_ = min;
+    max_ = max;
+    step_ = (max_-min_)/width;
 }

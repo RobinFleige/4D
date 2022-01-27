@@ -7,7 +7,6 @@ void ImageRenderer::InternalUpdate() {
     }
 
     window_->Render();
-    interactor_->Start();
 }
 
 ImageRenderer::ImageRenderer(){

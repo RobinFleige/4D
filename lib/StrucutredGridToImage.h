@@ -1,0 +1,14 @@
+//
+// Created by rfleige on 27.01.22.
+//
+
+#ifndef PROTOTYPE_STRUCUTREDGRIDTOIMAGE_H
+#define PROTOTYPE_STRUCUTREDGRIDTOIMAGE_H
+
+
+class StrucutredGridToImage {
+
+};
+
+
+#endif //PROTOTYPE_STRUCUTREDGRIDTOIMAGE_H
