@@ -1,34 +1,26 @@
 #pragma once
+#include "HasInput.h"
 #include <vtkSmartPointer.h>
-#include "HasOutput.h"
+#include <vtkImageData.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkNamedColors.h>
 
-template<class T> class Renderer{
+template<class InputType> class Renderer : public HasInput<InputType>{
 protected:
-    virtual ~Renderer(){};
-    vtkNew<vtkNamedColors> colors_;
-    vtkNew<vtkRenderer> renderer_;
-    vtkNew<vtkRenderWindow> window_;
-    vtkNew<vtkRenderWindowInteractor> interactor_;
-
-    bool updatable_ = true;
-    HasOutput<T>* input_connection_;
-
-    virtual void InternalUpdate() = 0;
+    vtkSmartPointer<vtkRenderer> renderer_;
+    vtkSmartPointer<vtkRenderWindow> window_;
+    vtkSmartPointer<vtkRenderWindowInteractor> interactor_;
+    vtkSmartPointer<vtkNamedColors> colors_;
 public:
-    vtkSmartPointer<vtkRenderWindowInteractor> GetInteractor() { return interactor_; }
-
-    virtual void SetInputConnection(HasOutput<T>* input_connection){
-        input_connection_ = input_connection;
-        updatable_ = true;
-    }
-
-    virtual void Update(){
-        if(input_connection_){
-            input_connection_->Update();
+    void Update() override{
+        if(this->input_connection_){
+            this->input_connection_->Update();
+            this->input_ = this->input_connection_->GetOutput();
         }
-        if(updatable_){
-            InternalUpdate();
-            updatable_ = false;
+        if(this->updatable_){
+            this->InternalUpdate();
         }
     }
 };

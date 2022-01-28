@@ -7,9 +7,10 @@
 
 class LIC : public Filter<vtkSmartPointer<vtkImageData>,vtkSmartPointer<vtkImageData>> {
 private:
-    vtkNew<vtkImageDataLIC2D> lic;
-    vtkNew<vtkImageShiftScale> scale;
+    vtkSmartPointer<vtkImageDataLIC2D> lic;
+    vtkSmartPointer<vtkImageShiftScale> scale;
 
-    vtkSmartPointer<vtkImageData> GetInternalOutput() override;
     void InternalUpdate() override;
+public:
+    LIC();
 };

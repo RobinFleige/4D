@@ -30,7 +30,7 @@ message(STATUS "VTK_VERSION: ${VTK_VERSION}")
 
 
 # Main library; can be used by e.g. executables
-add_library(prototype_lib lib/Slider.cpp lib/SliderObserver.h lib/LIC.cpp PipelineDefs/Filter.h PipelineDefs/Source.h PipelineDefs/Renderer.h lib/ImageRenderer.cpp lib/ImageRenderer.h lib/Source4D.h lib/LIC.h lib/Slider.h lib/Subspace.cpp lib/Subspace.h lib/CriticalPointsTrivial.cpp lib/CriticalPointsTrivial.h lib/CriticalPointsSet.cpp lib/CriticalPointsSet.h lib/CriticalPointsSubdivide.cpp lib/CriticalPointsSubdivide.h lib/PointSetToScalarField.cpp lib/PointSetToScalarField.h lib/StrucutredGridToImage.cpp lib/StrucutredGridToImage.h lib/StructuredGridnD.cpp lib/StructuredGridnD.h lib/MultiparameterDependentStructuredGridnD.cpp lib/MultiparameterDependentStructuredGridnD.h)
+add_library(prototype_lib lib/Slider.cpp lib/SliderObserver.h lib/LIC.cpp lib/ImageRenderer.cpp lib/ImageRenderer.h lib/Source4D.h lib/LIC.h lib/Slider.h lib/Subspace.cpp lib/Subspace.h lib/CriticalPointsTrivial.cpp lib/CriticalPointsTrivial.h lib/CriticalPointsSet.cpp lib/CriticalPointsSet.h lib/CriticalPointsSubdivide.cpp lib/CriticalPointsSubdivide.h lib/PointSetToScalarField.cpp lib/PointSetToScalarField.h lib/StrucutredGridToImage.cpp lib/StrucutredGridToImage.h lib/StructuredGridnD.cpp lib/StructuredGridnD.h lib/MultiparameterDependentStructuredGridnD.cpp lib/MultiparameterDependentStructuredGridnD.h)
 target_compile_features(prototype_lib PUBLIC cxx_std_14)
 target_sources(prototype_lib
         PRIVATE lib/Source4D.cpp
@@ -51,7 +51,7 @@ vtk_module_autoinit(
 
 
 # Executable for demonstration purposes
-add_executable(Prototype PipelineDefs/HasOutput.h)
+add_executable(Prototype )
 target_sources(Prototype PRIVATE src/Main.cxx )
 target_link_libraries(
         Prototype ${VTK_LIBRARIES} prototype_lib

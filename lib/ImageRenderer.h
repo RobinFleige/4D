@@ -13,12 +13,11 @@
 class ImageRenderer : public Renderer<vtkSmartPointer<vtkImageData>>, public SliderObserver {
 private:
     std::string name_ = "Test";
-    vtkSmartPointer<vtkImageData> input_;
     vtkNew<vtkImageActor> actor_;
     void InternalUpdate() override;
 public:
     ImageRenderer();
-    void OnChange() override;
+    void OnChange(double value, int id) override;
     void SetName(std::string name);
     void SetInput(vtkSmartPointer<vtkImageData> input);
 };

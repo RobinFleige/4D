@@ -115,9 +115,8 @@ int show_both(){
     return EXIT_SUCCESS;
 }
 
-int main(int argc, char* argv[])
-{
-    int width = 20;
+int with_slider(){
+    int width = 60;
     double min = -2;
     double max = 2;
 
@@ -134,13 +133,15 @@ int main(int argc, char* argv[])
 
 
     vtkNew<Slider> slider1;
-    slider1->Attach(renderer,s);
+    slider1->Attach(subspace,0);
+    slider1->Attach(renderer,0);
     vtkNew<Slider> slider2;
-    slider2->Attach(renderer,t);
+    slider2->Attach(subspace,1);
+    slider2->Attach(renderer,1);
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(width);
+    sliderRep1->SetMaximumValue(width-1);
     sliderRep1->SetValue(s);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
@@ -148,7 +149,7 @@ int main(int argc, char* argv[])
     sliderRep1->SetSliderWidth(.2);
     sliderRep1->SetLabelHeight(.1);
     vtkNew<vtkSliderWidget> sliderWidget1;
-    sliderWidget1->SetInteractor(renderer2->GetInteractor());
+    sliderWidget1->SetInteractor(renderer->GetInteractor());
     sliderWidget1->SetRepresentation(sliderRep1);
     sliderWidget1->SetAnimationModeToAnimate();
     sliderWidget1->EnabledOn();
@@ -156,7 +157,7 @@ int main(int argc, char* argv[])
 
     vtkNew<vtkSliderRepresentation3D> sliderRep2;
     sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(width);
+    sliderRep2->SetMaximumValue(width-1);
     sliderRep2->SetValue(t);
     sliderRep2->SetTitleText("T");
     sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
@@ -164,7 +165,7 @@ int main(int argc, char* argv[])
     sliderRep2->SetSliderWidth(.2);
     sliderRep2->SetLabelHeight(.1);
     vtkNew<vtkSliderWidget> sliderWidget2;
-    sliderWidget2->SetInteractor(renderer2->GetInteractor());
+    sliderWidget2->SetInteractor(renderer->GetInteractor());
     sliderWidget2->SetRepresentation(sliderRep2);
     sliderWidget2->SetAnimationModeToAnimate();
     sliderWidget2->EnabledOn();
@@ -191,13 +192,16 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 }
 
+int main(int argc, char* argv[])
+{
+    return with_slider();
+}
 
-//TODO 2D Slider hinzufügen
-//TODO Aktuelle Parameter-Kombi in Parameterbild zeigen
 
-//TODO Kritische Punkte in Raum-Feld anzeigen(Filter mit Bild und Points als Eingang und Bild als Ausgang (Filter Definition mit 2 Eingängen)
+
 //TODO Filter um PointSet auf Bild zu malen (InputConnection=HasOutput(vtkImageData);SecondaryInputConnection=HasOutput(vtkPoints)->Update überschreiben um SecondaryInput zu Updaten)
-
+//TODO Kritische Punkte in Raum-Feld anzeigen
+//TODO Aktuelle Parameter-Kombi in Parameterbild zeigen
 
 //TODO FFF
 //TODO Bifurcation Points

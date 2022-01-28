@@ -1,6 +1,5 @@
 #pragma once
 class SliderObserver {
 public:
-    virtual ~SliderObserver(){};
-    virtual void OnChange() = 0;
+    virtual void OnChange(double value, int id) = 0;
 };

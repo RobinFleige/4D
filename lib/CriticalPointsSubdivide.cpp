@@ -1,11 +1,7 @@
 #include "CriticalPointsSubdivide.h"
 
-vtkSmartPointer<vtkPoints> CriticalPointsSubdivide::GetInternalOutput() {
-    return critical_points_;
-}
-
 void CriticalPointsSubdivide::InternalUpdate() {
-    critical_points_ = vtkSmartPointer<vtkPoints>::New();
+    output_ = vtkSmartPointer<vtkPoints>::New();
     input_connection_->Update();
     vtkSmartPointer<vtkImageData> input = input_connection_->GetOutput();
     for (int x = 0; x < input->GetDimensions()[0]-1; x++) {
@@ -26,7 +22,7 @@ void CriticalPointsSubdivide::InternalUpdate() {
                 }
             }
             if(positive_x != 0 && positive_x != 4 && positive_y != 0 && positive_y != 4){
-                critical_points_->InsertNextPoint(x,y,0);
+                output_->InsertNextPoint(x,y,0);
             }
         }
     }

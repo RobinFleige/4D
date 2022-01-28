@@ -1,22 +1,16 @@
 #pragma once
 #include "HasOutput.h"
-template<class S>class Source : public HasOutput<S> {
-protected:
-    bool updatable_ = true;
-    virtual void InternalUpdate() = 0;
-
+template<class OutputType> class Source : public HasOutput<OutputType>{
 public:
-    virtual S GetInternalOutput() = 0;
-
-    virtual void Update(){
-        if(updatable_){
-            InternalUpdate();
-            updatable_ = false;
+    void Update() override{
+        if(this->updatable_){
+            this->InternalUpdate();
+            for(int i = 0; i < this->output_connections_.size(); i++){
+                this->output_connections_[i]->Invalidate();
+            }
         }
-    }
-
-    virtual S GetOutput() {
-        Update();
-        return GetInternalOutput();
+        for(int i = 0; i < this->output_connections_.size(); i++){
+            this->output_connections_[i]->Update();
+        }
     }
 };

@@ -7,10 +7,10 @@
 class Slider : public vtkCommand
 {
 private:
-    SliderObserver* observer;
-    int value;
+    std::vector<SliderObserver*> observer;
+    int id_;
 public:
     static Slider* New(){return new Slider;}
-    void Execute(vtkObject *caller, unsigned long, void *);
-    void Attach(SliderObserver *o, int v);
+    void Execute(vtkObject *caller, unsigned long, void *) override;
+    void Attach(SliderObserver *o, int id);
 };

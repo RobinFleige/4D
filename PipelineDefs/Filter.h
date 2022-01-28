@@ -1,31 +1,21 @@
 #pragma once
+#include "HasInput.h"
 #include "HasOutput.h"
-
-template<class T, class S> class Filter : public HasOutput<S> {
-protected:
-    HasOutput<T>* input_connection_;
-    bool updatable_ = true;
-    virtual void InternalUpdate() = 0;
-    virtual S GetInternalOutput() = 0;
-
+template<class InputType, class OutputType> class Filter : public HasInput<InputType>, public HasOutput<OutputType>{
 public:
-    virtual void SetInputConnection(HasOutput<T>* input_connection){
-        input_connection_ = input_connection;
-        updatable_ = true;
-    }
-
-    virtual void Update(){
-        if(input_connection_){
-            input_connection_->Update();
+    void Update() override{
+        if(this->input_connection_){
+            this->input_connection_->Update();
+            this->input_ = this->input_connection_->GetOutput();
         }
-        InternalUpdate();
-        updatable_ = false;
-    }
-
-    virtual S GetOutput() {
-        if (updatable_) {
-            Update();
+        if(this->updatable_){
+            this->InternalUpdate();
+            for(int i = 0; i < this->output_connections_.size(); i++){
+                this->output_connections_[i]->Invalidate();
+            }
         }
-        return GetInternalOutput();
+        for(int i = 0; i < this->output_connections_.size(); i++){
+            this->output_connections_[i]->Update();
+        }
     }
 };
