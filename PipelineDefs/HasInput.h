@@ -1,6 +1,6 @@
 #pragma once
 #include "HasOutput.h"
-template<class InputType> class HasInput : public Updatable{
+template<class InputType> class HasInput : virtual public Updatable{
 protected:
     HasOutput<InputType>* input_connection_;
     InputType input_;

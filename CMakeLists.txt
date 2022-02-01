@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
 project(Prototype)
 
@@ -30,11 +30,36 @@ message(STATUS "VTK_VERSION: ${VTK_VERSION}")
 
 
 # Main library; can be used by e.g. executables
-add_library(prototype_lib lib/Slider.cpp lib/SliderObserver.h lib/LIC.cpp lib/ImageRenderer.cpp lib/ImageRenderer.h lib/Source4D.h lib/LIC.h lib/Slider.h lib/Subspace.cpp lib/Subspace.h lib/CriticalPointsTrivial.cpp lib/CriticalPointsTrivial.h lib/CriticalPointsSet.cpp lib/CriticalPointsSet.h lib/CriticalPointsSubdivide.cpp lib/CriticalPointsSubdivide.h lib/PointSetToScalarField.cpp lib/PointSetToScalarField.h lib/StrucutredGridToImage.cpp lib/StrucutredGridToImage.h lib/StructuredGridnD.cpp lib/StructuredGridnD.h lib/MultiparameterDependentStructuredGridnD.cpp lib/MultiparameterDependentStructuredGridnD.h)
-target_compile_features(prototype_lib PUBLIC cxx_std_14)
-target_sources(prototype_lib
-        PRIVATE lib/Source4D.cpp
-        )
+add_library(prototype_lib STATIC)
+target_sources(prototype_lib PRIVATE
+        lib/Slider.cpp
+        lib/SliderObserver.h
+        lib/LIC.cpp
+        lib/ImageRenderer.cpp
+        lib/ImageRenderer.h
+        lib/Source4D.h
+        lib/Source4D.cpp
+        lib/LIC.h
+        lib/Slider.h
+        lib/Subspace.cpp
+        lib/Subspace.h
+        lib/CriticalPointsTrivial.cpp
+        lib/CriticalPointsTrivial.h
+        lib/CriticalPointsSet.cpp
+        lib/CriticalPointsSet.h
+        lib/CriticalPointsSubdivide.cpp
+        lib/CriticalPointsSubdivide.h
+        lib/PointSetToScalarField.cpp
+        lib/PointSetToScalarField.h
+        lib/StrucutredGridToImage.cpp
+        lib/StrucutredGridToImage.h
+        lib/StructuredGridnD.cpp
+        lib/StructuredGridnD.h
+        lib/MultiparameterDependentStructuredGridnD.cpp
+        lib/MultiparameterDependentStructuredGridnD.h)
+
+target_compile_features(prototype_lib PUBLIC cxx_std_17)
+
 target_link_libraries(
         prototype_lib PRIVATE ${VTK_LIBRARIES}
 )
@@ -48,15 +73,13 @@ vtk_module_autoinit(
 )
 
 
-
-
 # Executable for demonstration purposes
-add_executable(Prototype )
-target_sources(Prototype PRIVATE src/Main.cxx )
+add_executable(Prototype)
+target_sources(Prototype PRIVATE src/Main.cxx)
 target_link_libraries(
-        Prototype ${VTK_LIBRARIES} prototype_lib
+        Prototype PRIVATE ${VTK_LIBRARIES} prototype_lib
 )
-target_include_directories(Prototype PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(Prototype PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 vtk_module_autoinit(TARGETS Prototype MODULES ${VTK_LIBRARIES})
 

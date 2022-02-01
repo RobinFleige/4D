@@ -10,7 +10,8 @@ public:
             }
         }
         for(int i = 0; i < this->output_connections_.size(); i++){
-            this->output_connections_[i]->Update();
+            this->output_connections_[i]->Invalidate();
         }
+        this->updatable_ = false;
     }
 };

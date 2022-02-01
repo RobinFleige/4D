@@ -14,8 +14,7 @@
 #include "CriticalPointsSet.h"
 #include "PointSetToScalarField.h"
 
-void Write(vtkSmartPointer<vtkImageData> image, const std::string filename) {
-    //if(typeof<T>vtkImageData))
+void Write(vtkSmartPointer<vtkImageData> image, const std::string& filename) {
     vtkNew <vtkXMLImageDataWriter> writer;
     writer->SetFileName(filename.c_str());
     writer->SetCompressorTypeToNone();
@@ -37,11 +36,11 @@ int show_lic() {
     double min = -2;
     double max = 2;
 
-    Source4D* source = new Source4D(width,min,max);
-    Subspace* subspace = new Subspace();
-    LIC* lic = new LIC();
-    CriticalPointsSubdivide* critical_points = new CriticalPointsSubdivide();
-    ImageRenderer* renderer = new ImageRenderer();
+    auto* source = new Source4D(width,min,max);
+    auto* subspace = new Subspace();
+    auto* lic = new LIC();
+    auto* critical_points = new CriticalPointsSubdivide();
+    auto* renderer = new ImageRenderer();
 
     source->Update();
     Write(source->GetOutput()[0][0], "Source");
@@ -58,6 +57,7 @@ int show_lic() {
     Write(critical_points->GetOutput(),"CriticalPoints");
     renderer->SetInputConnection(lic);
     renderer->Update();
+    renderer->GetInteractor()->Start();
     return EXIT_SUCCESS;
 }
 
@@ -66,10 +66,10 @@ int show_parameter_field(){
     double min = -2;
     double max = 2;
 
-    Source4D* source = new Source4D(width,min,max);
-    CriticalPointsSet* point_set = new CriticalPointsSet();
-    PointSetToScalarField* scalar_field = new PointSetToScalarField();
-    ImageRenderer* renderer = new ImageRenderer();
+    auto* source = new Source4D(width,min,max);
+    auto* point_set = new CriticalPointsSet();
+    auto* scalar_field = new PointSetToScalarField();
+    auto* renderer = new ImageRenderer();
 
     point_set->SetInputConnection(source);
     scalar_field->SetInputConnection(point_set);
@@ -87,13 +87,13 @@ int show_both(){
     double min = -2;
     double max = 2;
 
-    Source4D* source = new Source4D(width,min,max);
-    Subspace* subspace = new Subspace();
-    LIC* lic = new LIC();
-    ImageRenderer* renderer = new ImageRenderer();
-    CriticalPointsSet* point_set = new CriticalPointsSet();
-    PointSetToScalarField* scalar_field = new PointSetToScalarField();
-    ImageRenderer* renderer2 = new ImageRenderer();
+    auto* source = new Source4D(width,min,max);
+    auto* subspace = new Subspace();
+    auto* lic = new LIC();
+    auto* renderer = new ImageRenderer();
+    auto* point_set = new CriticalPointsSet();
+    auto* scalar_field = new PointSetToScalarField();
+    auto* renderer2 = new ImageRenderer();
 
     subspace->SetInputConnection(source);
     subspace->SetSValue(width/2);
@@ -116,20 +116,20 @@ int show_both(){
 }
 
 int with_slider(){
-    int width = 60;
+    int width = 20;
     double min = -2;
     double max = 2;
 
-    double s = width/2;
-    double t = width/2;
+    double s = 1.*width/2;
+    double t = 1.*width/2;
 
-    Source4D* source = new Source4D(width,min,max);
-    Subspace* subspace = new Subspace();
-    LIC* lic = new LIC();
-    ImageRenderer* renderer = new ImageRenderer();
-    CriticalPointsSet* point_set = new CriticalPointsSet();
-    PointSetToScalarField* scalar_field = new PointSetToScalarField();
-    ImageRenderer* renderer2 = new ImageRenderer();
+    auto* source = new Source4D(width,min,max);
+    auto* subspace = new Subspace();
+    auto* lic = new LIC();
+    auto* renderer = new ImageRenderer();
+    auto* point_set = new CriticalPointsSet();
+    auto* scalar_field = new PointSetToScalarField();
+    auto* renderer2 = new ImageRenderer();
 
 
     vtkNew<Slider> slider1;

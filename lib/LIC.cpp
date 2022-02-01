@@ -3,10 +3,12 @@
 LIC::LIC() {
     lic = vtkSmartPointer<vtkImageDataLIC2D>::New();
     scale = vtkSmartPointer<vtkImageShiftScale>::New();
+    updatable_ = true;
 }
 
 void LIC::InternalUpdate() {
-    lic->SetInputData(input_connection_->GetOutput());
+    input_ = input_connection_->GetOutput();
+    lic->SetInputData(input_);
     lic->Update();
     scale->SetInputData(lic->GetOutput());
     scale->SetScale(128);

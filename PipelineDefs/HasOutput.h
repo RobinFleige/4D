@@ -2,7 +2,7 @@
 #include "Updatable.h"
 #include <vector>
 
-template<class OutputType> class HasOutput : public Updatable{
+template<class OutputType> class HasOutput : virtual public Updatable{
 protected:
     OutputType output_;
     std::vector<Updatable*> output_connections_;

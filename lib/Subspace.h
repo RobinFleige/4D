@@ -10,12 +10,12 @@ private:
     int s_;
     int t_;
 
-    vtkSmartPointer<vtkImageData> GetInternalOutput();
-    void InternalUpdate();
+    void InternalUpdate() override;
 
 public:
     void SetTValue(int t);
     void SetSValue(int s);
     void OnChange(double value, int id) override;
+    Subspace();
 
 };

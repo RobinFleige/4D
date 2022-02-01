@@ -12,15 +12,11 @@ private:
     double max_;
     double step_;
 
-    //s,t,image
-    std::vector<std::vector<vtkSmartPointer<vtkImageData>>> vector_field;
-
-
     float x_function(int x, int y, int s, int t);
     float y_function(int x, int y, int s, int t);
-    double normalize(int i);
+    double normalize(int i) const;
     std::vector<std::vector<vtkSmartPointer<vtkImageData>>> GetInternalOutput();
-    void InternalUpdate();
+    void InternalUpdate() override;
 public:
     Source4D(int width, double min, double max);
 

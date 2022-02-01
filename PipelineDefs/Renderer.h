@@ -22,5 +22,10 @@ public:
         if(this->updatable_){
             this->InternalUpdate();
         }
+        this->updatable_ = false;
+    }
+
+    vtkSmartPointer<vtkRenderWindowInteractor> GetInteractor(){
+        return interactor_;
     }
 };

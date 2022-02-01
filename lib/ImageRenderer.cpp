@@ -1,12 +1,8 @@
 #include "ImageRenderer.h"
 void ImageRenderer::InternalUpdate() {
-    if(input_){
-        actor_->GetMapper()->SetInputData((input_));
-    }else{
-        actor_->GetMapper()->SetInputData((input_connection_->GetOutput()));
-    }
+    input_ = input_connection_->GetOutput();
+    actor_->GetMapper()->SetInputData((input_));
     window_->SetWindowName(name_.c_str());
-
     window_->Render();
 }
 
@@ -23,6 +19,7 @@ ImageRenderer::ImageRenderer(){
     window_->AddRenderer(renderer_);
 
     interactor_->SetRenderWindow(window_);
+    Invalidate();
 }
 
 void ImageRenderer::OnChange(double value, int id) {
