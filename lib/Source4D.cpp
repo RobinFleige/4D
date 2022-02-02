@@ -6,7 +6,11 @@ float Source4D::x_function(int x, int y, int s, int t){
     double sd = normalize(s);
     double td = normalize(t);
 
-    return xd*xd+td;
+    //1. xd*xd+td; -> vertical zweigeteilt
+    //2. xd*xd+td+sd -> schräg zweigeteilt
+    //3. xd*xd+td*td+sd*sd-1 -> durch Kreis geteilt
+    //4. xd*xd+td -> 2 bifurcationen (linien liegen aufeinander)
+    return xd*xd+td*td+sd*sd-1;
 }
 
 float Source4D::y_function(int x, int y, int s, int t){
@@ -15,7 +19,11 @@ float Source4D::y_function(int x, int y, int s, int t){
     double sd = normalize(s);
     double td = normalize(t);
 
-    return -yd+sd;
+    //1. -yd+sd
+    //2. -yd
+    //3. -yd
+    //4. -yd*yd+sd
+    return -yd;
 }
 
 void Source4D::InternalUpdate(){

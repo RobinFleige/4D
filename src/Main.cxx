@@ -104,9 +104,6 @@ int show_both(){
     point_set->SetInputConnection(source);
     scalar_field->SetInputConnection(point_set);
     renderer2->SetInputConnection(scalar_field);
-    point_set->Update();
-    scalar_field->Update();
-
 
     renderer->Update();
     renderer2->Update();
@@ -116,7 +113,7 @@ int show_both(){
 }
 
 int with_slider(){
-    int width = 20;
+    int width = 100;
     double min = -2;
     double max = 2;
 
@@ -181,9 +178,6 @@ int with_slider(){
     point_set->SetInputConnection(source);
     scalar_field->SetInputConnection(point_set);
     renderer2->SetInputConnection(scalar_field);
-    point_set->Update();
-    scalar_field->Update();
-
 
     renderer->Update();
     renderer2->Update();
