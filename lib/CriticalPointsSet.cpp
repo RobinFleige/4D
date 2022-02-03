@@ -5,6 +5,7 @@
 
 
 void CriticalPointsSet::InternalUpdate() {
+    std::cout<<"CriticalPointSet"<<std::endl;
     output_.clear();
     input_ = input_connection_->GetOutput();
 

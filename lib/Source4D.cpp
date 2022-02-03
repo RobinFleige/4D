@@ -1,4 +1,5 @@
 #include <Source4D.h>
+#include <valarray>
 
 float Source4D::x_function(int x, int y, int s, int t){
     double xd = normalize(x);
@@ -10,7 +11,9 @@ float Source4D::x_function(int x, int y, int s, int t){
     //2. xd*xd+td+sd -> schräg zweigeteilt
     //3. xd*xd+td*td+sd*sd-1 -> durch Kreis geteilt
     //4. xd*xd+td -> 2 bifurcationen (linien liegen aufeinander)
-    return xd*xd+td*td+sd*sd-1;
+    //5. (xd*xd+td)*(xd*xd+sd) -> 2 kreuzende Bifurcation Lines (Mit fragmenten im weißen Bereich)
+    //6. (xd-td)*(xd+td)*(xd-1-sd)*(xd-1+sd) -> seltsame Box
+    return (xd*xd+td)*(xd*xd+sd);
 }
 
 float Source4D::y_function(int x, int y, int s, int t){
@@ -23,6 +26,8 @@ float Source4D::y_function(int x, int y, int s, int t){
     //2. -yd
     //3. -yd
     //4. -yd*yd+sd
+    //5. -yd
+    //6. -yd
     return -yd;
 }
 

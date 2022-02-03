@@ -5,13 +5,10 @@ public:
     void Update() override{
         if(this->updatable_){
             this->InternalUpdate();
+            this->updatable_ = false;
             for(int i = 0; i < this->output_connections_.size(); i++){
                 this->output_connections_[i]->Invalidate();
             }
         }
-        for(int i = 0; i < this->output_connections_.size(); i++){
-            this->output_connections_[i]->Invalidate();
-        }
-        this->updatable_ = false;
     }
 };

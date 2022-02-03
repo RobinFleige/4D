@@ -1,22 +1,20 @@
-#include "Subspace.h"
+#include "PointSetSubspace.h"
 
-void Subspace::SetSValue(int s){
+void PointSetSubspace::SetSValue(int s){
     s_ = s;
     Invalidate();
 }
-void Subspace::SetTValue(int t){
+void PointSetSubspace::SetTValue(int t){
     t_ = t;
     Invalidate();
 }
 
-void Subspace::InternalUpdate() {
+void PointSetSubspace::InternalUpdate() {
     input_ = input_connection_->GetOutput();
     output_ = input_[s_][t_];
 }
 
-
-
-void Subspace::OnChange(double value, int id) {
+void PointSetSubspace::OnChange(double value, int id) {
     if(id == 0){
         s_ = value;
     }else if(id == 1){
@@ -26,7 +24,7 @@ void Subspace::OnChange(double value, int id) {
     Update();
 }
 
-Subspace::Subspace() {
+PointSetSubspace::PointSetSubspace() {
     s_ = 0;
     t_ = 0;
     Invalidate();

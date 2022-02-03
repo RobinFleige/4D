@@ -1,3 +1,4 @@
+#include <vtkInteractorStyleImage.h>
 #include "ImageRenderer.h"
 void ImageRenderer::InternalUpdate() {
     input_ = input_connection_->GetOutput();
@@ -19,6 +20,8 @@ ImageRenderer::ImageRenderer(){
     window_->AddRenderer(renderer_);
 
     interactor_->SetRenderWindow(window_);
+    vtkNew<vtkInteractorStyleImage> style;
+    interactor_->SetInteractorStyle(style);
     Invalidate();
 }
 

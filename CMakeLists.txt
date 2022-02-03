@@ -30,33 +30,21 @@ message(STATUS "VTK_VERSION: ${VTK_VERSION}")
 
 
 # Main library; can be used by e.g. executables
-add_library(prototype_lib STATIC)
+add_library(prototype_lib STATIC lib/PointSource.cpp lib/PointSource.h lib/PointSetSubspace.cpp lib/PointSetSubspace.h lib/FeatureFlowField4D.cpp lib/FeatureFlowField4D.h)
 target_sources(prototype_lib PRIVATE
         lib/Slider.cpp
-        lib/SliderObserver.h
         lib/LIC.cpp
         lib/ImageRenderer.cpp
-        lib/ImageRenderer.h
-        lib/Source4D.h
         lib/Source4D.cpp
-        lib/LIC.h
-        lib/Slider.h
         lib/Subspace.cpp
-        lib/Subspace.h
         lib/CriticalPointsTrivial.cpp
-        lib/CriticalPointsTrivial.h
         lib/CriticalPointsSet.cpp
-        lib/CriticalPointsSet.h
         lib/CriticalPointsSubdivide.cpp
-        lib/CriticalPointsSubdivide.h
+        lib/DrawPointsOnImage.cpp
         lib/PointSetToScalarField.cpp
-        lib/PointSetToScalarField.h
         lib/StrucutredGridToImage.cpp
-        lib/StrucutredGridToImage.h
         lib/StructuredGridnD.cpp
-        lib/StructuredGridnD.h
-        lib/MultiparameterDependentStructuredGridnD.cpp
-        lib/MultiparameterDependentStructuredGridnD.h)
+        lib/MultiparameterDependentStructuredGridnD.cpp)
 
 target_compile_features(prototype_lib PUBLIC cxx_std_17)
 

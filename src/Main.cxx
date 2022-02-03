@@ -13,6 +13,9 @@
 #include "CriticalPointsSubdivide.h"
 #include "CriticalPointsSet.h"
 #include "PointSetToScalarField.h"
+#include "PointSource.h"
+#include "DrawPointsOnImage.h"
+#include "PointSetSubspace.h"
 
 void Write(vtkSmartPointer<vtkImageData> image, const std::string& filename) {
     vtkNew <vtkXMLImageDataWriter> writer;
@@ -112,7 +115,79 @@ int show_both(){
     return EXIT_SUCCESS;
 }
 
-int with_slider(){
+int with_slider() {
+    int width = 100;
+    double min = -2;
+    double max = 2;
+
+    double s = 1. * width / 2;
+    double t = 1. * width / 2;
+
+    auto *source = new Source4D(width, min, max);
+    auto *subspace = new Subspace();
+    auto *lic = new LIC();
+    auto *renderer = new ImageRenderer();
+    auto *point_set = new CriticalPointsSet();
+    auto *scalar_field = new PointSetToScalarField();
+    auto *renderer2 = new ImageRenderer();
+
+
+    vtkNew<Slider> slider1;
+    slider1->Attach(subspace, 0);
+    slider1->Attach(renderer, 0);
+    vtkNew<Slider> slider2;
+    slider2->Attach(subspace, 1);
+    slider2->Attach(renderer, 1);
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep1;
+    sliderRep1->SetMinimumValue(0);
+    sliderRep1->SetMaximumValue(width - 1);
+    sliderRep1->SetValue(s);
+    sliderRep1->SetTitleText("S");
+    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
+    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
+    sliderRep1->SetSliderWidth(.2);
+    sliderRep1->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget1;
+    sliderWidget1->SetInteractor(renderer->GetInteractor());
+    sliderWidget1->SetRepresentation(sliderRep1);
+    sliderWidget1->SetAnimationModeToAnimate();
+    sliderWidget1->EnabledOn();
+    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep2;
+    sliderRep2->SetMinimumValue(0);
+    sliderRep2->SetMaximumValue(width - 1);
+    sliderRep2->SetValue(t);
+    sliderRep2->SetTitleText("T");
+    sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
+    sliderRep2->SetPoint2InWorldCoordinates(30, -10, 0);
+    sliderRep2->SetSliderWidth(.2);
+    sliderRep2->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget2;
+    sliderWidget2->SetInteractor(renderer->GetInteractor());
+    sliderWidget2->SetRepresentation(sliderRep2);
+    sliderWidget2->SetAnimationModeToAnimate();
+    sliderWidget2->EnabledOn();
+    sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
+
+
+    subspace->SetInputConnection(source);
+    subspace->SetSValue(s);
+    subspace->SetTValue(t);
+    lic->SetInputConnection(subspace);
+    renderer->SetInputConnection(lic);
+
+    point_set->SetInputConnection(source);
+    scalar_field->SetInputConnection(point_set);
+    renderer2->SetInputConnection(scalar_field);
+
+    renderer->Update();
+    renderer2->Update();
+    renderer2->GetInteractor()->Start();
+}
+
+int with_slider_and_points(){
     int width = 100;
     double min = -2;
     double max = 2;
@@ -123,18 +198,29 @@ int with_slider(){
     auto* source = new Source4D(width,min,max);
     auto* subspace = new Subspace();
     auto* lic = new LIC();
+    auto* point_subspace = new PointSetSubspace();
+    auto* draw_points1 = new DrawPointsOnImage();
     auto* renderer = new ImageRenderer();
     auto* point_set = new CriticalPointsSet();
     auto* scalar_field = new PointSetToScalarField();
+    auto* point_source = new PointSource();
+    auto* draw_points2 = new DrawPointsOnImage();
     auto* renderer2 = new ImageRenderer();
 
 
     vtkNew<Slider> slider1;
     slider1->Attach(subspace,0);
+    slider1->Attach(point_subspace,0);
+    slider1->Attach(point_source,0);
     slider1->Attach(renderer,0);
+    slider1->Attach(renderer2,0);
     vtkNew<Slider> slider2;
     slider2->Attach(subspace,1);
+    slider2->Attach(point_subspace,1);
+    slider2->Attach(point_source,1);
     slider2->Attach(renderer,1);
+    slider2->Attach(renderer2,1);
+
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
@@ -173,11 +259,20 @@ int with_slider(){
     subspace->SetSValue(s);
     subspace->SetTValue(t);
     lic->SetInputConnection(subspace);
-    renderer->SetInputConnection(lic);
+    point_subspace->SetSValue(s);
+    point_subspace->SetTValue(t);
+    point_subspace->SetInputConnection(point_set);
+    draw_points1->SetInputConnection(lic);
+    draw_points1->SetSecondaryInputConnection(point_subspace);
+    renderer->SetInputConnection(draw_points1);
 
     point_set->SetInputConnection(source);
     scalar_field->SetInputConnection(point_set);
-    renderer2->SetInputConnection(scalar_field);
+    point_source->SetX(s);
+    point_source->SetY(t);
+    draw_points2->SetInputConnection(scalar_field);
+    draw_points2->SetSecondaryInputConnection(point_source);
+    renderer2->SetInputConnection(draw_points2);
 
     renderer->Update();
     renderer2->Update();
@@ -188,46 +283,19 @@ int with_slider(){
 
 int main(int argc, char* argv[])
 {
-    return with_slider();
+    return with_slider_and_points();
 }
 
 
 
-//TODO Filter um PointSet auf Bild zu malen (InputConnection=HasOutput(vtkImageData);SecondaryInputConnection=HasOutput(vtkPoints)->Update überschreiben um SecondaryInput zu Updaten)
-//TODO Kritische Punkte in Raum-Feld anzeigen
-//TODO Aktuelle Parameter-Kombi in Parameterbild zeigen
+//TODO Beide Visualisierungen in ein Window packen -> Slider funktionieren besser
 
 //TODO FFF
 //TODO Bifurcation Points
-//TODO Isoline Anzahl Bifurcation Point
 //TODO Bifurcation Line/Bifurcation FFF
 
-
-//TODO ScalarFieldToImage
-//TODO PointSetSubSpace (Oder Subspace unmabhängig vom Typ machen)
+//TODO PointSetSubSpace und Subspace kombinieren (unabhängig vom Type machen)
 //TODO Change Image To StructuredGrid
 //TODO Implement StructuredGridnD
 //TODO Implement StructuredGridToImage
 //TODO Implement nDImageToVtkImageData
-
-
-//vtkNew<vtkSliderRepresentation3D> sliderRep;
-//sliderRep->SetMinimumValue(0.0);
-//sliderRep->SetMaximumValue(30.0);
-//sliderRep->SetValue(10.0);
-//sliderRep->SetTitleText("Contour value");
-//sliderRep->SetPoint1InWorldCoordinates(-20, -40, 0);
-//sliderRep->SetPoint2InWorldCoordinates(0, -40, 0);
-//sliderRep->SetSliderWidth(.2);
-//sliderRep->SetLabelHeight(.1);
-//
-//vtkNew<vtkSliderWidget> sliderWidget;
-//sliderWidget->SetInteractor(interactor);
-//sliderWidget->SetRepresentation(sliderRep);
-//sliderWidget->SetAnimationModeToAnimate();
-//sliderWidget->EnabledOn();
-//
-//vtkNew<vtkSliderCallback> callback;
-//sliderWidget->AddObserver(vtkCommand::InteractionEvent, callback);
-
-
