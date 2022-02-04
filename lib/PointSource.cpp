@@ -2,10 +2,12 @@
 
 void PointSource::SetX(int x) {
     x_ = x;
+    Invalidate();
 }
 
 void PointSource::SetY(int y) {
     y_ = y;
+    Invalidate();
 }
 
 void PointSource::InternalUpdate() {
@@ -24,6 +26,5 @@ void PointSource::OnChange(double value, int id) {
     }else if(id == 1){
         y_ = value;
     }
-
     Invalidate();
 }

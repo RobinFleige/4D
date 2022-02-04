@@ -8,5 +8,8 @@
 #include "../PipelineDefs/DoubleFilter.h"
 
 class DrawPointsOnImage : public DoubleFilter<vtkSmartPointer<vtkImageData>,vtkSmartPointer<vtkPoints>,vtkSmartPointer<vtkImageData>>{
+private:
     void InternalUpdate() override;
+public:
+    DrawPointsOnImage();
 };

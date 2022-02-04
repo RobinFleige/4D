@@ -3,7 +3,7 @@
 void DrawPointsOnImage::InternalUpdate() {
     input_ = input_connection_->GetOutput();
     secondary_input_ = secondary_input_connection_->GetOutput();
-    output_ = input_;
+    output_->DeepCopy(input_);
 
     double point[3];
     for(int i = 0; i < secondary_input_->GetNumberOfPoints(); i++){
@@ -13,4 +13,9 @@ void DrawPointsOnImage::InternalUpdate() {
         pixel[1] = 0.0;
         pixel[2] = 0.0;
     }
+}
+
+DrawPointsOnImage::DrawPointsOnImage() {
+    output_ = vtkSmartPointer<vtkImageData>::New();
+    Invalidate();
 }

@@ -1,8 +1,15 @@
 #pragma once
 #include "HasInput.h"
 #include "HasSecondaryInput.h"
-#include "HasOutput.h"
-template<class InputType1, class InputType2, class OutputType> class DoubleFilter : public HasSecondaryInput<InputType1,InputType2>, public HasOutput<OutputType>{
+#include "Renderer.h"
+
+template<class InputType1, class InputType2> class DoubleRenderer : public HasSecondaryInput<InputType1, InputType2>{
+protected:
+    vtkSmartPointer<vtkRenderer> renderer_;
+    vtkSmartPointer<vtkRenderWindow> window_;
+    vtkSmartPointer<vtkRenderWindowInteractor> interactor_;
+    vtkSmartPointer<vtkNamedColors> colors_;
+
 public:
     void Update() override{
         if(this->input_connection_){
@@ -16,9 +23,10 @@ public:
         if(this->updatable_){
             this->InternalUpdate();
             this->updatable_ = false;
-            for(int i = 0; i < this->output_connections_.size(); i++){
-                this->output_connections_[i]->Invalidate();
-            }
         }
+    }
+
+    vtkSmartPointer<vtkRenderWindowInteractor> GetInteractor(){
+        return interactor_;
     }
 };

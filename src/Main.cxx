@@ -5,6 +5,7 @@
 #include <vtkPolyData.h>
 #include <vtkSliderRepresentation3D.h>
 #include <vtkSliderWidget.h>
+#include <DoubleImageRenderer.h>
 #include "Source4D.h"
 #include "LIC.h"
 #include "ImageRenderer.h"
@@ -185,6 +186,8 @@ int with_slider() {
     renderer->Update();
     renderer2->Update();
     renderer2->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
 }
 
 int with_slider_and_points(){
@@ -281,16 +284,105 @@ int with_slider_and_points(){
     return EXIT_SUCCESS;
 }
 
-int main(int argc, char* argv[])
-{
-    return with_slider_and_points();
+int two_in_one_image(){
+    int width = 100;
+    double min = -2;
+    double max = 2;
+
+    double s = 1.*width/2;
+    double t = 1.*width/2;
+
+    auto* source = new Source4D(width,min,max);
+    auto* subspace = new Subspace();
+    auto* lic = new LIC();
+    auto* point_subspace = new PointSetSubspace();
+    auto* draw_points1 = new DrawPointsOnImage();
+    auto* point_set = new CriticalPointsSet();
+    auto* scalar_field = new PointSetToScalarField();
+    auto* point_source = new PointSource();
+    auto* draw_points2 = new DrawPointsOnImage();
+    auto* renderer = new DoubleImageRenderer();
+
+
+    vtkNew<Slider> slider1;
+    slider1->Attach(subspace,0);
+    slider1->Attach(point_subspace,0);
+    slider1->Attach(point_source,0);
+    slider1->Attach(renderer,0);
+    vtkNew<Slider> slider2;
+    slider2->Attach(subspace,1);
+    slider2->Attach(point_subspace,1);
+    slider2->Attach(point_source,1);
+    slider2->Attach(renderer,1);
+
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep1;
+    sliderRep1->SetMinimumValue(0);
+    sliderRep1->SetMaximumValue(width-1);
+    sliderRep1->SetValue(s);
+    sliderRep1->SetTitleText("S");
+    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
+    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
+    sliderRep1->SetSliderWidth(.2);
+    sliderRep1->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget1;
+    sliderWidget1->SetInteractor(renderer->GetInteractor());
+    sliderWidget1->SetRepresentation(sliderRep1);
+    sliderWidget1->SetAnimationModeToAnimate();
+    sliderWidget1->EnabledOn();
+    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep2;
+    sliderRep2->SetMinimumValue(0);
+    sliderRep2->SetMaximumValue(width-1);
+    sliderRep2->SetValue(t);
+    sliderRep2->SetTitleText("T");
+    sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
+    sliderRep2->SetPoint2InWorldCoordinates(30, -10, 0);
+    sliderRep2->SetSliderWidth(.2);
+    sliderRep2->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget2;
+    sliderWidget2->SetInteractor(renderer->GetInteractor());
+    sliderWidget2->SetRepresentation(sliderRep2);
+    sliderWidget2->SetAnimationModeToAnimate();
+    sliderWidget2->EnabledOn();
+    sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
+
+
+    subspace->SetInputConnection(source);
+    subspace->SetSValue(s);
+    subspace->SetTValue(t);
+    lic->SetInputConnection(subspace);
+    point_subspace->SetSValue(s);
+    point_subspace->SetTValue(t);
+    point_subspace->SetInputConnection(point_set);
+    draw_points1->SetInputConnection(lic);
+    draw_points1->SetSecondaryInputConnection(point_subspace);
+    renderer->SetInputConnection(draw_points1);
+
+    point_set->SetInputConnection(source);
+    scalar_field->SetInputConnection(point_set);
+    point_source->SetX(s);
+    point_source->SetY(t);
+    draw_points2->SetInputConnection(scalar_field);
+    draw_points2->SetSecondaryInputConnection(point_source);
+    renderer->SetSecondaryInputConnection(draw_points2);
+
+    renderer->Update();
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
 }
 
+int main(int argc, char* argv[])
+{
+    return two_in_one_image();
+}
 
-
-//TODO Beide Visualisierungen in ein Window packen -> Slider funktionieren besser
-
-//TODO FFF
+//TODO FFF Paper erneut lesen und formeln aufschreiben
+//TODO FFF (3D Vektorfeld für jede Parameterrichtung)
+//TODO Ableitungsfilter + Kreuzprodukt
+//TODO ValueFilter (FFF_3 = 0)
 //TODO Bifurcation Points
 //TODO Bifurcation Line/Bifurcation FFF
 
