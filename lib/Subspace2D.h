@@ -5,7 +5,7 @@
 #include "../PipelineDefs/Filter.h"
 #include "SliderObserver.h"
 
-class Subspace : public Filter<std::vector < std::vector < vtkSmartPointer < vtkImageData>>>,vtkSmartPointer<vtkImageData>>, public SliderObserver{
+class Subspace2D : public Filter<std::vector < std::vector < vtkSmartPointer < vtkImageData>>>,vtkSmartPointer<vtkImageData>>, public SliderObserver{
 private:
     int s_;
     int t_;
@@ -16,6 +16,6 @@ public:
     void SetTValue(int t);
     void SetSValue(int s);
     void OnChange(double value, int id) override;
-    Subspace();
+    Subspace2D();
 
 };

@@ -1,6 +1,6 @@
 #include <vector>
 #include "CriticalPointsSet.h"
-#include "Subspace.h"
+#include "Subspace2D.h"
 #include "CriticalPointsSubdivide.h"
 
 
@@ -9,7 +9,7 @@ void CriticalPointsSet::InternalUpdate() {
     output_.clear();
     input_ = input_connection_->GetOutput();
 
-    Subspace* subspace = new Subspace();
+    Subspace2D* subspace = new Subspace2D();
     CriticalPointsSubdivide* critical_points = new CriticalPointsSubdivide();
 
     subspace->SetInputConnection(input_connection_);

@@ -22,7 +22,7 @@ void CriticalPointsSubdivide::InternalUpdate() {
                 }
             }
             if(positive_x != 0 && positive_x != 4 && positive_y != 0 && positive_y != 4){
-                output_->InsertNextPoint(x,y,0);
+                output_->InsertNextPoint(x+1,y+1,0);
             }
         }
     }

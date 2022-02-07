@@ -6,11 +6,14 @@
 #include <vtkSliderRepresentation3D.h>
 #include <vtkSliderWidget.h>
 #include <DoubleImageRenderer.h>
+#include <ImageRenderer3D.h>
+#include <PointSetTo3D.h>
 #include "Source4D.h"
 #include "LIC.h"
 #include "ImageRenderer.h"
 #include "Slider.h"
-#include "Subspace.h"
+#include "Subspace2D.h"
+#include "Subspace1D.h"
 #include "CriticalPointsSubdivide.h"
 #include "CriticalPointsSet.h"
 #include "PointSetToScalarField.h"
@@ -41,7 +44,7 @@ int show_lic() {
     double max = 2;
 
     auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace();
+    auto* subspace = new Subspace2D();
     auto* lic = new LIC();
     auto* critical_points = new CriticalPointsSubdivide();
     auto* renderer = new ImageRenderer();
@@ -92,7 +95,7 @@ int show_both(){
     double max = 2;
 
     auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace();
+    auto* subspace = new Subspace2D();
     auto* lic = new LIC();
     auto* renderer = new ImageRenderer();
     auto* point_set = new CriticalPointsSet();
@@ -125,7 +128,7 @@ int with_slider() {
     double t = 1. * width / 2;
 
     auto *source = new Source4D(width, min, max);
-    auto *subspace = new Subspace();
+    auto *subspace = new Subspace2D();
     auto *lic = new LIC();
     auto *renderer = new ImageRenderer();
     auto *point_set = new CriticalPointsSet();
@@ -199,7 +202,7 @@ int with_slider_and_points(){
     double t = 1.*width/2;
 
     auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace();
+    auto* subspace = new Subspace2D();
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage();
@@ -293,7 +296,7 @@ int two_in_one_image(){
     double t = 1.*width/2;
 
     auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace();
+    auto* subspace = new Subspace2D();
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage();
@@ -369,6 +372,57 @@ int two_in_one_image(){
     renderer->SetSecondaryInputConnection(draw_points2);
 
     renderer->Update();
+    std::cout<<"Finished"<<std::endl;
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
+}
+
+int example_3d(){
+    int width = 100;
+    double min = -2;
+    double max = 2;
+
+    double s = 1.*width/2;
+
+    auto* source = new Source4D(width,min,max);
+    auto* point_set = new CriticalPointsSet();
+    auto* image_3d = new PointSetTo3D();
+    auto* subspace_1d = new Subspace1D();
+    auto* renderer = new ImageRenderer3D();
+
+
+    vtkNew<Slider> slider1;
+    slider1->Attach(subspace_1d,0);
+    slider1->Attach(renderer,0);
+
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep1;
+    sliderRep1->SetMinimumValue(0);
+    sliderRep1->SetMaximumValue(width-1);
+    sliderRep1->SetValue(s);
+    sliderRep1->SetTitleText("S");
+    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
+    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
+    sliderRep1->SetSliderWidth(.2);
+    sliderRep1->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget1;
+    sliderWidget1->SetInteractor(renderer->GetInteractor());
+    sliderWidget1->SetRepresentation(sliderRep1);
+    sliderWidget1->SetAnimationModeToAnimate();
+    sliderWidget1->EnabledOn();
+    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
+
+
+    point_set->SetInputConnection(source);
+    image_3d->SetInputConnection(point_set);
+    image_3d->SetParameterID(0);
+    subspace_1d->SetInputConnection(image_3d);
+    subspace_1d->SetSValue(s);
+    renderer->SetInputConnection(subspace_1d);
+
+    renderer->Update();
+    std::cout<<"Finished"<<std::endl;
     renderer->GetInteractor()->Start();
 
     return EXIT_SUCCESS;
@@ -376,8 +430,13 @@ int two_in_one_image(){
 
 int main(int argc, char* argv[])
 {
-    return two_in_one_image();
+    return example_3d();
 }
+
+//TODO 3D Point Set Visualization
+//TODO Render Iso-Surface with increasing Transparency
+//TODO Improve CriticalPoint Calculation
+//TODO Store Calculations for faster Example
 
 //TODO FFF Paper erneut lesen und formeln aufschreiben
 //TODO FFF (3D Vektorfeld für jede Parameterrichtung)

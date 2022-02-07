@@ -36,7 +36,8 @@ target_sources(prototype_lib PRIVATE
         lib/LIC.cpp
         lib/ImageRenderer.cpp
         lib/Source4D.cpp
-        lib/Subspace.cpp
+        lib/Subspace2D.cpp
+        lib/Subspace1D.cpp
         lib/CriticalPointsTrivial.cpp
         lib/CriticalPointsSet.cpp
         lib/CriticalPointsSubdivide.cpp
@@ -47,11 +48,11 @@ target_sources(prototype_lib PRIVATE
         lib/MultiparameterDependentStructuredGridnD.cpp
         lib/PointSource.cpp
         lib/DoubleImageRenderer.cpp
-        lib/PointSource.h
+        lib/ImageRenderer.cpp
+        lib/ImageRenderer3D.cpp
         lib/PointSetSubspace.cpp
-        lib/PointSetSubspace.h
-        lib/FeatureFlowField4D.cpp
-        lib/FeatureFlowField4D.h)
+        lib/PointSetTo3D.cpp
+        lib/FeatureFlowField4D.cpp)
 
 target_compile_features(prototype_lib PUBLIC cxx_std_17)
 
