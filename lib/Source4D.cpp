@@ -13,7 +13,9 @@ float Source4D::x_function(int x, int y, int s, int t){
     //4. xd*xd+td -> 2 bifurcationen (linien liegen aufeinander)
     //5. (xd*xd+td)*(xd*xd+sd) -> 2 kreuzende Bifurcation Lines (Mit fragmenten im weißen Bereich)
     //6. (xd-td)*(xd+td)*(xd-1-sd)*(xd-1+sd) -> seltsame Box
-    return (xd*xd+td)*(xd*xd+sd);
+    //7. (xd*xd+td)*(yd-1)-(xd*xd+sd)*(yd+1) -> 2 kreuzende Bifurcation Lines (kritische Punkte werden nicht korrekt berechnet)
+    //8. (xd*xd+td-1)*(yd-1)+(xd*xd+td+1)*(yd+1) -> doppelt parallel vertical zweigeteilt (kritische Punkte werden nicht korrekt berechnet)
+    return (xd*xd+td-1)*(yd-1)+(xd*xd+td+1)*(yd+1);
 }
 
 float Source4D::y_function(int x, int y, int s, int t){
@@ -28,7 +30,9 @@ float Source4D::y_function(int x, int y, int s, int t){
     //4. -yd*yd+sd
     //5. -yd
     //6. -yd
-    return -yd;
+    //7. (yd+1)*(yd-1)
+    //8. (yd+1)*(yd-1)
+    return (yd+1)*(yd-1);
 }
 
 void Source4D::InternalUpdate(){

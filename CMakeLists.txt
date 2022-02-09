@@ -45,7 +45,7 @@ target_sources(prototype_lib PRIVATE
         lib/PointSetToScalarField.cpp
         lib/StrucutredGridToImage.cpp
         lib/StructuredGridnD.cpp
-        lib/MultiparameterDependentStructuredGridnD.cpp
+        DataType/MultiparameterDependentStructuredGridnD.cpp
         lib/PointSource.cpp
         lib/DoubleImageRenderer.cpp
         lib/ImageRenderer.cpp

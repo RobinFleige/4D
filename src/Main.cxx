@@ -430,21 +430,33 @@ int example_3d(){
 
 int main(int argc, char* argv[])
 {
-    return example_3d();
+    return two_in_one_image();
 }
 
-//TODO 3D Point Set Visualization
-//TODO Render Iso-Surface with increasing Transparency
-//TODO Improve CriticalPoint Calculation
-//TODO Store Calculations for faster Example
 
+//TODO Improve CriticalPoint Calculation
 //TODO FFF Paper erneut lesen und formeln aufschreiben
 //TODO FFF (3D Vektorfeld für jede Parameterrichtung)
 //TODO Ableitungsfilter + Kreuzprodukt
 //TODO ValueFilter (FFF_3 = 0)
 //TODO Bifurcation Points
 //TODO Bifurcation Line/Bifurcation FFF
+    //Bei Subdivision den genauen Punkt berechnen
+    //FFF für den genauen Punkt berechnen
+    //Für Punkt an dem gelandet wird wieder Subdivision berechnen um leichte Fehler auszugleichen
+    //Wiederholen und kritische Punkte damit zu Polyline machen
+    //Bei zwei Parametern -> 100 Polylines in jede Parameterdimension
+    //Pro Parameterdimension bei drittem Wert von FFF nach Vorzeichenwechsel suchen
+    //Bei angrenzenden Parameterwerten nach Bifurcation suchen und die zur Polyline zusammenfügen
+    // Kritische Punkte-Polyplanes und Bifurcation-Polylines visualisieren
 
+//TODO 3D Point Set Visualization
+//TODO Add Axes -> https://kitware.github.io/vtk-examples/site/Cxx/GeometricObjects/Axes/
+//TODO Render Iso-Surface with increasing Transparency
+
+
+
+//TODO Store Calculations for faster Example
 //TODO PointSetSubSpace und Subspace kombinieren (unabhängig vom Type machen)
 //TODO Change Image To StructuredGrid
 //TODO Implement StructuredGridnD
