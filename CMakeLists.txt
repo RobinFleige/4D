@@ -32,27 +32,29 @@ message(STATUS "VTK_VERSION: ${VTK_VERSION}")
 # Main library; can be used by e.g. executables
 add_library(prototype_lib STATIC )
 target_sources(prototype_lib PRIVATE
-        lib/Slider.cpp
-        lib/LIC.cpp
-        lib/ImageRenderer.cpp
-        lib/Source4D.cpp
-        lib/Subspace2D.cpp
-        lib/Subspace1D.cpp
-        lib/CriticalPointsTrivial.cpp
-        lib/CriticalPointsSet.cpp
-        lib/CriticalPointsSubdivide.cpp
-        lib/DrawPointsOnImage.cpp
-        lib/PointSetToScalarField.cpp
-        lib/StrucutredGridToImage.cpp
-        lib/StructuredGridnD.cpp
-        DataType/MultiparameterDependentStructuredGridnD.cpp
-        lib/PointSource.cpp
-        lib/DoubleImageRenderer.cpp
-        lib/ImageRenderer.cpp
-        lib/ImageRenderer3D.cpp
-        lib/PointSetSubspace.cpp
-        lib/PointSetTo3D.cpp
-        lib/FeatureFlowField4D.cpp)
+        lib/Slider/Slider.cpp
+        lib/Filter/LIC.cpp
+        lib/Renderer/ImageRenderer.cpp
+        lib/Source/VectorFieldSource.cpp
+        lib/Filter/Subspace.cpp
+        lib/Filter/CriticalPointsSet.cpp
+        lib/Filter/DrawPointsOnImage.cpp
+        lib/Filter/PointSetToScalarField.cpp
+        lib/Filter/VectorFieldToImageData.cpp
+        lib/Filter/PointSource.cpp
+        lib/DataType/VectorField.cpp
+        lib/DataType/SpaceVector.cpp
+        lib/DataType/SpaceVector.cpp
+        lib/DataType/CriticalPoint.cpp
+        lib/DataType/BifurcationPoint.cpp
+        lib/DataType/Point.cpp
+        lib/DataType/FeatureFlowField.cpp
+        lib/DataType/ProcessObject.cpp
+        lib/Renderer/DoubleImageRenderer.cpp
+        lib/Renderer/ImageRenderer.cpp
+        lib/Renderer/ImageRenderer3D.cpp
+        lib/Filter/PointSetSubspace.cpp
+        lib/Filter/PointSetTo3D.cpp)
 
 target_compile_features(prototype_lib PUBLIC cxx_std_17)
 

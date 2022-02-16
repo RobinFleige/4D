@@ -5,21 +5,21 @@
 #include <vtkPolyData.h>
 #include <vtkSliderRepresentation3D.h>
 #include <vtkSliderWidget.h>
-#include <DoubleImageRenderer.h>
-#include <ImageRenderer3D.h>
-#include <PointSetTo3D.h>
-#include "Source4D.h"
-#include "LIC.h"
-#include "ImageRenderer.h"
-#include "Slider.h"
-#include "Subspace2D.h"
-#include "Subspace1D.h"
+#include <Renderer/DoubleImageRenderer.h>
+#include <Renderer/ImageRenderer3D.h>
+#include <Filter/PointSetTo3D.h>
+#include <Filter/VectorFieldToImageData.h>
+#include "Source/VectorFieldSource.h"
+#include "Filter/LIC.h"
+#include "Renderer/ImageRenderer.h"
+#include "Source/Slider/Slider.h"
+#include "Filter/Subspace.h"
 #include "CriticalPointsSubdivide.h"
-#include "CriticalPointsSet.h"
-#include "PointSetToScalarField.h"
-#include "PointSource.h"
-#include "DrawPointsOnImage.h"
-#include "PointSetSubspace.h"
+#include "Filter/CriticalPointsSet.h"
+#include "Filter/PointSetToScalarField.h"
+#include "Filter/PointSource.h"
+#include "Filter/DrawPointsOnImage.h"
+#include "Filter/PointSetSubspace.h"
 
 void Write(vtkSmartPointer<vtkImageData> image, const std::string& filename) {
     vtkNew <vtkXMLImageDataWriter> writer;
@@ -38,42 +38,36 @@ void Write(vtkSmartPointer<vtkPoints> points, const std::string filename) {
     writer->SetInputData(polydata);
     writer->Write();
 }
-int show_lic() {
-    int width = 100;
-    double min = -2;
-    double max = 2;
+int show_lic(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace2D();
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
+    auto* subspace = new Subspace();
+    auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
     auto* critical_points = new CriticalPointsSubdivide();
     auto* renderer = new ImageRenderer();
 
+    int s = widths[0] / 2;
+    int t = widths[1] / 2;
+
     source->Update();
-    Write(source->GetOutput()[0][0], "Source");
     subspace->SetInputConnection(source);
-    subspace->SetSValue(width/2);
-    subspace->SetTValue(width/2);
+    subspace->SetParameters({s,t});
     subspace->Update();
-    Write(subspace->GetOutput(),"Subspace");
-    lic->SetInputConnection(subspace);
+    image->SetInputConnection(subspace);
+    image->Update();
+    lic->SetInputConnection(image);
     lic->Update();
     Write(lic->GetOutput(),"LIC");
-    critical_points->SetInputConnection(subspace);
-    critical_points->Update();
-    Write(critical_points->GetOutput(),"CriticalPoints");
     renderer->SetInputConnection(lic);
     renderer->Update();
     renderer->GetInteractor()->Start();
     return EXIT_SUCCESS;
 }
 
-int show_parameter_field(){
-    int width = 20;
-    double min = -2;
-    double max = 2;
+int show_parameter_field(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    auto* source = new Source4D(width,min,max);
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
     auto* point_set = new CriticalPointsSet();
     auto* scalar_field = new PointSetToScalarField();
     auto* renderer = new ImageRenderer();
@@ -89,23 +83,25 @@ int show_parameter_field(){
     return EXIT_SUCCESS;
 }
 
-int show_both(){
-    int width = 20;
-    double min = -2;
-    double max = 2;
+int show_both(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace2D();
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
+    auto* subspace = new Subspace();
+    auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
     auto* renderer = new ImageRenderer();
     auto* point_set = new CriticalPointsSet();
     auto* scalar_field = new PointSetToScalarField();
     auto* renderer2 = new ImageRenderer();
 
+    int s = widths[0] / 2;
+    int t = widths[1] / 2;
+
     subspace->SetInputConnection(source);
-    subspace->SetSValue(width/2);
-    subspace->SetTValue(width/2);
-    lic->SetInputConnection(subspace);
+    subspace->SetParameters({s,t});
+    image->SetInputConnection(subspace);
+    image->Update();
+    lic->SetInputConnection(image);
     renderer->SetInputConnection(lic);
 
     point_set->SetInputConnection(source);
@@ -119,16 +115,14 @@ int show_both(){
     return EXIT_SUCCESS;
 }
 
-int with_slider() {
-    int width = 100;
-    double min = -2;
-    double max = 2;
+int with_slider(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    double s = 1. * width / 2;
-    double t = 1. * width / 2;
+    int s = widths[0] / 2;
+    int t = widths[1] / 2;
 
-    auto *source = new Source4D(width, min, max);
-    auto *subspace = new Subspace2D();
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
+    auto *subspace = new Subspace();
+    auto* image = new VectorFieldToImageData();
     auto *lic = new LIC();
     auto *renderer = new ImageRenderer();
     auto *point_set = new CriticalPointsSet();
@@ -145,7 +139,7 @@ int with_slider() {
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(width - 1);
+    sliderRep1->SetMaximumValue(widths[3] - 1);
     sliderRep1->SetValue(s);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
@@ -161,7 +155,7 @@ int with_slider() {
 
     vtkNew<vtkSliderRepresentation3D> sliderRep2;
     sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(width - 1);
+    sliderRep2->SetMaximumValue(widths[4] - 1);
     sliderRep2->SetValue(t);
     sliderRep2->SetTitleText("T");
     sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
@@ -177,9 +171,9 @@ int with_slider() {
 
 
     subspace->SetInputConnection(source);
-    subspace->SetSValue(s);
-    subspace->SetTValue(t);
-    lic->SetInputConnection(subspace);
+    subspace->SetParameters({s,t});
+    image->SetInputConnection(subspace);
+    lic->SetInputConnection(image);
     renderer->SetInputConnection(lic);
 
     point_set->SetInputConnection(source);
@@ -193,16 +187,14 @@ int with_slider() {
     return EXIT_SUCCESS;
 }
 
-int with_slider_and_points(){
-    int width = 100;
-    double min = -2;
-    double max = 2;
+int with_slider_and_points(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    double s = 1.*width/2;
-    double t = 1.*width/2;
+    int s = widths[0] / 2;
+    int t = widths[1] / 2;
 
-    auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace2D();
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
+    auto* subspace = new Subspace();
+    auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage();
@@ -230,7 +222,7 @@ int with_slider_and_points(){
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(width-1);
+    sliderRep1->SetMaximumValue(widths[3]-1);
     sliderRep1->SetValue(s);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
@@ -246,7 +238,7 @@ int with_slider_and_points(){
 
     vtkNew<vtkSliderRepresentation3D> sliderRep2;
     sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(width-1);
+    sliderRep2->SetMaximumValue(widths[4]-1);
     sliderRep2->SetValue(t);
     sliderRep2->SetTitleText("T");
     sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
@@ -262,9 +254,10 @@ int with_slider_and_points(){
 
 
     subspace->SetInputConnection(source);
-    subspace->SetSValue(s);
-    subspace->SetTValue(t);
-    lic->SetInputConnection(subspace);
+    subspace->SetParameters({s,t});
+    image->SetInputConnection(subspace);
+    image->Update();
+    lic->SetInputConnection(image);
     point_subspace->SetSValue(s);
     point_subspace->SetTValue(t);
     point_subspace->SetInputConnection(point_set);
@@ -287,16 +280,14 @@ int with_slider_and_points(){
     return EXIT_SUCCESS;
 }
 
-int two_in_one_image(){
-    int width = 100;
-    double min = -2;
-    double max = 2;
+int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    double s = 1.*width/2;
-    double t = 1.*width/2;
+    int s = widths[0] / 2;
+    int t = widths[1] / 2;
 
-    auto* source = new Source4D(width,min,max);
-    auto* subspace = new Subspace2D();
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
+    auto* subspace = new Subspace();
+    auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage();
@@ -321,7 +312,7 @@ int two_in_one_image(){
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(width-1);
+    sliderRep1->SetMaximumValue(widths[3]-1);
     sliderRep1->SetValue(s);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
@@ -337,7 +328,7 @@ int two_in_one_image(){
 
     vtkNew<vtkSliderRepresentation3D> sliderRep2;
     sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(width-1);
+    sliderRep2->SetMaximumValue(widths[4]-1);
     sliderRep2->SetValue(t);
     sliderRep2->SetTitleText("T");
     sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
@@ -353,9 +344,10 @@ int two_in_one_image(){
 
 
     subspace->SetInputConnection(source);
-    subspace->SetSValue(s);
-    subspace->SetTValue(t);
-    lic->SetInputConnection(subspace);
+    subspace->SetParameters({s,t});
+    image->SetInputConnection(subspace);
+    image->Update();
+    lic->SetInputConnection(image);
     point_subspace->SetSValue(s);
     point_subspace->SetTValue(t);
     point_subspace->SetInputConnection(point_set);
@@ -378,28 +370,25 @@ int two_in_one_image(){
     return EXIT_SUCCESS;
 }
 
-int example_3d(){
-    int width = 100;
-    double min = -2;
-    double max = 2;
+int example_3d(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
 
-    double s = 1.*width/2;
+    int s = widths[0] / 2;
 
-    auto* source = new Source4D(width,min,max);
+    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
     auto* point_set = new CriticalPointsSet();
     auto* image_3d = new PointSetTo3D();
-    auto* subspace_1d = new Subspace1D();
+    auto* subspace = new Subspace();
     auto* renderer = new ImageRenderer3D();
 
 
     vtkNew<Slider> slider1;
-    slider1->Attach(subspace_1d,0);
+    slider1->Attach(subspace,0);
     slider1->Attach(renderer,0);
 
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(width-1);
+    sliderRep1->SetMaximumValue(widths[3]-1);
     sliderRep1->SetValue(s);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
@@ -414,51 +403,65 @@ int example_3d(){
     sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
 
 
-    point_set->SetInputConnection(source);
-    image_3d->SetInputConnection(point_set);
-    image_3d->SetParameterID(0);
-    subspace_1d->SetInputConnection(image_3d);
-    subspace_1d->SetSValue(s);
-    renderer->SetInputConnection(subspace_1d);
+    //point_set->SetInputConnection(source);
+    //image_3d->SetInputConnection(point_set);
+    //image_3d->SetParameterID(0);
+    //subspace->SetInputConnection(image_3d);
+    //subspace->SetParameters({s});
+    //renderer->SetInputConnection(subspace);
 
-    renderer->Update();
-    std::cout<<"Finished"<<std::endl;
-    renderer->GetInteractor()->Start();
+    //renderer->Update();
+    //std::cout<<"Finished"<<std::endl;
+    //renderer->GetInteractor()->Start();
 
     return EXIT_SUCCESS;
 }
 
 int main(int argc, char* argv[])
 {
-    return two_in_one_image();
+    std::vector<int> widths = {64,64,128,128};
+    std::vector<double> mins = {-1,-1,-1,-1};
+    std::vector<double> maxs = {1,1,1,1};
+    return two_in_one_image(widths,mins,maxs);
 }
 
 
-//TODO Improve CriticalPoint Calculation
-//TODO FFF Paper erneut lesen und formeln aufschreiben
-//TODO FFF (3D Vektorfeld für jede Parameterrichtung)
-//TODO Ableitungsfilter + Kreuzprodukt
-//TODO ValueFilter (FFF_3 = 0)
-//TODO Bifurcation Points
-//TODO Bifurcation Line/Bifurcation FFF
-    //Bei Subdivision den genauen Punkt berechnen
-    //FFF für den genauen Punkt berechnen
-    //Für Punkt an dem gelandet wird wieder Subdivision berechnen um leichte Fehler auszugleichen
-    //Wiederholen und kritische Punkte damit zu Polyline machen
-    //Bei zwei Parametern -> 100 Polylines in jede Parameterdimension
-    //Pro Parameterdimension bei drittem Wert von FFF nach Vorzeichenwechsel suchen
-    //Bei angrenzenden Parameterwerten nach Bifurcation suchen und die zur Polyline zusammenfügen
-    // Kritische Punkte-Polyplanes und Bifurcation-Polylines visualisieren
+//TODO CriticalPointSet
+//TODO Filter zum Erstellen der Linien zwischen den kritischen Punkten erstellen (Vielleicht über FFF, dann FFF anwenden und mögliche Abweichungen verhindern)
+//TODO Filter zum Berechnen von FFF auf kritischen Punkten von ProcessObject erstellen (Ableitung in x und y Richtung des x und y Wertes (oder höherer Raumdimensionen) pro Parameterdimension)
+//TODO Filter zum Berechnen der Bifurkationen erstellen (multilineare Interpolation der FFF der Nachbarn des kritischen Punktes)
+//TODO Filter zum Berechnen der Linien der Bifurkationen erstellen
+//TODO Filter um Teile aus ProcessObject wieder rauszuziehen (kritische Punkte, Bifurkationen, Vektorfeld?)
+//TODO Parameter-Subspace der (kritischen Punkte und ) Bifurkationspunkte
+//TODO Main ans laufen bringen (Slider Namen switchen,++)
+//TODO Axen in Renderer packen (https://kitware.github.io/vtk-examples/site/Cxx/GeometricObjects/Axes/))
+//TODO 3D Ansicht der Linien erstellen (teiltransparente Flächen sollten dann recht einfach werden)
 
-//TODO 3D Point Set Visualization
-//TODO Add Axes -> https://kitware.github.io/vtk-examples/site/Cxx/GeometricObjects/Axes/
+//https://www.lernhelfer.de/schuelerlexikon/mathematik-abitur/artikel/zwei-und-dreireihige-determinanten
+//https://de.serlo.org/mathe/1761/vektor-oder-kreuzprodukt
+
 //TODO Render Iso-Surface with increasing Transparency
-
-
-
+//TODO Optimization: Start with reduced resolution and use subdivision to ignore big parts of the vectorfield
+//TODO Move classes away from vtk one by one
 //TODO Store Calculations for faster Example
 //TODO PointSetSubSpace und Subspace kombinieren (unabhängig vom Type machen)
-//TODO Change Image To StructuredGrid
-//TODO Implement StructuredGridnD
-//TODO Implement StructuredGridToImage
-//TODO Implement nDImageToVtkImageData
+
+
+
+//1. xd*xd+td; -> vertical zweigeteilt
+//2. xd*xd+td+sd -> schräg zweigeteilt
+//3. xd*xd+td*td+sd*sd-1 -> durch Kreis geteilt
+//4. xd*xd+td -> 2 bifurcationen (linien liegen aufeinander)
+//5. (xd*xd+td)*(xd*xd+sd) -> 2 kreuzende Bifurcation Lines (Mit fragmenten im weißen Bereich)
+//6. (xd-td)*(xd+td)*(xd-1-sd)*(xd-1+sd) -> seltsame Box
+//7. (xd*xd+td)*(yd-1)-(xd*xd+sd)*(yd+1) -> 2 kreuzende Bifurcation Lines (kritische Punkte werden nicht korrekt berechnet)
+//8. (xd*xd+td-1)*(yd-1)+(xd*xd+td+1)*(yd+1) -> doppelt parallel vertical zweigeteilt (kritische Punkte werden nicht korrekt berechnet)
+
+//1. -yd+sd
+//2. -yd
+//3. -yd
+//4. -yd*yd+sd
+//5. -yd
+//6. -yd
+//7. (yd+1)*(yd-1)
+//8. (yd+1)*(yd-1)
