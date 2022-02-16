@@ -41,7 +41,7 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/DrawPointsOnImage.cpp
         lib/Filter/PointSetToScalarField.cpp
         lib/Filter/VectorFieldToImageData.cpp
-        lib/Filter/PointSource.cpp
+        lib/Source/PointSource.cpp
         lib/DataType/VectorField.cpp
         lib/DataType/SpaceVector.cpp
         lib/DataType/SpaceVector.cpp

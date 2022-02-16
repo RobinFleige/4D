@@ -12,12 +12,11 @@
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
 #include "Renderer/ImageRenderer.h"
-#include "Source/Slider/Slider.h"
+#include "./Slider/Slider.h"
 #include "Filter/Subspace.h"
-#include "CriticalPointsSubdivide.h"
 #include "Filter/CriticalPointsSet.h"
 #include "Filter/PointSetToScalarField.h"
-#include "Filter/PointSource.h"
+#include "Source/PointSource.h"
 #include "Filter/DrawPointsOnImage.h"
 #include "Filter/PointSetSubspace.h"
 
@@ -44,7 +43,7 @@ int show_lic(std::vector<int> widths, std::vector<double> mins, std::vector<doub
     auto* subspace = new Subspace();
     auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
-    auto* critical_points = new CriticalPointsSubdivide();
+    auto* critical_points = new CriticalPointsSet();
     auto* renderer = new ImageRenderer();
 
     int s = widths[0] / 2;
@@ -342,20 +341,25 @@ int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vec
     sliderWidget2->EnabledOn();
     sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
 
-
+    source->Update();
     subspace->SetInputConnection(source);
     subspace->SetParameters({s,t});
+    subspace->Update();
     image->SetInputConnection(subspace);
     image->Update();
     lic->SetInputConnection(image);
+    lic->Update();
     point_subspace->SetSValue(s);
     point_subspace->SetTValue(t);
+    point_set->SetInputConnection(source);
+    point_set->Update();
     point_subspace->SetInputConnection(point_set);
+    point_subspace->Update();
     draw_points1->SetInputConnection(lic);
     draw_points1->SetSecondaryInputConnection(point_subspace);
+    draw_points1->Update();
     renderer->SetInputConnection(draw_points1);
 
-    point_set->SetInputConnection(source);
     scalar_field->SetInputConnection(point_set);
     point_source->SetX(s);
     point_source->SetY(t);
@@ -419,14 +423,13 @@ int example_3d(std::vector<int> widths, std::vector<double> mins, std::vector<do
 
 int main(int argc, char* argv[])
 {
-    std::vector<int> widths = {64,64,128,128};
+    std::vector<int> widths = {10,10,20,20};
     std::vector<double> mins = {-1,-1,-1,-1};
     std::vector<double> maxs = {1,1,1,1};
     return two_in_one_image(widths,mins,maxs);
 }
 
-
-//TODO CriticalPointSet
+//TODO Calculate Interpolated in Vectorfield
 //TODO Filter zum Erstellen der Linien zwischen den kritischen Punkten erstellen (Vielleicht über FFF, dann FFF anwenden und mögliche Abweichungen verhindern)
 //TODO Filter zum Berechnen von FFF auf kritischen Punkten von ProcessObject erstellen (Ableitung in x und y Richtung des x und y Wertes (oder höherer Raumdimensionen) pro Parameterdimension)
 //TODO Filter zum Berechnen der Bifurkationen erstellen (multilineare Interpolation der FFF der Nachbarn des kritischen Punktes)
@@ -436,6 +439,7 @@ int main(int argc, char* argv[])
 //TODO Main ans laufen bringen (Slider Namen switchen,++)
 //TODO Axen in Renderer packen (https://kitware.github.io/vtk-examples/site/Cxx/GeometricObjects/Axes/))
 //TODO 3D Ansicht der Linien erstellen (teiltransparente Flächen sollten dann recht einfach werden)
+//TODO CriticalPointSet Calculate Subdivide for higher dimensions
 
 //https://www.lernhelfer.de/schuelerlexikon/mathematik-abitur/artikel/zwei-und-dreireihige-determinanten
 //https://de.serlo.org/mathe/1761/vektor-oder-kreuzprodukt

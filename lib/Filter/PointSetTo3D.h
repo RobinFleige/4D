@@ -3,7 +3,7 @@
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
-#include "../../PipelineDefs/Filter.h"
+#include "../PipelineDefs/Filter.h"
 
 class PointSetTo3D : public Filter<std::vector<std::vector<vtkSmartPointer<vtkPoints>>>,std::vector<vtkSmartPointer<vtkImageData>>> {
 private:

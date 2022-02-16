@@ -3,9 +3,10 @@
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
-#include "../../PipelineDefs/Filter.h"
+#include "../PipelineDefs/Filter.h"
+#include "DataType/ProcessObject.h"
 
-class PointSetToScalarField : public Filter<std::vector<std::vector<vtkSmartPointer<vtkPoints>>>,vtkSmartPointer<vtkImageData>> {
+class PointSetToScalarField : public Filter<ProcessObject*,vtkSmartPointer<vtkImageData>> {
 private:
     void InternalUpdate() override;
 };

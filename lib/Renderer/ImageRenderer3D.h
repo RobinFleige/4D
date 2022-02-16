@@ -10,8 +10,8 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkFlyingEdges3D.h>
-#include "../../PipelineDefs/Renderer.h"
-#include "Source/Slider/SliderObserver.h"
+#include "../PipelineDefs/Renderer.h"
+#include "../Slider/SliderObserver.h"
 
 class ImageRenderer3D : public Renderer<vtkSmartPointer<vtkImageData>>, public SliderObserver {
 private:

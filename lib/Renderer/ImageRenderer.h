@@ -8,8 +8,8 @@
 #include <vtkRenderer.h>
 #include <vtkInteractorStyleImage.h>
 #include <vtkRenderWindowInteractor.h>
-#include "../../PipelineDefs/Renderer.h"
-#include "Source/Slider/SliderObserver.h"
+#include "../PipelineDefs/Renderer.h"
+#include "../Slider/SliderObserver.h"
 
 class ImageRenderer : public Renderer<vtkSmartPointer<vtkImageData>>, public SliderObserver {
 private:

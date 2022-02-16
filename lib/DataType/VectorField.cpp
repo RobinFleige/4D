@@ -15,9 +15,8 @@ int VectorField::IDFromIDs(std::vector<int> ids){
 std::vector<int> VectorField::IDsFromID(int id){
     std::vector<int> ids;
     int reduced_id = id;
-    ids.reserve(lengths_.size());
     for(int i = 0; i < lengths_.size(); i++){
-        ids[i] = reduced_id%lengths_[i];
+        ids.push_back(reduced_id%lengths_[i]);
         reduced_id = reduced_id/lengths_[i];
     }
     return ids;
@@ -60,7 +59,7 @@ std::vector<SpaceVector *> VectorField::GetData() {
 
 std::vector<double> VectorField::GetInterpolated(std::vector<double> ids) {
     for(int i = 0; i < ids.size(); i++){
-
+        //TODO
     }
     return std::vector<double>();
 }

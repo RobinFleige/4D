@@ -5,9 +5,10 @@
 #include <vtkSmartPointer.h>
 #include <vector>
 #include <vtkPoints.h>
-#include "../../PipelineDefs/DoubleFilter.h"
+#include "../PipelineDefs/DoubleFilter.h"
+#include "DataType/Point.h"
 
-class DrawPointsOnImage : public DoubleFilter<vtkSmartPointer<vtkImageData>,vtkSmartPointer<vtkPoints>,vtkSmartPointer<vtkImageData>>{
+class DrawPointsOnImage : public DoubleFilter<vtkSmartPointer<vtkImageData>,std::vector<Point*>,vtkSmartPointer<vtkImageData>>{
 private:
     void InternalUpdate() override;
 public:

@@ -1,5 +1,9 @@
-//
-// Created by robin on 11.02.22.
-//
-
 #include "Point.h"
+
+std::vector<double> Point::GetCoordinates() {
+    return coordinates_;
+}
+
+Point::Point(std::vector<double> coordinates) {
+    coordinates_ = coordinates;
+}

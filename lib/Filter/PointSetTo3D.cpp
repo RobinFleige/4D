@@ -1,6 +1,6 @@
 #include <vector>
 #include "Filter/CriticalPointsSet.h"
-#include "Subspace2D.h"
+#include "Subspace.h"
 #include "PointSetTo3D.h"
 
 

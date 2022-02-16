@@ -19,13 +19,12 @@ double VectorFieldSource::Function(std::vector<int> ids, int space_dimension){
 }
 
 void VectorFieldSource::InternalUpdate(){
-    output_ = new VectorField(parameter_dimensions_+space_dimensions_, widths_);
+    output_ = new VectorField(parameter_dimensions_,space_dimensions_, widths_);
     int amount = widths_[0];
     for(int i = 1; i < parameter_dimensions_+space_dimensions_; i++){
         amount = amount * widths_[i];
     }
     std::vector<SpaceVector*> data;
-    data.reserve(amount);
 
     std::vector<int> ids;
     for(int i = 0; i < amount; i++){
@@ -34,7 +33,7 @@ void VectorFieldSource::InternalUpdate(){
         for(int j = 0; j < space_dimensions_; j++){
             vector.push_back(Function(ids,j));
         }
-        data[i] = new SpaceVector(vector);
+        data.push_back(new SpaceVector(vector));
     }
     output_->SetData(data);
 }
@@ -50,7 +49,7 @@ VectorFieldSource::VectorFieldSource(int parameter_dimensions, int space_dimensi
     mins_ = mins;
     maxs_ = maxs;
     for(int i = 0; i < parameter_dimensions+space_dimensions; i++){
-        steps_[i] = (maxs_[i]-mins_[i])/widths_[i];
+        steps_.push_back((maxs_[i]-mins_[i])/widths_[i]);
     }
     Invalidate();
 }

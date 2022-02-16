@@ -1,10 +1,11 @@
 #pragma once
 #include <vtkPoints.h>
 #include <vtkSmartPointer.h>
-#include "../../PipelineDefs/Source.h"
-#include "Source/Slider/SliderObserver.h"
+#include "PipelineDefs/Source.h"
+#include "Slider/SliderObserver.h"
+#include "DataType/Point.h"
 
-class PointSource : public Source<vtkSmartPointer<vtkPoints>>, public SliderObserver {
+class PointSource : public Source<std::vector<Point*>>, public SliderObserver {
 private:
     int x_;
     int y_;

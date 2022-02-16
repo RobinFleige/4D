@@ -11,8 +11,7 @@ void PointSource::SetY(int y) {
 }
 
 void PointSource::InternalUpdate() {
-    output_ = vtkSmartPointer<vtkPoints>::New();
-    output_->InsertNextPoint(x_,y_,0);
+    output_.push_back(new Point({(double)x_,(double)y_,0}));
 }
 
 PointSource::PointSource() {

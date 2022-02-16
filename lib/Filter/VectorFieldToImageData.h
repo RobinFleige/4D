@@ -3,7 +3,7 @@
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include "../DataType/VectorField.h"
-#include "../../PipelineDefs/Filter.h"
+#include "../PipelineDefs/Filter.h"
 
 
 class VectorFieldToImageData : public Filter<VectorField*, vtkSmartPointer<vtkImageData>>{

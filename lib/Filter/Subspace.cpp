@@ -20,7 +20,7 @@ void Subspace::InternalUpdate() {
     auto first = input_->GetData().begin()+begin_id;
     auto last = input_->GetData().begin()+end_id;
     std::vector<SpaceVector*> new_data(first,last);
-    output_ = new VectorField(input_->GetDimensions()-parameters_.size(),new_lengths);
+    output_ = new VectorField(input_->GetParameterDimensions()-parameters_.size(),input_->GetSpaceDimensions(),new_lengths);
     output_->SetData(new_data);
 
 }

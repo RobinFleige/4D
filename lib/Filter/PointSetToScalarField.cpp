@@ -3,14 +3,16 @@
 void PointSetToScalarField::InternalUpdate() {
     input_ = input_connection_->GetOutput();
     output_ = vtkSmartPointer<vtkImageData>::New();
-    output_->SetDimensions(input_.size(),input_[0].size(),1);
+    std::vector<int> dimensions;
+    for(int i = 0; i < input_->GetVectorField()->GetParameterDimensions(); i++){
+        dimensions.push_back(input_->GetVectorField()->GetLengths()[i]);
+    }
+    output_->SetDimensions(dimensions[0],dimensions[1],1);
     output_->AllocateScalars(VTK_FLOAT, 3);
-    for(int x = 0; x < input_.size(); x++) {
-        for (int y = 0; y < input_[0].size(); y++) {
-            auto* pixel = static_cast<float*>(output_->GetScalarPointer(x,y,0));
-            pixel[0] = input_[x][y]->GetNumberOfPoints() * 64;
-            pixel[1] = input_[x][y]->GetNumberOfPoints() * 64;
-            pixel[2] = input_[x][y]->GetNumberOfPoints() * 64;
-        }
+    for(int i = 0; i < input_->GetCriticalPoints().size(); i++) {
+        auto* pixel = static_cast<float*>(output_->GetScalarPointer(input_->GetCriticalPoints()[i]->GetCoordinates()[0],input_->GetCriticalPoints()[i]->GetCoordinates()[1],0));
+        pixel[0] = pixel[0] + 64;
+        pixel[1] = pixel[1] + 64;
+        pixel[2] = pixel[2] + 64;
     }
 }

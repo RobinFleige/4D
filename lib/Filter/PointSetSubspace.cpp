@@ -10,8 +10,11 @@ void PointSetSubspace::SetTValue(int t){
 }
 
 void PointSetSubspace::InternalUpdate() {
-    input_ = input_connection_->GetOutput();
-    output_ = input_[s_][t_];
+    for(int i = 0; i < input_->GetCriticalPoints().size(); i++){
+        if(input_->GetCriticalPoints()[i]->GetCoordinates()[0] >= s_ && input_->GetCriticalPoints()[i]->GetCoordinates()[0] < s_ && input_->GetCriticalPoints()[i]->GetCoordinates()[1] >= t_ && input_->GetCriticalPoints()[i]->GetCoordinates()[1] < t_+1){
+            output_.push_back(input_->GetCriticalPoints()[i]);
+        }
+    }
 }
 
 void PointSetSubspace::OnChange(double value, int id) {

@@ -2,8 +2,8 @@
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include <vector>
-#include "../../PipelineDefs/Filter.h"
-#include "Source/Slider/SliderObserver.h"
+#include "../PipelineDefs/Filter.h"
+#include "../Slider/SliderObserver.h"
 #include "../DataType/ProcessObject.h"
 
 class Subspace : public Filter<VectorField*,VectorField*>, public SliderObserver{
