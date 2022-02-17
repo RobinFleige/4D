@@ -1,3 +1,4 @@
+#include <valarray>
 #include "VectorField.h"
 
 int VectorField::IDFromIDs(std::vector<int> ids){
@@ -58,8 +59,36 @@ std::vector<SpaceVector *> VectorField::GetData() {
 }
 
 std::vector<double> VectorField::GetInterpolated(std::vector<double> ids) {
-    for(int i = 0; i < ids.size(); i++){
-        //TODO
+    std::vector<std::vector<int>> ids_set;
+    for(int j = 0; j < pow(2,ids.size()); j++){
+        std::vector<int> next_ids;
+        for(int k = 0; k < ids.size(); k++){
+            int next_id = floor(ids[k]);
+            if(j%((int)pow(2,k+1)) >= pow(2,k)){
+                next_id = next_id+1;
+            }
+            next_ids.push_back(next_id);
+        }
+        ids_set.push_back(next_ids);
     }
-    return std::vector<double>();
+
+    std::vector<double> values;
+    for(int i = 0; i < GetParameterDimensions(); i++){
+        values.push_back(0);
+    }
+    for(int i = 0; i < ids_set.size(); i++){
+        std::vector<double> value = *GetData()[IDFromIDs(ids_set[i])]->GetValues();
+        double multiplicator = 1;
+        for(int j = 0; j < ids_set[i].size(); j++){
+            if(ids_set[i][j] > ids[j]){
+                multiplicator = multiplicator * (1-(ids_set[i][j]-ids[j]));
+            }else{
+                multiplicator = multiplicator * (1-(ids[j]-ids_set[i][j]));
+            }
+        }
+        for(int j = 0; j < GetParameterDimensions(); j++){
+            values[j] = values[j]+value[j]*multiplicator;
+        }
+    }
+    return values;
 }

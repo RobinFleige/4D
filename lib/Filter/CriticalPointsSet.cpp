@@ -18,8 +18,11 @@ void CriticalPointsSet::InternalUpdate() {
             std::vector<std::vector<double>> ids_set;
             for(int j = 0; j < pow(2,input_->GetSpaceDimensions()); j++){
                 std::vector<double> next_ids;
+                for(int k = 0; k < input_->GetParameterDimensions(); k++){
+                    next_ids.push_back(ids[k]);
+                }
                 for(int k = 0; k < input_->GetSpaceDimensions(); k++){
-                    double next_id = ids[k];
+                    double next_id = ids[k+input_->GetParameterDimensions()];
                     //TODO Calculate the next_ids (Modulo auf pow(2,k) >= pow(2,k-1) -> 1)
                     if(j%((int)pow(2,k+1)) >= pow(2,k)){
                         next_id = next_id+1;
@@ -45,7 +48,7 @@ std::vector<CriticalPoint*> CriticalPointsSet::Subdivide(int min_iterations, int
         }
         for(int i = 0; i < ids_set.size(); i++){
             for(int j = 0; j < input_->GetSpaceDimensions(); j++){
-                if(input_->GetInterpolated(ids_set[i])[j] > 0){
+                if(input_->GetInterpolated(ids_set[i])[j+input_->GetParameterDimensions()] > 0){
                     positive_per_dimension[j]++;
                 }
             }
@@ -62,21 +65,31 @@ std::vector<CriticalPoint*> CriticalPointsSet::Subdivide(int min_iterations, int
         std::vector<double> mid;
         mid.push_back((ids_set[0][0]+ids_set[1][0]+ids_set[2][0]+ids_set[3][0])/4);
         mid.push_back((ids_set[0][1]+ids_set[1][1]+ids_set[2][1]+ids_set[3][1])/4);
+        mid.push_back((ids_set[0][2]+ids_set[1][2]+ids_set[2][2]+ids_set[3][2])/4);
+        mid.push_back((ids_set[0][3]+ids_set[1][3]+ids_set[2][3]+ids_set[3][3])/4);
         if(max_iterations == 0){
             return {new CriticalPoint(mid)};
         }else{
             std::vector<double> top;
             top.push_back((ids_set[0][0]+ids_set[1][0])/2);
             top.push_back((ids_set[0][1]+ids_set[1][1])/2);
+            top.push_back((ids_set[0][2]+ids_set[1][2])/2);
+            top.push_back((ids_set[0][3]+ids_set[1][3])/2);
             std::vector<double> right;
             right.push_back((ids_set[3][0]+ids_set[1][0])/2);
             right.push_back((ids_set[3][1]+ids_set[1][1])/2);
+            right.push_back((ids_set[3][2]+ids_set[1][2])/2);
+            right.push_back((ids_set[3][3]+ids_set[1][3])/2);
             std::vector<double> bot;
             bot.push_back((ids_set[3][0]+ids_set[2][0])/2);
             bot.push_back((ids_set[3][1]+ids_set[2][1])/2);
+            bot.push_back((ids_set[3][2]+ids_set[2][2])/2);
+            bot.push_back((ids_set[3][3]+ids_set[2][3])/2);
             std::vector<double> left;
             left.push_back((ids_set[0][0]+ids_set[2][0])/2);
             left.push_back((ids_set[0][1]+ids_set[2][1])/2);
+            left.push_back((ids_set[0][2]+ids_set[2][2])/2);
+            left.push_back((ids_set[0][3]+ids_set[2][3])/2);
             std::vector<std::vector<std::vector<double>>> sub_pixel = {{ids_set[0],top,left,mid},{top,ids_set[1],mid,right},{left,mid,ids_set[2],bot},{mid,right,bot,ids_set[3]}};
 
 
