@@ -5,10 +5,12 @@
 #include <vtkPoints.h>
 #include "../PipelineDefs/Filter.h"
 
-class PointSetTo3D : public Filter<std::vector<std::vector<vtkSmartPointer<vtkPoints>>>,std::vector<vtkSmartPointer<vtkImageData>>> {
+class PointSetTo3D : public Filter<std::vector<std::vector<int>>,std::vector<vtkSmartPointer<vtkImageData>>> {
 private:
     int id_;
-public:
+    int size_;
     void InternalUpdate() override;
+public:
     void SetParameterID(int id);
+    PointSetTo3D(int size);
 };

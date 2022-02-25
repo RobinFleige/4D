@@ -6,31 +6,34 @@
 
 void PointSetTo3D::InternalUpdate() {
     output_.clear();
-    for(int i = 0; i < input_.size(); i++){
+    for(int i = 0; i < size_; i++){
         vtkSmartPointer<vtkImageData> image = vtkSmartPointer<vtkImageData>::New();
-        image->SetDimensions(input_.size(),input_.size(),input_.size());
-        image->AllocateScalars(VTK_FLOAT, 1);
+        image->SetDimensions(2*size_,2*size_,2*size_);
+        image->AllocateScalars(VTK_DOUBLE, 1);
         output_.push_back(image);
     }
 
-    for(int s = 0; s < input_.size(); s++){
-        for(int t = 0; t < input_[0].size(); t++){
-            double point[3];
-            for(int i = 0; i < input_[s][t]->GetNumberOfPoints(); i++){
-                input_[s][t]->GetPoint(i,point);
-                if(id_ == 0){
-                    auto* pixel = static_cast<float*>(output_[s]->GetScalarPointer(point[0],point[1],t));
-                    pixel[0] = 255;
-                }else{
-                    auto* pixel = static_cast<float*>(output_[t]->GetScalarPointer(point[0],point[1],s));
-                    pixel[0] = 255;
-                }
-            }
+    std::vector<int> value_ids;
+    for(int i = 0; i < input_[0].size(); i++){
+        if(i != id_){
+            value_ids.push_back(i);
         }
+    }
+
+    for(int i = 0; i < input_.size(); i++){
+        int image_id = input_[i][id_];
+        std::cout<<input_[i][value_ids[0]]<<" "<<input_[i][value_ids[1]]<<" "<<input_[i][value_ids[2]]<<std::endl;
+        auto* pixel = static_cast<double*>(output_[image_id]->GetScalarPointer(2*input_[i][value_ids[0]],2*input_[i][value_ids[1]],2*input_[i][value_ids[2]]));
+        pixel[0] = 255;
     }
 }
 
 void PointSetTo3D::SetParameterID(int id) {
     id_ = id;
+    Invalidate();
+}
+
+PointSetTo3D::PointSetTo3D(int size) {
+    size_ = size;
     Invalidate();
 }

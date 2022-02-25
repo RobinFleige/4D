@@ -2,12 +2,14 @@
 #include <vtkImageActor.h>
 #include <vtkImageMapper3D.h>
 #include <vtkSmartPointer.h>
+#include <vtkAxesActor.h>
 #include <vtkImageData.h>
 #include <vtkNamedColors.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkInteractorStyleImage.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkFlyingEdges3D.h>
 #include "../PipelineDefs/Renderer.h"

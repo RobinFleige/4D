@@ -23,12 +23,23 @@ ImageRenderer3D::ImageRenderer3D(){
     renderer_->AddActor(actor_);
     renderer_->SetBackground(colors_->GetColor3d("SteelBlue").GetData());
 
+
+    //vtkNew<vtkAxesActor> axes;
+    //axes->SetNormalizedShaftLength(80,80,80);
+    //axes->SetXAxisLabelText("S");
+    //axes->SetYAxisLabelText("T");
+    //axes->SetZAxisLabelText("X");
+    //axes->AxisLabelsOff();
+    //renderer_->AddActor(axes);
+
     window_->SetSize(1000, 1000);
     window_->AddRenderer(renderer_);
 
     interactor_->SetRenderWindow(window_);
-    vtkNew<vtkInteractorStyleImage> style;
+    vtkNew<vtkInteractorStyleTrackballCamera> style;
     interactor_->SetInteractorStyle(style);
+    //vtkNew<vtkInteractorStyleImage> style;
+    //interactor_->SetInteractorStyle(style);
     Invalidate();
 }
 
