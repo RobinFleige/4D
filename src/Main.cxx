@@ -1,297 +1,39 @@
 #include <vtkNew.h>
 #include <vtkImageData.h>
 #include <vtkXMLImageDataWriter.h>
-#include <vtkPolyDataWriter.h>
-#include <vtkPolyData.h>
 #include <vtkSliderRepresentation3D.h>
 #include <vtkSliderWidget.h>
 #include <Renderer/DoubleImageRenderer.h>
 #include <Renderer/ImageRenderer3D.h>
 #include <Filter/PointSetTo3D.h>
+#include <Filter/PointSetToScalarField.h>
 #include <Filter/VectorFieldToImageData.h>
+#include <Source/TestSource.h>
+#include <Filter/PointSetSubspace.h>
+#include <Filter/Subspace4D2D.h>
+#include <DataTypeFilter/GetPointsSet.h>
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
-#include "Renderer/ImageRenderer.h"
 #include "./Slider/Slider.h"
 #include "Filter/Subspace.h"
 #include "Filter/CriticalPointsSet.h"
-#include "Filter/PointSetToScalarField.h"
 #include "Source/PointSource.h"
 #include "Filter/DrawPointsOnImage.h"
-#include "Filter/PointSetSubspace.h"
 
-void Write(vtkSmartPointer<vtkImageData> image, const std::string& filename) {
-    vtkNew <vtkXMLImageDataWriter> writer;
-    writer->SetFileName(filename.c_str());
-    writer->SetCompressorTypeToNone();
-    writer->SetDataModeToAscii();
-    writer->SetInputData(image);
-    writer->Write();
-}
+int two_in_one_image(int size, int min, int max){
 
-void Write(vtkSmartPointer<vtkPoints> points, const std::string filename) {
-    vtkNew<vtkPolyData> polydata;
-    polydata->SetPoints(points);
-    vtkNew<vtkPolyDataWriter> writer;
-    writer->SetFileName(filename.c_str());
-    writer->SetInputData(polydata);
-    writer->Write();
-}
-int show_lic(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
+    int s = size / 2;
+    int t = size / 2;
 
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto* subspace = new Subspace();
+    auto* source = new VectorFieldSource(size,min,max);
+    auto* subspace = new Subspace4D2D();
     auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
+    auto* point_subspace = new PointSetSubspace();
+    auto* draw_points1 = new DrawPointsOnImage();
     auto* critical_points = new CriticalPointsSet();
-    auto* renderer = new ImageRenderer();
-
-    int s = widths[0] / 2;
-    int t = widths[1] / 2;
-
-    source->Update();
-    subspace->SetInputConnection(source);
-    subspace->SetParameters({s,t});
-    subspace->Update();
-    image->SetInputConnection(subspace);
-    image->Update();
-    lic->SetInputConnection(image);
-    lic->Update();
-    Write(lic->GetOutput(),"LIC");
-    renderer->SetInputConnection(lic);
-    renderer->Update();
-    renderer->GetInteractor()->Start();
-    return EXIT_SUCCESS;
-}
-
-int show_parameter_field(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
-
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto* point_set = new CriticalPointsSet();
-    auto* scalar_field = new PointSetToScalarField();
-    auto* renderer = new ImageRenderer();
-
-    point_set->SetInputConnection(source);
-    scalar_field->SetInputConnection(point_set);
-    renderer->SetInputConnection(scalar_field);
-    source->Update();
-    point_set->Update();
-    scalar_field->Update();
-    renderer->Update();
-
-    return EXIT_SUCCESS;
-}
-
-int show_both(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
-
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto* subspace = new Subspace();
-    auto* image = new VectorFieldToImageData();
-    auto* lic = new LIC();
-    auto* renderer = new ImageRenderer();
-    auto* point_set = new CriticalPointsSet();
-    auto* scalar_field = new PointSetToScalarField();
-    auto* renderer2 = new ImageRenderer();
-
-    int s = widths[0] / 2;
-    int t = widths[1] / 2;
-
-    subspace->SetInputConnection(source);
-    subspace->SetParameters({s,t});
-    image->SetInputConnection(subspace);
-    image->Update();
-    lic->SetInputConnection(image);
-    renderer->SetInputConnection(lic);
-
-    point_set->SetInputConnection(source);
-    scalar_field->SetInputConnection(point_set);
-    renderer2->SetInputConnection(scalar_field);
-
-    renderer->Update();
-    renderer2->Update();
-    renderer->GetInteractor()->Start();
-
-    return EXIT_SUCCESS;
-}
-
-int with_slider(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
-
-    int s = widths[0] / 2;
-    int t = widths[1] / 2;
-
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto *subspace = new Subspace();
-    auto* image = new VectorFieldToImageData();
-    auto *lic = new LIC();
-    auto *renderer = new ImageRenderer();
-    auto *point_set = new CriticalPointsSet();
-    auto *scalar_field = new PointSetToScalarField();
-    auto *renderer2 = new ImageRenderer();
-
-
-    vtkNew<Slider> slider1;
-    slider1->Attach(subspace, 0);
-    slider1->Attach(renderer, 0);
-    vtkNew<Slider> slider2;
-    slider2->Attach(subspace, 1);
-    slider2->Attach(renderer, 1);
-
-    vtkNew<vtkSliderRepresentation3D> sliderRep1;
-    sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(widths[3] - 1);
-    sliderRep1->SetValue(s);
-    sliderRep1->SetTitleText("S");
-    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
-    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
-    sliderRep1->SetSliderWidth(.2);
-    sliderRep1->SetLabelHeight(.1);
-    vtkNew<vtkSliderWidget> sliderWidget1;
-    sliderWidget1->SetInteractor(renderer->GetInteractor());
-    sliderWidget1->SetRepresentation(sliderRep1);
-    sliderWidget1->SetAnimationModeToAnimate();
-    sliderWidget1->EnabledOn();
-    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
-
-    vtkNew<vtkSliderRepresentation3D> sliderRep2;
-    sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(widths[4] - 1);
-    sliderRep2->SetValue(t);
-    sliderRep2->SetTitleText("T");
-    sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
-    sliderRep2->SetPoint2InWorldCoordinates(30, -10, 0);
-    sliderRep2->SetSliderWidth(.2);
-    sliderRep2->SetLabelHeight(.1);
-    vtkNew<vtkSliderWidget> sliderWidget2;
-    sliderWidget2->SetInteractor(renderer->GetInteractor());
-    sliderWidget2->SetRepresentation(sliderRep2);
-    sliderWidget2->SetAnimationModeToAnimate();
-    sliderWidget2->EnabledOn();
-    sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
-
-
-    subspace->SetInputConnection(source);
-    subspace->SetParameters({s,t});
-    image->SetInputConnection(subspace);
-    lic->SetInputConnection(image);
-    renderer->SetInputConnection(lic);
-
-    point_set->SetInputConnection(source);
-    scalar_field->SetInputConnection(point_set);
-    renderer2->SetInputConnection(scalar_field);
-
-    renderer->Update();
-    renderer2->Update();
-    renderer2->GetInteractor()->Start();
-
-    return EXIT_SUCCESS;
-}
-
-int with_slider_and_points(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
-
-    int s = widths[0] / 2;
-    int t = widths[1] / 2;
-
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto* subspace = new Subspace();
-    auto* image = new VectorFieldToImageData();
-    auto* lic = new LIC();
-    auto* point_subspace = new PointSetSubspace();
-    auto* draw_points1 = new DrawPointsOnImage();
-    auto* renderer = new ImageRenderer();
-    auto* point_set = new CriticalPointsSet();
-    auto* scalar_field = new PointSetToScalarField();
-    auto* point_source = new PointSource();
-    auto* draw_points2 = new DrawPointsOnImage();
-    auto* renderer2 = new ImageRenderer();
-
-
-    vtkNew<Slider> slider1;
-    slider1->Attach(subspace,0);
-    slider1->Attach(point_subspace,0);
-    slider1->Attach(point_source,0);
-    slider1->Attach(renderer,0);
-    slider1->Attach(renderer2,0);
-    vtkNew<Slider> slider2;
-    slider2->Attach(subspace,1);
-    slider2->Attach(point_subspace,1);
-    slider2->Attach(point_source,1);
-    slider2->Attach(renderer,1);
-    slider2->Attach(renderer2,1);
-
-
-    vtkNew<vtkSliderRepresentation3D> sliderRep1;
-    sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(widths[3]-1);
-    sliderRep1->SetValue(s);
-    sliderRep1->SetTitleText("S");
-    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
-    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
-    sliderRep1->SetSliderWidth(.2);
-    sliderRep1->SetLabelHeight(.1);
-    vtkNew<vtkSliderWidget> sliderWidget1;
-    sliderWidget1->SetInteractor(renderer->GetInteractor());
-    sliderWidget1->SetRepresentation(sliderRep1);
-    sliderWidget1->SetAnimationModeToAnimate();
-    sliderWidget1->EnabledOn();
-    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
-
-    vtkNew<vtkSliderRepresentation3D> sliderRep2;
-    sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(widths[4]-1);
-    sliderRep2->SetValue(t);
-    sliderRep2->SetTitleText("T");
-    sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
-    sliderRep2->SetPoint2InWorldCoordinates(30, -10, 0);
-    sliderRep2->SetSliderWidth(.2);
-    sliderRep2->SetLabelHeight(.1);
-    vtkNew<vtkSliderWidget> sliderWidget2;
-    sliderWidget2->SetInteractor(renderer->GetInteractor());
-    sliderWidget2->SetRepresentation(sliderRep2);
-    sliderWidget2->SetAnimationModeToAnimate();
-    sliderWidget2->EnabledOn();
-    sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
-
-
-    subspace->SetInputConnection(source);
-    subspace->SetParameters({s,t});
-    image->SetInputConnection(subspace);
-    image->Update();
-    lic->SetInputConnection(image);
-    point_subspace->SetSValue(s);
-    point_subspace->SetTValue(t);
-    point_subspace->SetInputConnection(point_set);
-    draw_points1->SetInputConnection(lic);
-    draw_points1->SetSecondaryInputConnection(point_subspace);
-    renderer->SetInputConnection(draw_points1);
-
-    point_set->SetInputConnection(source);
-    scalar_field->SetInputConnection(point_set);
-    point_source->SetX(s);
-    point_source->SetY(t);
-    draw_points2->SetInputConnection(scalar_field);
-    draw_points2->SetSecondaryInputConnection(point_source);
-    renderer2->SetInputConnection(draw_points2);
-
-    renderer->Update();
-    renderer2->Update();
-    renderer2->GetInteractor()->Start();
-
-    return EXIT_SUCCESS;
-}
-
-int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
-
-    int s = widths[0] / 2;
-    int t = widths[1] / 2;
-
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto* subspace = new Subspace();
-    auto* image = new VectorFieldToImageData();
-    auto* lic = new LIC();
-    auto* point_subspace = new PointSetSubspace();
-    auto* draw_points1 = new DrawPointsOnImage();
-    auto* point_set = new CriticalPointsSet();
-    auto* scalar_field = new PointSetToScalarField();
+    auto* point_set = new GetPointsSet();
+    auto* scalar_field = new PointSetToScalarField(size);
     auto* point_source = new PointSource();
     auto* draw_points2 = new DrawPointsOnImage();
     auto* renderer = new DoubleImageRenderer();
@@ -311,7 +53,7 @@ int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vec
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(widths[3]-1);
+    sliderRep1->SetMaximumValue(size-1);
     sliderRep1->SetValue(s);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
@@ -327,7 +69,7 @@ int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vec
 
     vtkNew<vtkSliderRepresentation3D> sliderRep2;
     sliderRep2->SetMinimumValue(0);
-    sliderRep2->SetMaximumValue(widths[4]-1);
+    sliderRep2->SetMaximumValue(size-1);
     sliderRep2->SetValue(t);
     sliderRep2->SetTitleText("T");
     sliderRep2->SetPoint1InWorldCoordinates(10, -10, 0);
@@ -343,7 +85,8 @@ int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vec
 
     source->Update();
     subspace->SetInputConnection(source);
-    subspace->SetParameters({s,t});
+    subspace->SetId(s,0);
+    subspace->SetId(t,0);
     subspace->Update();
     image->SetInputConnection(subspace);
     image->Update();
@@ -351,15 +94,15 @@ int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vec
     lic->Update();
     point_subspace->SetSValue(s);
     point_subspace->SetTValue(t);
-    point_set->SetInputConnection(source);
-    point_set->Update();
-    point_subspace->SetInputConnection(point_set);
+    critical_points->SetInputConnection(source);
+    critical_points->Update();
+    point_subspace->SetInputConnection(critical_points);
     point_subspace->Update();
     draw_points1->SetInputConnection(lic);
     draw_points1->SetSecondaryInputConnection(point_subspace);
     draw_points1->Update();
     renderer->SetInputConnection(draw_points1);
-
+    point_set->SetInputConnection(critical_points);
     scalar_field->SetInputConnection(point_set);
     point_source->SetX(s);
     point_source->SetY(t);
@@ -374,26 +117,22 @@ int two_in_one_image(std::vector<int> widths, std::vector<double> mins, std::vec
     return EXIT_SUCCESS;
 }
 
-int example_3d(std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs){
-
-    int s = widths[0] / 2;
-
-    auto* source = new VectorFieldSource(2,2,widths,mins,maxs);
-    auto* point_set = new CriticalPointsSet();
-    auto* image_3d = new PointSetTo3D();
-    auto* subspace = new Subspace();
-    auto* renderer = new ImageRenderer3D();
-
+int fake_3d(int size, int min, int max)
+{
+    auto source = new TestSource(size);
+    auto points_set = new GetPointsSet();
+    auto image = new PointSetTo3D(size);
+    auto subspace = new Subspace<vtkSmartPointer<vtkImageData>>();
+    auto renderer = new ImageRenderer3D();
 
     vtkNew<Slider> slider1;
-    slider1->Attach(subspace,0);
-    slider1->Attach(renderer,0);
-
+    slider1->Attach(subspace, 0);
+    slider1->Attach(renderer, 0);
 
     vtkNew<vtkSliderRepresentation3D> sliderRep1;
     sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(widths[3]-1);
-    sliderRep1->SetValue(s);
+    sliderRep1->SetMaximumValue(size - 1);
+    sliderRep1->SetValue(size/2);
     sliderRep1->SetTitleText("S");
     sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
     sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
@@ -407,33 +146,92 @@ int example_3d(std::vector<int> widths, std::vector<double> mins, std::vector<do
     sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
 
 
-    //point_set->SetInputConnection(source);
-    //image_3d->SetInputConnection(point_set);
-    //image_3d->SetParameterID(0);
-    //subspace->SetInputConnection(image_3d);
-    //subspace->SetParameters({s});
-    //renderer->SetInputConnection(subspace);
+    source->Update();
+    points_set->SetInputConnection(source);
+    image->SetParameterID(3);
+    image->SetInputConnection(points_set);
+    image->Update();
+    subspace->SetId(size/2);
+    subspace->SetInputConnection(image);
+    subspace->Update();
+    renderer->SetInputConnection(subspace);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
 
-    //renderer->Update();
-    //std::cout<<"Finished"<<std::endl;
-    //renderer->GetInteractor()->Start();
+    return EXIT_SUCCESS;
+
+}
+
+int example_3d(int size, int min, int max){
+    auto source = new VectorFieldSource(size,-2,2);
+    auto critical_points = new CriticalPointsSet();
+    auto points_set = new GetPointsSet();
+    auto subspace = new Subspace<vtkSmartPointer<vtkImageData>>();
+    auto image = new PointSetTo3D(size);
+    auto renderer = new ImageRenderer3D();
+
+    vtkNew<Slider> slider1;
+    slider1->Attach(subspace, 0);
+    slider1->Attach(renderer, 0);
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep1;
+    sliderRep1->SetMinimumValue(0);
+    sliderRep1->SetMaximumValue(size - 1);
+    sliderRep1->SetValue(size/2);
+    sliderRep1->SetTitleText("S");
+    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
+    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
+    sliderRep1->SetSliderWidth(.2);
+    sliderRep1->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget1;
+    sliderWidget1->SetInteractor(renderer->GetInteractor());
+    sliderWidget1->SetRepresentation(sliderRep1);
+    sliderWidget1->SetAnimationModeToAnimate();
+    sliderWidget1->EnabledOn();
+    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
+
+
+    source->Update();
+    critical_points->SetInputConnection(source);
+    critical_points->Update();
+    points_set->SetInputConnection(critical_points);
+    image->SetParameterID(3);
+    image->SetInputConnection(points_set);
+    image->Update();
+    subspace->SetId(size/2);
+    subspace->SetInputConnection(image);
+    subspace->Update();
+    renderer->SetInputConnection(subspace);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
 
     return EXIT_SUCCESS;
 }
 
 int main(int argc, char* argv[])
 {
-    std::vector<int> widths = {10,10,20,20};
-    std::vector<double> mins = {-1,-1,-1,-1};
-    std::vector<double> maxs = {1,1,1,1};
-    return two_in_one_image(widths,mins,maxs);
+    int size = 40;
+    int min = -2;
+    int max = 2;
+    return fake_3d(size,min,max);
 }
 
-//TODO Calculate Interpolated in Vectorfield
+
+//VectorField GetInterpolated
+//CriticalPointSet genauen Punkt berechnen
+//Fix Drawing of Points on Image
+//FFF per ParameterDimension
+//Critical Lines per ParameterDimension
+//Vorzeichenwechsel im FFF
+//Bifurcation Lines per ParameterDimension-1
 //TODO Filter zum Erstellen der Linien zwischen den kritischen Punkten erstellen (Vielleicht über FFF, dann FFF anwenden und mögliche Abweichungen verhindern)
 //TODO Filter zum Berechnen von FFF auf kritischen Punkten von ProcessObject erstellen (Ableitung in x und y Richtung des x und y Wertes (oder höherer Raumdimensionen) pro Parameterdimension)
 //TODO Filter zum Berechnen der Bifurkationen erstellen (multilineare Interpolation der FFF der Nachbarn des kritischen Punktes)
 //TODO Filter zum Berechnen der Linien der Bifurkationen erstellen
+
+//TODO Container für Vektorfelder
+//TODO Container für ParameterDependentVektorfelder
+
 //TODO Filter um Teile aus ProcessObject wieder rauszuziehen (kritische Punkte, Bifurkationen, Vektorfeld?)
 //TODO Parameter-Subspace der (kritischen Punkte und ) Bifurkationspunkte
 //TODO Main ans laufen bringen (Slider Namen switchen,++)

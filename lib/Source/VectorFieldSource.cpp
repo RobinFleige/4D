@@ -4,7 +4,7 @@
 double VectorFieldSource::Function(std::vector<int> ids, int space_dimension){
     std::vector<double> normalized;
     for(int i = 0; i < ids.size(); i++){
-        normalized.push_back(Normalize(ids[i],i));
+        normalized.push_back(Normalize(i));
     }
     double value;
     if(space_dimension == 0){
@@ -19,37 +19,43 @@ double VectorFieldSource::Function(std::vector<int> ids, int space_dimension){
 }
 
 void VectorFieldSource::InternalUpdate(){
-    output_ = new VectorField(parameter_dimensions_,space_dimensions_, widths_);
-    int amount = widths_[0];
-    for(int i = 1; i < parameter_dimensions_+space_dimensions_; i++){
-        amount = amount * widths_[i];
-    }
-    std::vector<SpaceVector*> data;
+    output_ = new VectorField4D(size_);
 
-    std::vector<int> ids;
-    for(int i = 0; i < amount; i++){
-        ids = output_->IDsFromID(i);
-        std::vector<double> vector;
-        for(int j = 0; j < space_dimensions_; j++){
-            vector.push_back(Function(ids,j));
+    std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> data;
+    data.reserve(size_);
+    for(int s = 0; s < size_; s++){
+        std::vector<std::vector<std::vector<std::vector<double>>>> txy_vector;
+        txy_vector.reserve(size_);
+        for(int t = 0; t < size_; t++){
+            std::vector<std::vector<std::vector<double>>> xy_vector;
+            xy_vector.reserve(size_);
+            for(int x = 0; x < size_; x++){
+                std::vector<std::vector<double>> y_vector;
+                y_vector.reserve(size_);
+                for(int y = 0; y < size_; y++){
+                    std::vector<double> vector;
+                    vector.reserve(2);
+                    vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
+                    vector.push_back(Normalize(y));
+                    y_vector.push_back(vector);
+                }
+                xy_vector.push_back(std::move(y_vector));
+            }
+            txy_vector.push_back(std::move(xy_vector));
         }
-        data.push_back(new SpaceVector(vector));
+        data.push_back(std::move(txy_vector));
     }
-    output_->SetData(data);
+    output_->SetData(std::move(data));
 }
 
-double VectorFieldSource::Normalize(int i, int parameter_id) const {
-    return i*steps_[parameter_id]+mins_[parameter_id];
+double VectorFieldSource::Normalize(int i) const {
+    return i*step_+min_;
 }
 
-VectorFieldSource::VectorFieldSource(int parameter_dimensions, int space_dimensions, std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs) {
-    parameter_dimensions_ = parameter_dimensions;
-    space_dimensions_ = space_dimensions;
-    widths_ = widths;
-    mins_ = mins;
-    maxs_ = maxs;
-    for(int i = 0; i < parameter_dimensions+space_dimensions; i++){
-        steps_.push_back((maxs_[i]-mins_[i])/widths_[i]);
-    }
+VectorFieldSource::VectorFieldSource(int size, double min, double max) {
+    size_ = size;
+    min_= min;
+    max_ = max;
+    step_ = (max_-min_)/size;
     Invalidate();
 }

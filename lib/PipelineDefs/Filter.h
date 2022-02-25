@@ -1,5 +1,6 @@
 #pragma once
 #include "HasInput.h"
+#include <iostream>
 #include "HasOutput.h"
 template<class InputType, class OutputType> class Filter : public HasInput<InputType>, public HasOutput<OutputType>{
 public:

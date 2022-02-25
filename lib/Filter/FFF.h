@@ -1,14 +1,12 @@
-//
-// Created by robin on 25.02.22.
-//
+#pragma once
+#include <vector>
+#include <DataType/ProcessObject.h>
+#include "../PipelineDefs/Filter.h"
+#include "DataType/Point.h"
 
-#ifndef PROTOTYPE_FFF_H
-#define PROTOTYPE_FFF_H
-
-
-class FFF {
-
+class FFF : public Filter<ProcessObject*,ProcessObject*> {
+private:
+    void InternalUpdate() override;
+public:
+    FFF();
 };
-
-
-#endif //PROTOTYPE_FFF_H

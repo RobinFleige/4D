@@ -2,24 +2,24 @@
 #include <vector>
 #include <vtkImageData.h>
 #include "../PipelineDefs/Source.h"
-#include "../DataType/VectorField.h"
-#include "../DataType/SpaceVector.h"
+#include "../DataType/VectorField4D.h"
 #include <vtkPointData.h>
 
-class VectorFieldSource : public Source<VectorField*>{
+class VectorFieldSource : public Source<VectorField4D*>{
 private:
-    int parameter_dimensions_;
-    int space_dimensions_;
+    int parameter_dimensions_ = 2;
+    int space_dimensions_ = 2;
+    int dimensions_ = 4;
 
-    std::vector<int> widths_;
-    std::vector<double> mins_;
-    std::vector<double> maxs_;
-    std::vector<double> steps_;
+    int size_;
+    double min_;
+    double max_;
+    double step_;
 
     double Function(std::vector<int> parameters, int space_dimension);
-    double Normalize(int i, int param_id) const;
+    double Normalize(int i) const;
     void InternalUpdate() override;
 public:
-    VectorFieldSource(int parameter_dimensions, int space_dimensions, std::vector<int> widths, std::vector<double> mins, std::vector<double> maxs);
+    VectorFieldSource(int size, double min, double max);
 
 };

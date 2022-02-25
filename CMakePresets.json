@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "asan",
+      "displayName": "asan",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer",
+        "VTK_DIR": "/media/robin/Work/Git/VTK_build/lib/cmake/vtk-9.0/"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "asan",
+      "configurePreset": "asan"
+    }
+  ]
+}

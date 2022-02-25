@@ -1,10 +1,6 @@
 #include "ProcessObject.h"
 
-void ProcessObject::SetCriticalPoints(std::vector<CriticalPoint*> critical_points) {
-    critical_points_ = critical_points;
-}
-
-VectorField* ProcessObject::GetVectorField() {
+VectorField4D* ProcessObject::GetVectorField() {
     return vector_field_;
 }
 
@@ -16,4 +12,8 @@ void ProcessObject::AppendCriticalPoints(std::vector<CriticalPoint *> critical_p
     for(int i = 0; i < critical_points.size(); i++){
         critical_points_.push_back(critical_points[i]);
     }
+}
+
+void ProcessObject::SetVectorField(VectorField4D *vector_field) {
+    vector_field_ = vector_field;
 }

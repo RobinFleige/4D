@@ -13,6 +13,7 @@ find_package(VTK COMPONENTS
   FiltersModeling
   FiltersSources
   InteractionStyle
+  RenderingAnnotation
   RenderingContextOpenGL2
   RenderingCore
   RenderingFreeType
@@ -39,12 +40,16 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/Subspace.cpp
         lib/Filter/CriticalPointsSet.cpp
         lib/Filter/DrawPointsOnImage.cpp
+        lib/Filter/PointSetSubspace.cpp
+        lib/Filter/Subspace4D2D.cpp
         lib/Filter/PointSetToScalarField.cpp
+        lib/DataTypeFilter/GetPointsSet.cpp
         lib/Filter/VectorFieldToImageData.cpp
+        lib/Filter/FFF.cpp
         lib/Source/PointSource.cpp
-        lib/DataType/VectorField.cpp
-        lib/DataType/SpaceVector.cpp
-        lib/DataType/SpaceVector.cpp
+        lib/Source/TestSource.cpp
+        lib/DataType/VectorField4D.cpp
+        lib/DataType/VectorField2D.cpp
         lib/DataType/CriticalPoint.cpp
         lib/DataType/BifurcationPoint.cpp
         lib/DataType/Point.cpp
@@ -53,7 +58,6 @@ target_sources(prototype_lib PRIVATE
         lib/Renderer/DoubleImageRenderer.cpp
         lib/Renderer/ImageRenderer.cpp
         lib/Renderer/ImageRenderer3D.cpp
-        lib/Filter/PointSetSubspace.cpp
         lib/Filter/PointSetTo3D.cpp)
 
 target_compile_features(prototype_lib PUBLIC cxx_std_17)
