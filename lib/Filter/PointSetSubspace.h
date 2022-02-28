@@ -9,8 +9,8 @@
 
 class PointSetSubspace : public Filter<ProcessObject*,std::vector<Point*>>, public SliderObserver{
 private:
-    int s_;
-    int t_;
+    double s_;
+    double t_;
 
     void InternalUpdate() override;
 

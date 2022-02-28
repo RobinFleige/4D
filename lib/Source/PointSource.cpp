@@ -11,6 +11,7 @@ void PointSource::SetY(int y) {
 }
 
 void PointSource::InternalUpdate() {
+    output_.clear();
     output_.push_back(new Point({(double)x_,(double)y_,0}));
 }
 

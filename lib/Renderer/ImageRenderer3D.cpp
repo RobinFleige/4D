@@ -24,13 +24,13 @@ ImageRenderer3D::ImageRenderer3D(){
     renderer_->SetBackground(colors_->GetColor3d("SteelBlue").GetData());
 
 
-    //vtkNew<vtkAxesActor> axes;
-    //axes->SetNormalizedShaftLength(80,80,80);
-    //axes->SetXAxisLabelText("S");
-    //axes->SetYAxisLabelText("T");
-    //axes->SetZAxisLabelText("X");
-    //axes->AxisLabelsOff();
-    //renderer_->AddActor(axes);
+    vtkNew<vtkAxesActor> axes;
+    axes->SetNormalizedShaftLength(80,80,80);
+    axes->SetXAxisLabelText("S");
+    axes->SetYAxisLabelText("T");
+    axes->SetZAxisLabelText("X");
+    axes->AxisLabelsOff();
+    renderer_->AddActor(axes);
 
     window_->SetSize(1000, 1000);
     window_->AddRenderer(renderer_);

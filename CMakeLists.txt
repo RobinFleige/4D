@@ -36,16 +36,17 @@ target_sources(prototype_lib PRIVATE
         lib/Slider/Slider.cpp
         lib/Filter/LIC.cpp
         lib/Renderer/ImageRenderer.cpp
+        lib/Renderer/PolyDataRenderer.cpp
         lib/Source/VectorFieldSource.cpp
         lib/Filter/Subspace.cpp
-        lib/Filter/CriticalPointsSet.cpp
+        lib/Filter/CalculateCriticalPoints.cpp
         lib/Filter/DrawPointsOnImage.cpp
         lib/Filter/PointSetSubspace.cpp
         lib/Filter/Subspace4D2D.cpp
         lib/Filter/PointSetToScalarField.cpp
         lib/DataTypeFilter/GetPointsSet.cpp
         lib/Filter/VectorFieldToImageData.cpp
-        lib/Filter/FFF.cpp
+        lib/Filter/CalculateFFF.cpp
         lib/Source/PointSource.cpp
         lib/Source/TestSource.cpp
         lib/DataType/VectorField4D.cpp

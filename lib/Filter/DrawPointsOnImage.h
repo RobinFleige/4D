@@ -10,7 +10,9 @@
 
 class DrawPointsOnImage : public DoubleFilter<vtkSmartPointer<vtkImageData>,std::vector<Point*>,vtkSmartPointer<vtkImageData>>{
 private:
+    int x_id_;
+    int y_id_;
     void InternalUpdate() override;
 public:
-    DrawPointsOnImage();
+    DrawPointsOnImage(int x_id,int y_id);
 };

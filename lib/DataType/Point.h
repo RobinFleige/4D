@@ -11,4 +11,5 @@ protected:
 public:
     std::vector<double> GetCoordinates();
     Point(std::vector<double> coordinates);
+    std::vector<FeatureFlowField> GetFFF();
 };

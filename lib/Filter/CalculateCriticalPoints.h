@@ -8,10 +8,10 @@
 #include "../DataType/VectorField4D.h"
 #include "../DataType/ProcessObject.h"
 
-class CriticalPointsSet : public Filter<VectorField4D*,ProcessObject*> {
+class CalculateCriticalPoints : public Filter<VectorField4D*,ProcessObject*> {
 private:
-    bool Subdivide(int max_iterations, std::vector<std::vector<double>> pixel);
+    std::vector<CriticalPoint*> Subdivide(bool interpolate, int max_iterations, std::vector<std::vector<double>> ids);
     void InternalUpdate() override;
 public:
-    CriticalPointsSet();
+    CalculateCriticalPoints();
 };

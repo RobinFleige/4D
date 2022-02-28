@@ -7,3 +7,7 @@ std::vector<double> Point::GetCoordinates() {
 Point::Point(std::vector<double> coordinates) {
     coordinates_ = coordinates;
 }
+
+std::vector<FeatureFlowField> Point::GetFFF() {
+    return fff_;
+}

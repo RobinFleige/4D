@@ -28,6 +28,8 @@ void TestSource::InternalUpdate() {
                     vector.reserve(2);
                     vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
                     vector.push_back(Normalize(y));
+                    //vector.push_back((Normalize(x)*Normalize(x)+Normalize(t))*(Normalize(x)*Normalize(x)+Normalize(s)));
+                    //vector.push_back(Normalize(y));
                     y_vector.push_back(vector);
                 }
                 xy_vector.push_back(std::move(y_vector));
@@ -45,18 +47,21 @@ void TestSource::InternalUpdate() {
         for(int t = 0; t < size_; t++){
             /*
             if(s>size_/2){
-              critical_points.push_back({s,t,(int)abs((s-size_)/2)+(size_/2),0});
-              critical_points.push_back({s,t,-(int)abs((s-size_)/2)+(size_/2),0});
+                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)std::abs((s-size_)/2)+(size_/2),(double)(size_/2)}));
+                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)-std::abs((s-size_)/2)+(size_/2),(double)(size_/2)}));
             }
             if(t>size_/2){
-              critical_points.push_back({s,t,(int)abs((t-size_)/2)+(size_/2),0});
-              critical_points.push_back({s,t,-(int)abs((t-size_)/2)+(size_/2),0});
-            }*/
+                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)std::abs((t-size_)/2)+(size_/2),(double)(size_/2)}));
+                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)-std::abs((t-size_)/2)+(size_/2),(double)(size_/2)}));
+            }
+            */
             //
+
             if(s+t>size_){
                 critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)(size_/2)+sqrt(s+t-size_),(double)size_/2}));
                 critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)(size_/2)-sqrt(s+t-size_),(double)size_/2}));
             }
+
         }
     }
     output_->AppendCriticalPoints(critical_points);

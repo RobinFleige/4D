@@ -10,6 +10,7 @@ public:
     std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>&  GetData();
     std::vector<std::vector<std::vector<double>>>& GetData(int s, int t);
     std::vector<double>& GetData(int s, int t, int x, int y);
-    std::vector<double> GetInterpolated(int s, int t, double x, double y);
+    std::vector<double> GetInterpolatedSpace(double s, double t, double x, double y);
     int GetSize();
+    std::vector<double> GetInterpolatedParameter(double s, double t, double x, double y);
 };
