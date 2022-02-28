@@ -22,7 +22,7 @@ void PointSetTo3D::InternalUpdate() {
 
     for(int i = 0; i < input_.size(); i++){
         int image_id = input_[i]->GetCoordinates()[id_];
-        std::cout<<input_[i]->GetCoordinates()[value_ids[0]]<<" "<<input_[i]->GetCoordinates()[value_ids[1]]<<" "<<input_[i]->GetCoordinates()[value_ids[2]]<<std::endl;
+        //std::cout<<input_[i]->GetCoordinates()[value_ids[0]]<<" "<<input_[i]->GetCoordinates()[value_ids[1]]<<" "<<input_[i]->GetCoordinates()[value_ids[2]]<<std::endl;
         auto* pixel = static_cast<double*>(output_[image_id]->GetScalarPointer(2*input_[i]->GetCoordinates()[value_ids[0]],2*input_[i]->GetCoordinates()[value_ids[1]],2*input_[i]->GetCoordinates()[value_ids[2]]));
         pixel[0] = 255;
     }

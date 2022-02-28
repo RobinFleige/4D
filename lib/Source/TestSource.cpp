@@ -1,3 +1,4 @@
+#include <valarray>
 #include "TestSource.h"
 
 TestSource::TestSource(int size) {

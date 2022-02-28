@@ -1,7 +1,7 @@
 #include "PolyDataRenderer.h"
 void PolyDataRenderer::InternalUpdate() {
-    int factor1 = 10;
-    int factor2 = 100;
+    int factor1 = 40;
+    int factor2 = 40;
     std::vector<CriticalPoint*> critical_points = input_->GetCriticalPoints();
 
     vtkNew<vtkPoints> points;

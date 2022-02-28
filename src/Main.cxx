@@ -170,45 +170,12 @@ int fake_3d(int size, int min, int max)
 int fake_3d_with_lines(int size, int min, int max)
 {
     auto source = new TestSource(size);
-    auto points_set = new GetPointsSet();
     auto fff = new CalculateFFF();
-    auto image = new PointSetTo3D(size);
-    auto subspace = new Subspace<vtkSmartPointer<vtkImageData>>();
-    //auto renderer = new ImageRenderer3D();
     auto renderer = new PolyDataRenderer();
-
-    vtkNew<Slider> slider1;
-    slider1->Attach(subspace, 0);
-    slider1->Attach(renderer, 0);
-
-    vtkNew<vtkSliderRepresentation3D> sliderRep1;
-    sliderRep1->SetMinimumValue(0);
-    sliderRep1->SetMaximumValue(size - 1);
-    sliderRep1->SetValue(size/2);
-    sliderRep1->SetTitleText("S");
-    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
-    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
-    sliderRep1->SetSliderWidth(.2);
-    sliderRep1->SetLabelHeight(.1);
-    vtkNew<vtkSliderWidget> sliderWidget1;
-    sliderWidget1->SetInteractor(renderer->GetInteractor());
-    sliderWidget1->SetRepresentation(sliderRep1);
-    sliderWidget1->SetAnimationModeToAnimate();
-    sliderWidget1->EnabledOn();
-    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
-
 
     source->Update();
     fff->SetInputConnection(source);
     fff->Update();
-    points_set->SetInputConnection(source);
-    image->SetParameterID(3);
-    image->SetInputConnection(points_set);
-    image->Update();
-    subspace->SetId(size/2);
-    subspace->SetInputConnection(image);
-    subspace->Update();
-    //renderer->SetInputConnection(subspace);
     renderer->SetInputConnection(fff);
     renderer->Update();
     renderer->GetInteractor()->Start();
@@ -217,28 +184,19 @@ int fake_3d_with_lines(int size, int min, int max)
 
 }
 
-int real_3d_with_lines(int size, int min, int max)
+int example_3d_with_lines(int size, int min, int max)
 {
     auto source = new VectorFieldSource(size,min,max);
     auto critical_points = new CalculateCriticalPoints();
-    auto points_set = new GetPointsSet();
     auto fff = new CalculateFFF();
-    auto image = new PointSetTo3D(size);
-    auto subspace = new Subspace<vtkSmartPointer<vtkImageData>>();
-    //auto renderer = new ImageRenderer3D();
     auto renderer = new PolyDataRenderer();
 
     source->Update();
+    critical_points->SetInputConnection(source);
+    critical_points->Update();
+    std::cout<<critical_points->GetOutput()->GetCriticalPoints().size()<<std::endl;
     fff->SetInputConnection(critical_points);
     fff->Update();
-    points_set->SetInputConnection(critical_points);
-    image->SetParameterID(3);
-    image->SetInputConnection(points_set);
-    image->Update();
-    subspace->SetId(size/2);
-    subspace->SetInputConnection(image);
-    subspace->Update();
-    //renderer->SetInputConnection(subspace);
     renderer->SetInputConnection(fff);
     renderer->Update();
     renderer->GetInteractor()->Start();
@@ -294,7 +252,7 @@ int main(int argc, char* argv[])
     int size = 40;
     int min = -2;
     int max = 2;
-    return fake_3d_with_lines(size,min,max);
+    return example_3d_with_lines(size,min,max);
 }
 
 //MEETING TODO
@@ -344,6 +302,7 @@ int main(int argc, char* argv[])
 //6. (xd-td)*(xd+td)*(xd-1-sd)*(xd-1+sd) -> seltsame Box
 //7. (xd*xd+td)*(yd-1)-(xd*xd+sd)*(yd+1) -> 2 kreuzende Bifurcation Lines (kritische Punkte werden nicht korrekt berechnet)
 //8. (xd*xd+td-1)*(yd-1)+(xd*xd+td+1)*(yd+1) -> doppelt parallel vertical zweigeteilt (kritische Punkte werden nicht korrekt berechnet)
+//9. 2*xd*xd+sd+td-> Paper?
 
 //1. -yd+sd
 //2. -yd
@@ -353,3 +312,4 @@ int main(int argc, char* argv[])
 //6. -yd
 //7. (yd+1)*(yd-1)
 //8. (yd+1)*(yd-1)
+//9. yd+sd

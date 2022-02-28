@@ -9,7 +9,7 @@ void CalculateFFF::InternalUpdate() {
     for(int d = 0; d < 2; d++){
         for(int i = 0; i < critical_points.size(); i++){
             //Border Detection
-            if(critical_points[i]->GetCoordinates()[0] > 1 && critical_points[i]->GetCoordinates()[1] > 1 && critical_points[i]->GetCoordinates()[2] > 1 && critical_points[i]->GetCoordinates()[3] > 1 && critical_points[i]->GetCoordinates()[0] < input_->GetVectorField()->GetSize()-1 && critical_points[i]->GetCoordinates()[1] < input_->GetVectorField()->GetSize()-1 && critical_points[i]->GetCoordinates()[2] < input_->GetVectorField()->GetSize()-1 && critical_points[i]->GetCoordinates()[3] < input_->GetVectorField()->GetSize()-1){
+            if(critical_points[i]->GetCoordinates()[0] > 1 && critical_points[i]->GetCoordinates()[1] > 1 && critical_points[i]->GetCoordinates()[2] > 1 && critical_points[i]->GetCoordinates()[3] > 1 && critical_points[i]->GetCoordinates()[0] < input_->GetVectorField()->GetSize()-2 && critical_points[i]->GetCoordinates()[1] < input_->GetVectorField()->GetSize()-2 && critical_points[i]->GetCoordinates()[2] < input_->GetVectorField()->GetSize()-1 && critical_points[i]->GetCoordinates()[3] < input_->GetVectorField()->GetSize()-2){
                 //Calculate previous and next values per dimension
                 std::vector<double> prev_value_x;
                 std::vector<double> next_value_x;

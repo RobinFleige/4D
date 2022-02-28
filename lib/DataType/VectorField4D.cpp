@@ -106,7 +106,7 @@ std::vector<double> VectorField4D::GetInterpolatedParameter(double s, double t, 
     double value1 = 0;
     double value2 = 0;
     for(int i = 0; i < 16; i++){
-        std::cout<<sp[i]<<" "<<tp[i]<<" "<<xp[i]<<" "<<yp[i]<<std::endl;
+        //std::cout<<sp[i]<<" "<<tp[i]<<" "<<xp[i]<<" "<<yp[i]<<std::endl;
         value1+= factors[i]*values_[sp[i]][tp[i]][xp[i]][yp[i]][0];
         value2+= factors[i]*values_[sp[i]][tp[i]][xp[i]][yp[i]][1];
     }
