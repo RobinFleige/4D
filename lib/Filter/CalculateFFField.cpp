@@ -1,10 +1,10 @@
-#include "CalculateFFF.h"
+#include "CalculateFFField.h"
 
-CalculateFFF::CalculateFFF() {
+CalculateFFField::CalculateFFField() {
     Invalidate();
 }
 
-void CalculateFFF::InternalUpdate() {
+void CalculateFFField::InternalUpdate() {
     std::vector<CriticalPoint*> critical_points = input_->GetCriticalPoints();
     for(int d = 0; d < 2; d++){
         for(int i = 0; i < critical_points.size(); i++){
@@ -45,23 +45,29 @@ void CalculateFFF::InternalUpdate() {
                 //Calculate determinants of derivative combinations
                 std::vector<double> fff;
 
+                if((derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]) < -0.00001){
+                    fff.push_back(-(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
+                    fff.push_back(-(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
+                    fff.push_back(-1);
+                }else if((derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]) > 0.00001){
+                    fff.push_back((derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
+                    fff.push_back((derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
+                    fff.push_back(1);
+                } else{
+                    fff.push_back(1);
+                    fff.push_back(1);
+                    fff.push_back(0);
+                }
+
+
                 //fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
                 //fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
-                //if((derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]) < 0){
-                //    fff.push_back(-1);
-                //}else{
-                //    fff.push_back(1);
-                //}
+                //fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
 
 
-                fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
-                fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
-                fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
-
-
-                critical_points[i]->AddFFF(*new FeatureFlowField(fff));
+                critical_points[i]->AddFFF(fff);
             }else{
-                critical_points[i]->AddFFF(*new FeatureFlowField({0,0,0}));
+                critical_points[i]->AddFFF({0,0,0});
             }
         }
     }

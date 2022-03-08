@@ -34,7 +34,6 @@ ImageRenderer3D::ImageRenderer3D(){
 
     window_->SetSize(1000, 1000);
     window_->AddRenderer(renderer_);
-
     interactor_->SetRenderWindow(window_);
     vtkNew<vtkInteractorStyleTrackballCamera> style;
     interactor_->SetInteractorStyle(style);

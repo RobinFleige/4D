@@ -5,9 +5,9 @@
 #include <vtkPoints.h>
 #include <Slider/SliderObserver.h>
 #include <DataType/VectorField4D.h>
-#include <DataType/VectorField2D.h>
+#include <DataType/VectorField.h>
 #include "../PipelineDefs/Filter.h"
-class Subspace4D2D : public Filter<VectorField4D*,VectorField2D*>, public SliderObserver {
+class Subspace4D2D : public Filter<VectorField4D*,VectorField*>, public SliderObserver {
 private:
     std::vector<int> values_;
     void InternalUpdate() override;

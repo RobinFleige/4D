@@ -11,7 +11,7 @@ void Subspace4D2D::SetId(int value, int id) {
 }
 
 void Subspace4D2D::InternalUpdate() {
-    output_ = new VectorField2D(input_->GetSize());
+    output_ = new VectorField(input_->GetSize());
     output_->SetData(input_->GetData(values_[0],values_[1]));
 }
 

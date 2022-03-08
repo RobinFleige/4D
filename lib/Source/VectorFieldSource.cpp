@@ -36,7 +36,7 @@ void VectorFieldSource::InternalUpdate(){
                     std::vector<double> vector;
                     vector.reserve(2);
                     vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                    vector.push_back(Normalize(y));
+                    vector.push_back(Normalize(y)+Normalize(s));
                     y_vector.push_back(vector);
                 }
                 xy_vector.push_back(std::move(y_vector));

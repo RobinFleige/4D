@@ -35,8 +35,8 @@ add_library(prototype_lib STATIC )
 target_sources(prototype_lib PRIVATE
         lib/Slider/Slider.cpp
         lib/Filter/LIC.cpp
-        lib/Renderer/ImageRenderer.cpp
-        lib/Renderer/PolyDataRenderer.cpp
+        lib/Renderer/ImageRenderer2D.cpp
+        lib/Renderer/CriticalPointRenderer3D.cpp
         lib/Source/VectorFieldSource.cpp
         lib/Filter/Subspace.cpp
         lib/Filter/CalculateCriticalPoints.cpp
@@ -46,19 +46,20 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/PointSetToScalarField.cpp
         lib/DataTypeFilter/GetPointsSet.cpp
         lib/Filter/VectorFieldToImageData.cpp
-        lib/Filter/CalculateFFF.cpp
+        lib/Filter/CalculateFFPoints.cpp
+        lib/Filter/CalculateFFField.cpp
         lib/Source/PointSource.cpp
         lib/Source/TestSource.cpp
         lib/DataType/VectorField4D.cpp
-        lib/DataType/VectorField2D.cpp
+        lib/DataType/VectorField.cpp
         lib/DataType/CriticalPoint.cpp
         lib/DataType/BifurcationPoint.cpp
         lib/DataType/Point.cpp
-        lib/DataType/FeatureFlowField.cpp
         lib/DataType/ProcessObject.cpp
-        lib/Renderer/DoubleImageRenderer.cpp
-        lib/Renderer/ImageRenderer.cpp
+        lib/Renderer/DoubleImageRenderer2D.cpp
+        lib/Renderer/ImageRenderer2D.cpp
         lib/Renderer/ImageRenderer3D.cpp
+        lib/Renderer/ImageRenderer4D.cpp
         lib/Filter/PointSetTo3D.cpp)
 
 target_compile_features(prototype_lib PUBLIC cxx_std_17)

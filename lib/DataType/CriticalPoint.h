@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "Point.h"
-#include "FeatureFlowField.h"
 
 class CriticalPoint : public Point {
     std::vector<CriticalPoint*> previous_critical_point_;//per parameter-dimension
@@ -10,6 +9,6 @@ class CriticalPoint : public Point {
 public:
     CriticalPoint(std::vector<double> coordinates);
 
-    void AddFFF(FeatureFlowField fff);
+    void AddFFF(std::vector<double> fff);
 
 };

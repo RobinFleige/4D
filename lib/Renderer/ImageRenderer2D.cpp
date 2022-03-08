@@ -1,25 +1,18 @@
-#include "DoubleImageRenderer.h"
-
-void DoubleImageRenderer::InternalUpdate() {
+#include "ImageRenderer2D.h"
+void ImageRenderer2D::InternalUpdate() {
     input_ = input_connection_->GetOutput();
-    secondary_input_ = secondary_input_connection_->GetOutput();
     actor_->GetMapper()->SetInputData((input_));
-    secondary_actor_->GetMapper()->SetInputData((secondary_input_));
     window_->SetWindowName(name_.c_str());
     window_->Render();
-
 }
 
-DoubleImageRenderer::DoubleImageRenderer() {
+ImageRenderer2D::ImageRenderer2D(){
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
     window_ = vtkSmartPointer<vtkRenderWindow>::New();
     interactor_ = vtkSmartPointer<vtkRenderWindowInteractor>::New();
     colors_ = vtkSmartPointer<vtkNamedColors>::New();
 
-    actor_->SetPosition(-100,0,0);
-    actor_->SetPosition(100,0,0);
     renderer_->AddActor(actor_);
-    renderer_->AddActor(secondary_actor_);
     renderer_->SetBackground(colors_->GetColor3d("SteelBlue").GetData());
 
     window_->SetSize(1000, 1000);
@@ -29,14 +22,13 @@ DoubleImageRenderer::DoubleImageRenderer() {
     vtkNew<vtkInteractorStyleImage> style;
     interactor_->SetInteractorStyle(style);
     Invalidate();
-
 }
 
-void DoubleImageRenderer::OnChange(double value, int id) {
+void ImageRenderer2D::OnChange(double value, int id) {
     Update();
 }
 
-void DoubleImageRenderer::SetName(std::string name) {
+void ImageRenderer2D::SetName(std::string name) {
     name_ = name;
     Invalidate();
 }

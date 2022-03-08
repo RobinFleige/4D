@@ -8,6 +8,6 @@ Point::Point(std::vector<double> coordinates) {
     coordinates_ = coordinates;
 }
 
-std::vector<FeatureFlowField> Point::GetFFF() {
+std::vector<std::vector<double>> Point::GetFFF() {
     return fff_;
 }

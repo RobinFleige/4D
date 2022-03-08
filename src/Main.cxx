@@ -1,9 +1,10 @@
 #include <vtkNew.h>
 #include <vtkImageData.h>
+#include <vtkImageMapper3D.h>
 #include <vtkXMLImageDataWriter.h>
 #include <vtkSliderRepresentation3D.h>
 #include <vtkSliderWidget.h>
-#include <Renderer/DoubleImageRenderer.h>
+#include <Renderer/DoubleImageRenderer2D.h>
 #include <Renderer/ImageRenderer3D.h>
 #include <Filter/PointSetTo3D.h>
 #include <Filter/PointSetToScalarField.h>
@@ -12,8 +13,9 @@
 #include <Filter/PointSetSubspace.h>
 #include <Filter/Subspace4D2D.h>
 #include <DataTypeFilter/GetPointsSet.h>
-#include <Filter/CalculateFFF.h>
-#include <Renderer/PolyDataRenderer.h>
+#include <Filter/CalculateFFPoints.h>
+#include <Renderer/CriticalPointRenderer3D.h>
+#include <Renderer/ImageRenderer4D.h>
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
 #include "./Slider/Slider.h"
@@ -38,7 +40,7 @@ int two_in_one_image(int size, int min, int max){
     auto* scalar_field = new PointSetToScalarField(size);
     auto* point_source = new PointSource();
     auto* draw_points2 = new DrawPointsOnImage(0,1);
-    auto* renderer = new DoubleImageRenderer();
+    auto* renderer = new DoubleImageRenderer2D();
 
 
     vtkNew<Slider> slider1;
@@ -123,7 +125,7 @@ int fake_3d(int size, int min, int max)
 {
     auto source = new TestSource(size);
     auto points_set = new GetPointsSet();
-    auto fff = new CalculateFFF();
+    auto fff = new CalculateFFPoints();
     auto image = new PointSetTo3D(size);
     auto subspace = new Subspace<vtkSmartPointer<vtkImageData>>();
     auto renderer = new ImageRenderer3D();
@@ -170,8 +172,8 @@ int fake_3d(int size, int min, int max)
 int fake_3d_with_lines(int size, int min, int max)
 {
     auto source = new TestSource(size);
-    auto fff = new CalculateFFF();
-    auto renderer = new PolyDataRenderer();
+    auto fff = new CalculateFFPoints();
+    auto renderer = new CriticalPointRenderer3D();
 
     source->Update();
     fff->SetInputConnection(source);
@@ -188,8 +190,8 @@ int example_3d_with_lines(int size, int min, int max)
 {
     auto source = new VectorFieldSource(size,min,max);
     auto critical_points = new CalculateCriticalPoints();
-    auto fff = new CalculateFFF();
-    auto renderer = new PolyDataRenderer();
+    auto fff = new CalculateFFPoints();
+    auto renderer = new CriticalPointRenderer3D();
 
     source->Update();
     critical_points->SetInputConnection(source);
@@ -202,7 +204,6 @@ int example_3d_with_lines(int size, int min, int max)
     renderer->GetInteractor()->Start();
 
     return EXIT_SUCCESS;
-
 }
 
 int example_3d(int size, int min, int max){
@@ -246,70 +247,29 @@ int example_3d(int size, int min, int max){
 
     return EXIT_SUCCESS;
 }
+int example_4d(int size, int min, int max){
+    auto source = new VectorFieldSource(size,min,max);
+    auto critical_points = new CalculateCriticalPoints();
+    auto fff = new CalculateFFPoints();
+    auto renderer = new ImageRenderer4D();
+
+    source->Update();
+    critical_points->SetInputConnection(source);
+    critical_points->Update();
+    std::cout<<critical_points->GetOutput()->GetCriticalPoints().size()<<std::endl;
+    fff->SetInputConnection(critical_points);
+    fff->Update();
+    renderer->SetInputConnection(fff);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
+}
 
 int main(int argc, char* argv[])
 {
     int size = 40;
     int min = -2;
     int max = 2;
-    return example_3d_with_lines(size,min,max);
+    return example_4d(size,min,max);
 }
-
-//MEETING TODO
-//3D Visualisierung mit Slider für 4. Komponente
-//2D Side-by-Side Visualisierung für besseres Verständnis
-//Bifurcation Curve extrahieren
-//FFF von FFF
-//Nabla/Gradient von Vektor
-//Trackball Code ins Wiki
-
-
-
-
-
-
-
-
-
-
-//Vorzeichenwechsel im FFF
-//Bifurcation Lines per ParameterDimension-1
-
-
-
-//TODO Filter zum Erstellen der Linien zwischen den kritischen Punkten erstellen (Vielleicht über FFF, dann FFF anwenden und mögliche Abweichungen verhindern)
-//TODO Filter zum Berechnen von FFF auf kritischen Punkten von ProcessObject erstellen (Ableitung in x und y Richtung des x und y Wertes (oder höherer Raumdimensionen) pro Parameterdimension)
-//TODO Filter zum Berechnen der Bifurkationen erstellen (multilineare Interpolation der FFF der Nachbarn des kritischen Punktes)
-//TODO Filter zum Berechnen der Linien der Bifurkationen erstellen
-
-
-//TODO Container für Vektorfelder
-//TODO Container für ParameterDependentVektorfelder
-//TODO Filter um Teile aus ProcessObject wieder rauszuziehen (kritische Punkte, Bifurkationen, Vektorfeld?)
-
-
-//Backlog Render Iso-Surface with increasing Transparency
-//Backlog Store Calculations for faster Example
-//Backlog Optimization: Start with reduced resolution and use subdivision to ignore big parts of the vectorfield
-//Backlog Höhere Dimensionen
-
-
-//1. xd*xd+td; -> vertical zweigeteilt
-//2. xd*xd+td+sd -> schräg zweigeteilt
-//3. xd*xd+td*td+sd*sd-1 -> durch Kreis geteilt
-//4. xd*xd+td -> 2 bifurcationen (linien liegen aufeinander)
-//5. (xd*xd+td)*(xd*xd+sd) -> 2 kreuzende Bifurcation Lines (Mit fragmenten im weißen Bereich)
-//6. (xd-td)*(xd+td)*(xd-1-sd)*(xd-1+sd) -> seltsame Box
-//7. (xd*xd+td)*(yd-1)-(xd*xd+sd)*(yd+1) -> 2 kreuzende Bifurcation Lines (kritische Punkte werden nicht korrekt berechnet)
-//8. (xd*xd+td-1)*(yd-1)+(xd*xd+td+1)*(yd+1) -> doppelt parallel vertical zweigeteilt (kritische Punkte werden nicht korrekt berechnet)
-//9. 2*xd*xd+sd+td-> Paper?
-
-//1. -yd+sd
-//2. -yd
-//3. -yd
-//4. -yd*yd+sd
-//5. -yd
-//6. -yd
-//7. (yd+1)*(yd-1)
-//8. (yd+1)*(yd-1)
-//9. yd+sd

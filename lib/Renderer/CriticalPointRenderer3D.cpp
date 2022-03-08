@@ -1,7 +1,5 @@
-#include "PolyDataRenderer.h"
-void PolyDataRenderer::InternalUpdate() {
-    int factor1 = 40;
-    int factor2 = 40;
+#include "CriticalPointRenderer3D.h"
+void CriticalPointRenderer3D::InternalUpdate() {
     std::vector<CriticalPoint*> critical_points = input_->GetCriticalPoints();
 
     vtkNew<vtkPoints> points;
@@ -9,18 +7,20 @@ void PolyDataRenderer::InternalUpdate() {
     vtkNew<vtkPolyData> linesPolyData;
 
     for(int i = 0; i < critical_points.size(); i++){
-        double p0[3] = {critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]};
-        double p1[3] = {critical_points[i]->GetCoordinates()[0]+critical_points[i]->GetFFF()[0].GetValue()[2]*factor2,critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[0].GetValue()[0]*factor1};
-        double p2[3] = {critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1]+critical_points[i]->GetFFF()[1].GetValue()[2]*factor2,critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[1].GetValue()[0]*factor1};
+        double p0[3] = {critical_points[i]->GetCoordinates()[0]-critical_points[i]->GetFFF()[0][2]   ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]-critical_points[i]->GetFFF()[0][0]};
+        double p1[3] = {critical_points[i]->GetCoordinates()[0]+critical_points[i]->GetFFF()[0][2]   ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[0][0]};
+        double p2[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]-critical_points[i]->GetFFF()[1][2]  ,critical_points[i]->GetCoordinates()[2]-critical_points[i]->GetFFF()[1][0]};
+        double p3[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]+critical_points[i]->GetFFF()[1][2]  ,critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[1][0]};
         points->InsertNextPoint(p0);
         points->InsertNextPoint(p1);
         points->InsertNextPoint(p2);
+        points->InsertNextPoint(p3);
         vtkNew<vtkLine> line1;
         vtkNew<vtkLine> line2;
-        line1->GetPointIds()->SetId(0, 3*i);
-        line1->GetPointIds()->SetId(1, 3*i+1);;
-        line2->GetPointIds()->SetId(0, 3*i);
-        line2->GetPointIds()->SetId(1, 3*i+2);
+        line1->GetPointIds()->SetId(0, 4*i);
+        line1->GetPointIds()->SetId(1, 4*i+1);
+        line2->GetPointIds()->SetId(0, 4*i+2);
+        line2->GetPointIds()->SetId(1, 4*i+3);
         lines->InsertNextCell(line1);
         lines->InsertNextCell(line2);
     }
@@ -33,7 +33,7 @@ void PolyDataRenderer::InternalUpdate() {
     window_->Render();
 }
 
-PolyDataRenderer::PolyDataRenderer(){
+CriticalPointRenderer3D::CriticalPointRenderer3D(){
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
     window_ = vtkSmartPointer<vtkRenderWindow>::New();
     mapper_ = vtkSmartPointer<vtkPolyDataMapper>::New();
@@ -67,11 +67,11 @@ PolyDataRenderer::PolyDataRenderer(){
     Invalidate();
 }
 
-void PolyDataRenderer::OnChange(double value, int id) {
+void CriticalPointRenderer3D::OnChange(double value, int id) {
     Update();
 }
 
-void PolyDataRenderer::SetName(std::string name) {
+void CriticalPointRenderer3D::SetName(std::string name) {
     name_ = name;
     Invalidate();
 }

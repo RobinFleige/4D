@@ -6,8 +6,8 @@
 void CalculateCriticalPoints::InternalUpdate() {
     output_ = new ProcessObject();
     output_->SetVectorField(input_);
-    for(int s = 0; s < input_->GetSize(); s++){
-        for(int t = 0; t < input_->GetSize(); t++){
+    for(int s = 1; s < input_->GetSize()-1; s++){
+        for(int t = 1; t < input_->GetSize()-1; t++){
             for(int x = 0; x < input_->GetSize()-1; x++){
                 for(int y = 0; y < input_->GetSize()-1; y++){
                     std::vector<std::vector<double>> ids_set = {{(double)s,(double)t,(double)x,(double)y},{(double)s,(double)t,(double)x+1,(double)y},{(double)s,(double)t,(double)x,(double)y+1},{(double)s,(double)t,(double)x+1,(double)y+1}};

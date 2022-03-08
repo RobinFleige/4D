@@ -6,18 +6,19 @@
 #include <vtkNamedColors.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
-#include <vtkInteractorStyleImage.h>
 #include <vtkRenderWindowInteractor.h>
-#include "../PipelineDefs/Renderer.h"
+#include <vtkInteractorStyleImage.h>
+#include "../PipelineDefs/DoubleRenderer.h"
 #include "../Slider/SliderObserver.h"
 
-class ImageRenderer : public Renderer<vtkSmartPointer<vtkImageData>>, public SliderObserver {
+class DoubleImageRenderer2D : public DoubleRenderer<vtkSmartPointer<vtkImageData>,vtkSmartPointer<vtkImageData>>, public SliderObserver{
 private:
     std::string name_ = "Test";
     vtkNew<vtkImageActor> actor_;
+    vtkNew<vtkImageActor> secondary_actor_;
     void InternalUpdate() override;
 public:
-    ImageRenderer();
+    DoubleImageRenderer2D();
     void OnChange(double value, int id) override;
     void SetName(std::string name);
 };
