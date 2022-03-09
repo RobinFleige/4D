@@ -1,17 +1,16 @@
 #pragma once
 
 #include <vector>
-#include "VectorField4D.h"
-#include "BifurcationPoint.h"
+#include "ParameterDependentVectorField.h"
+#include "CriticalPoint.h"
 
 class ProcessObject {
-    VectorField4D* vector_field_;
+    ParameterDependentVectorField* vector_field_;
     std::vector<CriticalPoint*> critical_points_;
-    std::vector<BifurcationPoint*> bifurcation_points_;
 
 public:
     void AppendCriticalPoints(std::vector<CriticalPoint*> critical_points);
-    VectorField4D* GetVectorField();
-    void SetVectorField(VectorField4D* vector_field);
+    ParameterDependentVectorField* GetVectorField();
+    void SetVectorField(ParameterDependentVectorField* vector_field);
     std::vector<CriticalPoint*> GetCriticalPoints();
 };

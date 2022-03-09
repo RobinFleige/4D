@@ -17,18 +17,18 @@ void CalculateFFPoints::InternalUpdate() {
                 std::vector<double> next_value_y;
                 std::vector<double> prev_value_p;
                 std::vector<double> next_value_p;
-                prev_value_x = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]-0.5,critical_points[i]->GetCoordinates()[3]);
-                next_value_x = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]+0.5,critical_points[i]->GetCoordinates()[3]);
+                prev_value_x = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]-0.5,critical_points[i]->GetCoordinates()[3]);
+                next_value_x = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]+0.5,critical_points[i]->GetCoordinates()[3]);
 
-                prev_value_y = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]-0.5);
-                next_value_y = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]+0.5);
+                prev_value_y = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]-0.5);
+                next_value_y = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]+0.5);
 
                 if(d == 0){
-                    prev_value_p = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0]-0.5,critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
-                    next_value_p = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0]+0.5,critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
+                    prev_value_p = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0]-0.5,critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
+                    next_value_p = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0]+0.5,critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
                 }else{
-                    prev_value_p = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1]-0.5,critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
-                    next_value_p = input_->GetVectorField()->GetInterpolatedParameter(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1]+0.5,critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
+                    prev_value_p = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1]-0.5,critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
+                    next_value_p = input_->GetVectorField()->GetInterpolated(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1]+0.5,critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]);
                 }
 
                 //Calculate derivatives per dimension

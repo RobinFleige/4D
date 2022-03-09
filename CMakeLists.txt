@@ -34,33 +34,38 @@ message(STATUS "VTK_VERSION: ${VTK_VERSION}")
 add_library(prototype_lib STATIC )
 target_sources(prototype_lib PRIVATE
         lib/Slider/Slider.cpp
-        lib/Filter/LIC.cpp
-        lib/Renderer/ImageRenderer2D.cpp
-        lib/Renderer/CriticalPointRenderer3D.cpp
-        lib/Source/VectorFieldSource.cpp
-        lib/Filter/Subspace.cpp
-        lib/Filter/CalculateCriticalPoints.cpp
-        lib/Filter/DrawPointsOnImage.cpp
-        lib/Filter/PointSetSubspace.cpp
-        lib/Filter/Subspace4D2D.cpp
-        lib/Filter/PointSetToScalarField.cpp
-        lib/DataTypeFilter/GetPointsSet.cpp
-        lib/Filter/VectorFieldToImageData.cpp
-        lib/Filter/CalculateFFPoints.cpp
-        lib/Filter/CalculateFFField.cpp
-        lib/Source/PointSource.cpp
-        lib/Source/TestSource.cpp
-        lib/DataType/VectorField4D.cpp
-        lib/DataType/VectorField.cpp
+
         lib/DataType/CriticalPoint.cpp
-        lib/DataType/BifurcationPoint.cpp
+        lib/DataType/ParameterDependentVectorField.cpp
         lib/DataType/Point.cpp
         lib/DataType/ProcessObject.cpp
+        lib/DataType/VectorField.cpp
+
+        lib/DataTypeFilter/GetPointsSet.cpp
+
+        lib/Source/PointSource.cpp
+        lib/Source/TestSource.cpp
+        lib/Source/VectorFieldSource.cpp
+
+        lib/Filter/CalculateBifurcationPoints.cpp
+        lib/Filter/CalculateCriticalPoints.cpp
+        lib/Filter/CalculateFFField.cpp
+        lib/Filter/CalculateFFPoints.cpp
+        lib/Filter/DrawPointsOnImage.cpp
+        lib/Filter/LIC.cpp
+        lib/Filter/PointSetSubspace.cpp
+        lib/Filter/PointSetToScalarField.cpp
+        lib/Filter/PointSetTo3D.cpp
+        lib/Filter/Subspace.cpp
+        lib/Filter/Subspace4D2D.cpp
+        lib/Filter/VectorFieldToImageData.cpp
+
+        lib/Renderer/CriticalPointRenderer3D.cpp
         lib/Renderer/DoubleImageRenderer2D.cpp
         lib/Renderer/ImageRenderer2D.cpp
         lib/Renderer/ImageRenderer3D.cpp
         lib/Renderer/ImageRenderer4D.cpp
-        lib/Filter/PointSetTo3D.cpp)
+        )
 
 target_compile_features(prototype_lib PUBLIC cxx_std_17)
 

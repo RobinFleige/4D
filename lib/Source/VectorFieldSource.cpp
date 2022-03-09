@@ -19,12 +19,12 @@ double VectorFieldSource::Function(std::vector<int> ids, int space_dimension){
 }
 
 void VectorFieldSource::InternalUpdate(){
-    output_ = new VectorField4D(size_);
+    output_ = new ParameterDependentVectorField(size_);
 
-    std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> data;
+    std::vector<std::vector<VectorField*>> data;
     data.reserve(size_);
     for(int s = 0; s < size_; s++){
-        std::vector<std::vector<std::vector<std::vector<double>>>> txy_vector;
+        std::vector<VectorField*> txy_vector;
         txy_vector.reserve(size_);
         for(int t = 0; t < size_; t++){
             std::vector<std::vector<std::vector<double>>> xy_vector;
@@ -36,12 +36,15 @@ void VectorFieldSource::InternalUpdate(){
                     std::vector<double> vector;
                     vector.reserve(2);
                     vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                    vector.push_back(Normalize(y)+Normalize(s));
+                    //vector.push_back(Normalize(y)+Normalize(s));
+                    vector.push_back(Normalize(y));
                     y_vector.push_back(vector);
                 }
                 xy_vector.push_back(std::move(y_vector));
             }
-            txy_vector.push_back(std::move(xy_vector));
+            auto vectorField = new VectorField(size_);
+            vectorField->SetData(xy_vector);
+            txy_vector.push_back(vectorField);
         }
         data.push_back(std::move(txy_vector));
     }

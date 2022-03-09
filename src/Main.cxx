@@ -16,6 +16,7 @@
 #include <Filter/CalculateFFPoints.h>
 #include <Renderer/CriticalPointRenderer3D.h>
 #include <Renderer/ImageRenderer4D.h>
+#include <Filter/CalculateFFField.h>
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
 #include "./Slider/Slider.h"
@@ -247,6 +248,54 @@ int example_3d(int size, int min, int max){
 
     return EXIT_SUCCESS;
 }
+
+int example_3d_bifurcation(int size, int min, int max){
+    auto source = new VectorFieldSource(size,-2,2);
+    auto critical_points = new CalculateCriticalPoints();
+    auto feature_flow = new CalculateFFField();
+    auto points_set = new GetPointsSet();
+    auto subspace = new Subspace<vtkSmartPointer<vtkImageData>>();
+    auto image = new PointSetTo3D(size);
+    auto renderer = new ImageRenderer3D();
+
+    vtkNew<Slider> slider1;
+    slider1->Attach(subspace, 0);
+    slider1->Attach(renderer, 0);
+
+    vtkNew<vtkSliderRepresentation3D> sliderRep1;
+    sliderRep1->SetMinimumValue(0);
+    sliderRep1->SetMaximumValue(size - 1);
+    sliderRep1->SetValue(size/2);
+    sliderRep1->SetTitleText("S");
+    sliderRep1->SetPoint1InWorldCoordinates(-10, -10, 0);
+    sliderRep1->SetPoint2InWorldCoordinates(10, -10, 0);
+    sliderRep1->SetSliderWidth(.2);
+    sliderRep1->SetLabelHeight(.1);
+    vtkNew<vtkSliderWidget> sliderWidget1;
+    sliderWidget1->SetInteractor(renderer->GetInteractor());
+    sliderWidget1->SetRepresentation(sliderRep1);
+    sliderWidget1->SetAnimationModeToAnimate();
+    sliderWidget1->EnabledOn();
+    sliderWidget1->AddObserver(vtkCommand::InteractionEvent, slider1);
+
+
+    critical_points->SetInputConnection(source);
+    critical_points->Update();
+    feature_flow->SetInputConnection(critical_points);
+    feature_flow->Update();
+
+    points_set->SetInputConnection(feature_flow);
+    image->SetParameterID(3);
+    image->SetInputConnection(points_set);
+    subspace->SetId(size/2);
+    subspace->SetInputConnection(image);
+    renderer->SetInputConnection(subspace);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
+}
+
 int example_4d(int size, int min, int max){
     auto source = new VectorFieldSource(size,min,max);
     auto critical_points = new CalculateCriticalPoints();
@@ -271,5 +320,5 @@ int main(int argc, char* argv[])
     int size = 40;
     int min = -2;
     int max = 2;
-    return example_4d(size,min,max);
+    return example_3d(size,min,max);
 }

@@ -1,6 +1,7 @@
 #include "CriticalPoint.h"
 
-CriticalPoint::CriticalPoint(std::vector<double> coordinates) : Point(coordinates) {
+CriticalPoint::CriticalPoint(std::vector<double> coordinates, CriticalPointType type) : Point(coordinates) {
+    type_ = type;
 }
 
 void CriticalPoint::AddFFF(std::vector<double> fff) {

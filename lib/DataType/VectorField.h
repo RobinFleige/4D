@@ -9,5 +9,6 @@ public:
     void SetData(std::vector<std::vector<std::vector<double>>> values);
     std::vector<std::vector<std::vector<double>>>& GetData();
     std::vector<double>& GetData(int x, int y);
+    std::vector<double> GetInterpolated(double x, double y);
     int GetSize();
 };

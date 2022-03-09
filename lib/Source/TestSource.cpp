@@ -11,12 +11,12 @@ TestSource::TestSource(int size) {
 void TestSource::InternalUpdate() {
     output_ = new ProcessObject();
 
-    auto vector_field = new VectorField4D(size_);
+    auto vector_field = new ParameterDependentVectorField(size_);
 
-    std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> data;
+    std::vector<std::vector<VectorField*>> data;
     data.reserve(size_);
     for(int s = 0; s < size_; s++){
-        std::vector<std::vector<std::vector<std::vector<double>>>> txy_vector;
+        std::vector<VectorField*> txy_vector;
         txy_vector.reserve(size_);
         for(int t = 0; t < size_; t++){
             std::vector<std::vector<std::vector<double>>> xy_vector;
@@ -35,7 +35,9 @@ void TestSource::InternalUpdate() {
                 }
                 xy_vector.push_back(std::move(y_vector));
             }
-            txy_vector.push_back(std::move(xy_vector));
+            auto vectorField = new VectorField(size_);
+            vectorField->SetData(xy_vector);
+            txy_vector.push_back(vectorField);
         }
         data.push_back(std::move(txy_vector));
     }
@@ -59,8 +61,8 @@ void TestSource::InternalUpdate() {
             //
 
             if(s+t>size_){
-                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)(size_/2)+sqrt(s+t-size_),(double)size_/2}));
-                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)(size_/2)-sqrt(s+t-size_),(double)size_/2}));
+                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)(size_/2)+sqrt(s+t-size_),(double)size_/2},CriticalPointType::source));
+                critical_points.push_back(new CriticalPoint({(double)s,(double)t,(double)(size_/2)-sqrt(s+t-size_),(double)size_/2},CriticalPointType::saddle));
             }
 
         }

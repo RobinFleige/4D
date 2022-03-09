@@ -1,9 +1,9 @@
 #include <vector>
 #include <valarray>
-#include "CalculateCriticalPoints.h"
+#include "CalculateBifurcationPoints.h"
 
 
-void CalculateCriticalPoints::InternalUpdate() {
+void CalculateBifurcationPoints::InternalUpdate() {
     output_ = new ProcessObject();
     output_->SetVectorField(input_);
     for(int s = 1; s < input_->GetSize()-1; s++){
@@ -19,7 +19,7 @@ void CalculateCriticalPoints::InternalUpdate() {
     }
 }
 
-std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate, int max_iterations, std::vector<std::vector<double>> ids_set) {
+std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(bool interpolate, int max_iterations, std::vector<std::vector<double>> ids_set) {
     std::vector<std::vector<double>> pixel_set;
     for(int i = 0; i < 4; i++){
         if(interpolate){
@@ -30,6 +30,7 @@ std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate,
     }
     int positive_x = 0;
     int positive_y = 0;
+    int positive_fff = 0;
     for(int i = 0; i < 4; i++){
         if(pixel_set[i][0] > 0){
             positive_x++;
@@ -83,6 +84,6 @@ std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate,
     }
 }
 
-CalculateCriticalPoints::CalculateCriticalPoints() {
+CalculateBifurcationPoints::CalculateBifurcationPoints() {
     Invalidate();
 }

@@ -4,10 +4,10 @@
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
 #include <Slider/SliderObserver.h>
-#include <DataType/VectorField4D.h>
+#include <DataType/ParameterDependentVectorField.h>
 #include <DataType/VectorField.h>
 #include "../PipelineDefs/Filter.h"
-class Subspace4D2D : public Filter<VectorField4D*,VectorField*>, public SliderObserver {
+class Subspace4D2D : public Filter<ParameterDependentVectorField*,VectorField*>, public SliderObserver {
 private:
     std::vector<int> values_;
     void InternalUpdate() override;

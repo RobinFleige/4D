@@ -2,10 +2,10 @@
 #include <vector>
 #include <vtkImageData.h>
 #include "../PipelineDefs/Source.h"
-#include "../DataType/VectorField4D.h"
+#include "../DataType/ParameterDependentVectorField.h"
 #include <vtkPointData.h>
 
-class VectorFieldSource : public Source<VectorField4D*>{
+class VectorFieldSource : public Source<ParameterDependentVectorField*>{
 private:
     int parameter_dimensions_ = 2;
     int space_dimensions_ = 2;
