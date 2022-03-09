@@ -60,7 +60,6 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/Subspace4D2D.cpp
         lib/Filter/VectorFieldToImageData.cpp
 
-        lib/Renderer/CriticalPointRenderer3D.cpp
         lib/Renderer/DoubleImageRenderer2D.cpp
         lib/Renderer/ImageRenderer2D.cpp
         lib/Renderer/ImageRenderer3D.cpp

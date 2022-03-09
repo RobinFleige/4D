@@ -37,13 +37,18 @@
 #include "../PipelineDefs/Renderer.h"
 #include "../Slider/SliderObserver.h"
 
+enum RenderType {point,line,triangle};
+
 class ImageRenderer4D : public Renderer<ProcessObject*> {
 private:
     std::string name_ = "Test";
     vtkSmartPointer<vtkPolyDataMapper> mapper_;
     vtkSmartPointer<vtkActor> actor_;
+    RenderType type_;
+    int supportive_dimension_;
+    bool use_transparency_;
+
     void InternalUpdate() override;
 public:
-    ImageRenderer4D();
-    void SetName(std::string name);
+    ImageRenderer4D(std::string name, RenderType type, int supportive_dimension, bool show_axes, bool use_transparency);
 };

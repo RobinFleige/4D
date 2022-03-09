@@ -8,7 +8,7 @@
 #include "../DataType/ParameterDependentVectorField.h"
 #include "../DataType/ProcessObject.h"
 
-class CalculateBifurcationPoints : public Filter<ParameterDependentVectorField*,ProcessObject*> {
+class CalculateBifurcationPoints : public Filter<ProcessObject*,ProcessObject*> {
 private:
     std::vector<CriticalPoint*> Subdivide(bool interpolate, int max_iterations, std::vector<std::vector<double>> ids);
     void InternalUpdate() override;

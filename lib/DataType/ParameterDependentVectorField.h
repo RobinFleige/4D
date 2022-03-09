@@ -17,4 +17,6 @@ public:
     int GetSize();
     std::vector<double> GetInterpolated(double s, double t, double x, double y);
     void SetFeatureFlowField(std::vector<std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>> fff);
+    double GetFFF3(int s, int t, int x, int y);
+    double GetInterpolatedFFF3(int s, int t, int x, int y);
 };

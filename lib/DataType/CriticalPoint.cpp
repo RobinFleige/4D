@@ -8,3 +8,7 @@ void CriticalPoint::AddFFF(std::vector<double> fff) {
     fff_.push_back(fff);
 }
 
+CriticalPointType CriticalPoint::GetCriticalPointType() {
+    return type_;
+}
+

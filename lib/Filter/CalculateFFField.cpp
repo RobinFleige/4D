@@ -59,26 +59,26 @@ void CalculateFFField::InternalUpdate() {
                         }
 
                         if(d == 0){
-                            if(y > 0){
+                            if(s > 0){
                                 prev_value_p = input_->GetVectorField()->GetInterpolated(s-0.5,t,x,y);
                             }else{
                                 prev_value_p = input_->GetVectorField()->GetInterpolated(0,t,x,y);
                                 p_factor=2;
                             }
-                            if(y < input_->GetVectorField()->GetSize()-1){
+                            if(s < input_->GetVectorField()->GetSize()-1){
                                 next_value_p = input_->GetVectorField()->GetInterpolated(s+0.5,t,x,y);
                             }else{
                                 next_value_p = input_->GetVectorField()->GetInterpolated(input_->GetVectorField()->GetSize()-1,t,x,y);
                                 p_factor=2;
                             }
                         }else{
-                            if(y > 0){
+                            if(t > 0){
                                 prev_value_p = input_->GetVectorField()->GetInterpolated(s,t-0.5,x,y);
                             }else{
                                 prev_value_p = input_->GetVectorField()->GetInterpolated(s,0,x,y);
                                 p_factor=2;
                             }
-                            if(y < input_->GetVectorField()->GetSize()-1){
+                            if(t < input_->GetVectorField()->GetSize()-1){
                                 next_value_p = input_->GetVectorField()->GetInterpolated(s,t+0.5,x,y);
                             }else{
                                 next_value_p = input_->GetVectorField()->GetInterpolated(s,input_->GetVectorField()->GetSize()-1,x,y);
