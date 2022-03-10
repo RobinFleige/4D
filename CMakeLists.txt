@@ -42,6 +42,7 @@ target_sources(prototype_lib PRIVATE
         lib/DataType/VectorField.cpp
 
         lib/DataTypeFilter/GetPointsSet.cpp
+        lib/DataTypeFilter/GetVectorField.cpp
 
         lib/Source/PointSource.cpp
         lib/Source/TestSource.cpp

@@ -19,7 +19,8 @@ double VectorFieldSource::Function(std::vector<int> ids, int space_dimension){
 }
 
 void VectorFieldSource::InternalUpdate(){
-    output_ = new ParameterDependentVectorField(size_);
+    output_ = new ProcessObject();
+    auto temp = new ParameterDependentVectorField(size_);
 
     std::vector<std::vector<VectorField*>> data;
     data.reserve(size_);
@@ -48,7 +49,8 @@ void VectorFieldSource::InternalUpdate(){
         }
         data.push_back(std::move(txy_vector));
     }
-    output_->SetData(std::move(data));
+    temp->SetData(std::move(data));
+    output_->SetVectorField(temp);
 }
 
 double VectorFieldSource::Normalize(int i) const {

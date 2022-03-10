@@ -3,9 +3,10 @@
 #include <vtkImageData.h>
 #include "../PipelineDefs/Source.h"
 #include "../DataType/ParameterDependentVectorField.h"
+#include "../DataType/ProcessObject.h"
 #include <vtkPointData.h>
 
-class VectorFieldSource : public Source<ParameterDependentVectorField*>{
+class VectorFieldSource : public Source<ProcessObject*>{
 private:
     int parameter_dimensions_ = 2;
     int space_dimensions_ = 2;

@@ -4,12 +4,11 @@
 
 
 void CalculateCriticalPoints::InternalUpdate() {
-    output_ = new ProcessObject();
-    output_->SetVectorField(input_);
-    for(int s = 1; s < input_->GetSize()-1; s++){
-        for(int t = 1; t < input_->GetSize()-1; t++){
-            for(int x = 0; x < input_->GetSize()-1; x++){
-                for(int y = 0; y < input_->GetSize()-1; y++){
+    output_ = input_;
+    for(int s = 1; s < input_->GetVectorField()->GetSize()-1; s++){
+        for(int t = 1; t < input_->GetVectorField()->GetSize()-1; t++){
+            for(int x = 0; x < input_->GetVectorField()->GetSize()-1; x++){
+                for(int y = 0; y < input_->GetVectorField()->GetSize()-1; y++){
                     std::vector<std::vector<double>> ids_set = {{(double)s,(double)t,(double)x,(double)y},{(double)s,(double)t,(double)x+1,(double)y},{(double)s,(double)t,(double)x,(double)y+1},{(double)s,(double)t,(double)x+1,(double)y+1}};
                     //std::cout<<s<<" "<<t<<" "<<x<<" "<<y<<std::endl;
                     output_->AppendCriticalPoints(Subdivide(false,10,ids_set));
@@ -23,9 +22,9 @@ std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate,
     std::vector<std::vector<double>> pixel_set;
     for(int i = 0; i < 4; i++){
         if(interpolate){
-            pixel_set.push_back(input_->GetData(ids_set[i][0],ids_set[i][1])->GetInterpolated(ids_set[i][2], ids_set[i][3]));
+            pixel_set.push_back(input_->GetVectorField()->GetData(ids_set[i][0],ids_set[i][1])->GetInterpolated(ids_set[i][2], ids_set[i][3]));
         }else{
-            pixel_set.push_back(input_->GetData(floor(ids_set[i][0]),floor(ids_set[i][1]),floor(ids_set[i][2]),floor(ids_set[i][3])));
+            pixel_set.push_back(input_->GetVectorField()->GetData(floor(ids_set[i][0]),floor(ids_set[i][1]),floor(ids_set[i][2]),floor(ids_set[i][3])));
         }
     }
     int positive_x = 0;

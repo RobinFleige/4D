@@ -17,6 +17,7 @@
 #include <Renderer/ImageRenderer4D.h>
 #include <Filter/CalculateFFField.h>
 #include <vtkSimplePointsReader.h>
+#include <DataTypeFilter/GetVectorField.h>
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
 #include "./Slider/Slider.h"
@@ -32,6 +33,7 @@ int two_in_one_image(int size, int min, int max){
     int t = size / 2;
 
     auto* source = new VectorFieldSource(size,min,max);
+    auto* vectorfield = new GetVectorField();
     auto* subspace = new Subspace4D2D();
     auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
@@ -90,7 +92,8 @@ int two_in_one_image(int size, int min, int max){
     sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
 
     source->Update();
-    subspace->SetInputConnection(source);
+    vectorfield->SetInputConnection(source);
+    subspace->SetInputConnection(vectorfield);
     subspace->SetId(s,0);
     subspace->SetId(t,0);
     subspace->Update();
@@ -158,14 +161,11 @@ int example_3d(int size, int min, int max){
 
 int example_3d_bifurcation(int size, int min, int max){
     auto source = new VectorFieldSource(size,-2,2);
-    auto critical_points = new CalculateCriticalPoints();
     auto feature_flow = new CalculateFFField();
     auto bifurcation = new CalculateBifurcationPoints();
     auto renderer = new ImageRenderer4D("Test",RenderType::point,3,false,false);
 
-    critical_points->SetInputConnection(source);
-    critical_points->Update();
-    feature_flow->SetInputConnection(critical_points);
+    feature_flow->SetInputConnection(source);
     feature_flow->Update();
     bifurcation->SetInputConnection(feature_flow);
     bifurcation->Update();
