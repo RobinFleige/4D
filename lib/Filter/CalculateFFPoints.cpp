@@ -59,12 +59,6 @@ void CalculateFFPoints::InternalUpdate() {
                     fff.push_back(0);
                 }
 
-
-                //fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
-                //fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
-                //fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
-
-
                 critical_points[i]->AddFFF(fff);
             }else{
                 critical_points[i]->AddFFF({0,0,0});

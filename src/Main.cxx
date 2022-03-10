@@ -168,6 +168,7 @@ int example_3d_bifurcation(int size, int min, int max){
     feature_flow->SetInputConnection(source);
     feature_flow->Update();
     bifurcation->SetInputConnection(feature_flow);
+    bifurcation->SetCalculateCriticalPoints(true);
     bifurcation->Update();
     renderer->SetInputConnection(bifurcation);
     renderer->Update();
@@ -197,7 +198,7 @@ int example_4d(int size, int min, int max){
 
 int main(int argc, char* argv[])
 {
-    int size = 40;
+    int size = 10;
     int min = -2;
     int max = 2;
     return example_3d_bifurcation(size,min,max);

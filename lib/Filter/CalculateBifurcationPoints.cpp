@@ -13,7 +13,7 @@ void CalculateBifurcationPoints::InternalUpdate() {
                     //Dimension{min,max}
                     std::vector<std::vector<double>> min_max_set = {{(double)s,(double)s+1},{(double)t,(double)t+1},{(double)x,(double)x+1},{(double)y,(double)y+1}};
                     //std::cout<<s<<" "<<t<<" "<<x<<" "<<y<<std::endl;
-                    output_->AppendCriticalPoints(Subdivide(1,min_max_set));
+                    output_->AppendCriticalPoints(Subdivide(2,min_max_set));
                 }
             }
         }
@@ -28,10 +28,10 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterat
         for(int t = 0; t < 2; t++){
             for(int x = 0; x < 2; x++){
                 for(int y = 0; y < 2; y++){
-                    if(input_->GetVectorField()->GetData(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y])[0] > 0){
+                    if(input_->GetVectorField()->GetInterpolated(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y])[0] > 0){
                         positive_x++;
                     }
-                    if(input_->GetVectorField()->GetData(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y])[1] > 0){
+                    if(input_->GetVectorField()->GetInterpolated(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y])[1] > 0){
                         positive_y++;
                     }
                     if(input_->GetVectorField()->GetInterpolatedFFF3(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]) > 0){

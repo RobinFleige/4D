@@ -3,10 +3,15 @@ MEETING
 
 
     ToDo
-        CalculateBifurcationPoints->Subdivide fff Vorzeichenwechsel
+        Fix CalculateCriticalPoints (after CalculateBifurcationPoints)
+        Komplexere Vektorfelder testen
         Change FFF Order (s,t,x,y); Change ImageRenderer4D accordingly
         ImageRenderer4D Make additionalParameter work
+        Zacken aus BifurcationCurve rausbekommen
+        Rauschen testen
+        Höhere Dimensionen
         Vision aufschreiben auf Folien (Add: Kontaktkurven von kritischen Punkten im Raum sind Bifurkation, in Parameter-Projektion können es auch Fehler durch reduzierte Dimension sein)
+
 
     Backlog
         FFF von FFF

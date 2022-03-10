@@ -99,22 +99,9 @@ void CalculateFFField::InternalUpdate() {
 
                         //Calculate determinants of derivative combinations
                         std::vector<double> fff;
-                        //fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
-                        //fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
-                        //fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
-                        if((derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]) < -0.00001){
-                            fff.push_back(-(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
-                            fff.push_back(-(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
-                            fff.push_back(-1);
-                        }else if((derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]) > 0.00001){
-                            fff.push_back((derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
-                            fff.push_back((derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0])/(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]));
-                            fff.push_back(1);
-                        } else{
-                            fff.push_back(1);
-                            fff.push_back(1);
-                            fff.push_back(0);
-                        }
+                        fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
+                        fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
+                        fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
                         d_vector.push_back(fff);
                     }
                     yd_vector.push_back(d_vector);

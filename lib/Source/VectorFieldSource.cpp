@@ -36,8 +36,12 @@ void VectorFieldSource::InternalUpdate(){
                 for(int y = 0; y < size_; y++){
                     std::vector<double> vector;
                     vector.reserve(2);
-                    vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                    vector.push_back(Normalize(y)+Normalize(s));
+                    //(xd*xd+td)*(yd-1)-(xd*xd+sd)*(yd+1)
+                    //(yd+1)*(yd-1)
+                    vector.push_back((Normalize(x)*Normalize(x)+Normalize(t))*((Normalize(y)-1))-(Normalize(x)*Normalize(x)+Normalize(s))*((Normalize(y)+1)));
+                    //vector.push_back(Normalize(x)*Normalize(x)+Normalize(t)*Normalize(t)+Normalize(s)*Normalize(s)-1);
+                    //vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
+                    vector.push_back(((Normalize(y)-1))*((Normalize(y)+1)));
                     //vector.push_back(Normalize(y));
                     y_vector.push_back(vector);
                 }
