@@ -6,21 +6,23 @@
 #include "../DataType/ProcessObject.h"
 #include <vtkPointData.h>
 
+enum VectorFieldExampleType{simple4d_without_y,simple4d,circle4d,double4d,simple5d};
+
 class VectorFieldSource : public Source<ProcessObject*>{
 private:
     int parameter_dimensions_ = 2;
     int space_dimensions_ = 2;
     int dimensions_ = 4;
 
+    VectorFieldExampleType type_;
     int size_;
     double min_;
     double max_;
     double step_;
 
-    double Function(std::vector<int> parameters, int space_dimension);
     double Normalize(int i) const;
     void InternalUpdate() override;
 public:
-    VectorFieldSource(int size, double min, double max);
+    VectorFieldSource(int size, double min, double max,VectorFieldExampleType type);
 
 };

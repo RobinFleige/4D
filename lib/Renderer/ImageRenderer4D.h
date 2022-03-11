@@ -45,10 +45,11 @@ private:
     vtkSmartPointer<vtkPolyDataMapper> mapper_;
     vtkSmartPointer<vtkActor> actor_;
     RenderType type_;
+    std::vector<int> used_dimensions_;
     int supportive_dimension_;
     bool use_transparency_;
 
     void InternalUpdate() override;
 public:
-    ImageRenderer4D(std::string name, RenderType type, int supportive_dimension, bool show_axes, bool use_transparency);
+    ImageRenderer4D(std::string name, RenderType type, std::vector<int> used_dimensions, int supportive_dimension, bool show_axes, bool use_transparency);
 };

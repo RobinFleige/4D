@@ -1,23 +1,6 @@
 #include <Source/VectorFieldSource.h>
 #include <valarray>
 
-double VectorFieldSource::Function(std::vector<int> ids, int space_dimension){
-    std::vector<double> normalized;
-    for(int i = 0; i < ids.size(); i++){
-        normalized.push_back(Normalize(i));
-    }
-    double value;
-    if(space_dimension == 0){
-        value = (normalized[2]*normalized[2]+normalized[1]-1)*(normalized[3]-1)+(normalized[2]*normalized[2]+normalized[1]+1)*(normalized[3]+1);
-    }else{
-        value = (normalized[3]+1)*(normalized[3]-1);
-    }
-    if(value == 0){
-        value = 0.001;
-    }
-    return value;
-}
-
 void VectorFieldSource::InternalUpdate(){
     output_ = new ProcessObject();
     auto temp = new ParameterDependentVectorField(size_);
@@ -36,13 +19,26 @@ void VectorFieldSource::InternalUpdate(){
                 for(int y = 0; y < size_; y++){
                     std::vector<double> vector;
                     vector.reserve(2);
-                    //(xd*xd+td)*(yd-1)-(xd*xd+sd)*(yd+1)
-                    //(yd+1)*(yd-1)
-                    vector.push_back((Normalize(x)*Normalize(x)+Normalize(t))*((Normalize(y)-1))-(Normalize(x)*Normalize(x)+Normalize(s))*((Normalize(y)+1)));
-                    //vector.push_back(Normalize(x)*Normalize(x)+Normalize(t)*Normalize(t)+Normalize(s)*Normalize(s)-1);
-                    //vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                    vector.push_back(((Normalize(y)-1))*((Normalize(y)+1)));
-                    //vector.push_back(Normalize(y));
+                    if(type_ == VectorFieldExampleType::simple4d){
+                        vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
+                        vector.push_back(Normalize(y)+Normalize(s));
+                    }
+                    if(type_ == VectorFieldExampleType::double4d){
+                        vector.push_back((Normalize(x)*Normalize(x)+Normalize(t))*((Normalize(y)-1))-(Normalize(x)*Normalize(x)+Normalize(s))*((Normalize(y)+1)));
+                        vector.push_back(((Normalize(y)-1))*((Normalize(y)+1)));
+                    }
+                    if(type_ == VectorFieldExampleType::circle4d){
+                        vector.push_back(Normalize(x)*Normalize(x)+Normalize(t)*Normalize(t)+Normalize(s)*Normalize(s)-1);
+                        vector.push_back(Normalize(y));
+                    }
+                    if(type_ == VectorFieldExampleType::simple4d_without_y){
+                        vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
+                        vector.push_back(Normalize(y));
+                    }
+                    if(type_ == VectorFieldExampleType::simple5d){
+                        vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
+                        vector.push_back(Normalize(y));
+                    }
                     y_vector.push_back(vector);
                 }
                 xy_vector.push_back(std::move(y_vector));
@@ -61,10 +57,11 @@ double VectorFieldSource::Normalize(int i) const {
     return i*step_+min_;
 }
 
-VectorFieldSource::VectorFieldSource(int size, double min, double max) {
+VectorFieldSource::VectorFieldSource(int size, double min, double max, VectorFieldExampleType type) {
     size_ = size;
     min_= min;
     max_ = max;
     step_ = (max_-min_)/size;
+    type_ = type;
     Invalidate();
 }

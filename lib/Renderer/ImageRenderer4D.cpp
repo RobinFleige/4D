@@ -114,11 +114,12 @@ void ImageRenderer4D::InternalUpdate() {
     window_->Render();
 }
 
-ImageRenderer4D::ImageRenderer4D(std::string name, RenderType type, int supportive_dimension, bool show_axes, bool use_transparency){
+ImageRenderer4D::ImageRenderer4D(std::string name, RenderType type, std::vector<int> used_dimensions, int supportive_dimension, bool show_axes, bool use_transparency){
     name_ = name;
     type_ = type;
     supportive_dimension_ = supportive_dimension;
     use_transparency_ = use_transparency;
+    used_dimensions_ = used_dimensions;
 
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
     window_ = vtkSmartPointer<vtkRenderWindow>::New();

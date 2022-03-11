@@ -13,7 +13,7 @@ void CalculateBifurcationPoints::InternalUpdate() {
                     //Dimension{min,max}
                     std::vector<std::vector<double>> min_max_set = {{(double)s,(double)s+1},{(double)t,(double)t+1},{(double)x,(double)x+1},{(double)y,(double)y+1}};
                     //std::cout<<s<<" "<<t<<" "<<x<<" "<<y<<std::endl;
-                    output_->AppendCriticalPoints(Subdivide(2,min_max_set));
+                    output_->AppendCriticalPoints(Subdivide(subdivision_depth_,min_max_set));
                 }
             }
         }
@@ -122,7 +122,8 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterat
     }
 }
 
-CalculateBifurcationPoints::CalculateBifurcationPoints() {
+CalculateBifurcationPoints::CalculateBifurcationPoints(int subdivision_depth) {
+    subdivision_depth_ = subdivision_depth;
     Invalidate();
 }
 

@@ -10,8 +10,10 @@
 
 class CalculateCriticalPoints : public Filter<ProcessObject*,ProcessObject*> {
 private:
+    int subdivision_depth_;
+
     std::vector<CriticalPoint*> Subdivide(bool interpolate, int max_iterations, std::vector<std::vector<double>> ids);
     void InternalUpdate() override;
 public:
-    CalculateCriticalPoints();
+    CalculateCriticalPoints(int subdivision_depth);
 };

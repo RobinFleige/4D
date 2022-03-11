@@ -11,7 +11,7 @@ void CalculateCriticalPoints::InternalUpdate() {
                 for(int y = 0; y < input_->GetVectorField()->GetSize()-1; y++){
                     std::vector<std::vector<double>> ids_set = {{(double)s,(double)t,(double)x,(double)y},{(double)s,(double)t,(double)x+1,(double)y},{(double)s,(double)t,(double)x,(double)y+1},{(double)s,(double)t,(double)x+1,(double)y+1}};
                     //std::cout<<s<<" "<<t<<" "<<x<<" "<<y<<std::endl;
-                    output_->AppendCriticalPoints(Subdivide(false,10,ids_set));
+                    output_->AppendCriticalPoints(Subdivide(false,subdivision_depth_,ids_set));
                 }
             }
         }
@@ -82,6 +82,7 @@ std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate,
     }
 }
 
-CalculateCriticalPoints::CalculateCriticalPoints() {
+CalculateCriticalPoints::CalculateCriticalPoints(int subdivision_depth) {
+    subdivision_depth_ = subdivision_depth;
     Invalidate();
 }

@@ -11,10 +11,11 @@
 class CalculateBifurcationPoints : public Filter<ProcessObject*,ProcessObject*> {
 private:
     bool calculate_critical_points_ = true;
+    int subdivision_depth_;
 
     std::vector<CriticalPoint*> Subdivide(int max_iterations, std::vector<std::vector<double>> ids);
     void InternalUpdate() override;
 public:
-    CalculateBifurcationPoints();
+    CalculateBifurcationPoints(int subdivision_depth);
     void SetCalculateCriticalPoints(bool calculate_critical_points);
 };

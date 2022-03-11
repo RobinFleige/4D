@@ -27,19 +27,19 @@
 #include "Filter/DrawPointsOnImage.h"
 #include "Filter/CalculateBifurcationPoints.h"
 
-int two_in_one_image(int size, int min, int max){
+int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
 
     int s = size / 2;
     int t = size / 2;
 
-    auto* source = new VectorFieldSource(size,min,max);
+    auto* source = new VectorFieldSource(size,min,max,type);
     auto* vectorfield = new GetVectorField();
     auto* subspace = new Subspace4D2D();
     auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage(2,3);
-    auto* critical_points = new CalculateCriticalPoints();
+    auto* critical_points = new CalculateCriticalPoints(5);
     auto* point_set = new GetPointsSet();
     auto* scalar_field = new PointSetToScalarField(size);
     auto* point_source = new PointSource();
@@ -126,80 +126,31 @@ int two_in_one_image(int size, int min, int max){
     return EXIT_SUCCESS;
 }
 
-int example_3d_with_lines(int size, int min, int max)
-{
-    auto source = new VectorFieldSource(size,min,max);
-    auto critical_points = new CalculateCriticalPoints();
-    auto fff = new CalculateFFPoints();
-    auto renderer = new ImageRenderer4D("Test",RenderType::line,3,false,false);
+int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
+    auto source = new VectorFieldSource(size,min,max,type);
+    auto feature_flow_field = new CalculateFFField();
+    auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
+    auto feature_flow_points = new CalculateFFPoints();
+    auto renderer = new ImageRenderer4D("Test",render_type,used_dimensions,additional_dimension,false,use_transparency);
 
-    source->Update();
-    critical_points->SetInputConnection(source);
-    critical_points->Update();
-    std::cout<<critical_points->GetOutput()->GetCriticalPoints().size()<<std::endl;
-    fff->SetInputConnection(critical_points);
-    fff->Update();
-    renderer->SetInputConnection(fff);
-    renderer->Update();
-    renderer->GetInteractor()->Start();
-
-    return EXIT_SUCCESS;
-}
-
-int example_3d(int size, int min, int max){
-    auto source = new VectorFieldSource(size,-2,2);
-    auto critical_points = new CalculateCriticalPoints();
-    auto renderer = new ImageRenderer4D("Test",RenderType::point,3,true,false);
-
-    critical_points->SetInputConnection(source);
-    renderer->SetInputConnection(critical_points);
-    renderer->Update();
-    renderer->GetInteractor()->Start();
-
-    return EXIT_SUCCESS;
-}
-
-int example_3d_bifurcation(int size, int min, int max){
-    auto source = new VectorFieldSource(size,-2,2);
-    auto feature_flow = new CalculateFFField();
-    auto bifurcation = new CalculateBifurcationPoints();
-    auto renderer = new ImageRenderer4D("Test",RenderType::point,3,false,false);
-
-    feature_flow->SetInputConnection(source);
-    feature_flow->Update();
-    bifurcation->SetInputConnection(feature_flow);
+    feature_flow_field->SetInputConnection(source);
+    feature_flow_field->Update();
+    bifurcation->SetInputConnection(feature_flow_field);
     bifurcation->SetCalculateCriticalPoints(true);
     bifurcation->Update();
-    renderer->SetInputConnection(bifurcation);
+    feature_flow_points->SetInputConnection(bifurcation);
+    feature_flow_points->Update();
+    renderer->SetInputConnection(feature_flow_points);
     renderer->Update();
     renderer->GetInteractor()->Start();
 
     return EXIT_SUCCESS;
 }
 
-int example_4d(int size, int min, int max){
-    auto source = new VectorFieldSource(size,min,max);
-    auto critical_points = new CalculateCriticalPoints();
-    auto fff = new CalculateFFPoints();
-    auto renderer = new ImageRenderer4D("Test",RenderType::triangle,3,false,false);
-
-    source->Update();
-    critical_points->SetInputConnection(source);
-    critical_points->Update();
-    std::cout<<critical_points->GetOutput()->GetCriticalPoints().size()<<std::endl;
-    fff->SetInputConnection(critical_points);
-    fff->Update();
-    renderer->SetInputConnection(fff);
-    renderer->Update();
-    renderer->GetInteractor()->Start();
-
-    return EXIT_SUCCESS;
-}
-
-int main(int argc, char* argv[])
-{
-    int size = 10;
+int main(int argc, char* argv[]){
+    int size = 20;
     int min = -2;
     int max = 2;
-    return example_3d_bifurcation(size,min,max);
+    VectorFieldExampleType type = VectorFieldExampleType::circle4d;
+    return render_general(size,min,max,type,{0,1,2},3,2,false,RenderType::point);
 }
