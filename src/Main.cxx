@@ -9,7 +9,6 @@
 #include <Filter/PointSetTo3D.h>
 #include <Filter/PointSetToScalarField.h>
 #include <Filter/VectorFieldToImageData.h>
-#include <Source/TestSource.h>
 #include <Filter/PointSetSubspace.h>
 #include <Filter/Subspace4D2D.h>
 #include <DataTypeFilter/GetPointsSet.h>
@@ -31,7 +30,7 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     int s = size / 2;
     int t = size / 2;
 
-    auto* source = new VectorFieldSource(size,min,max,type);
+    auto* source = new VectorFieldSource(2,2,size,min,max,type);
     auto* vectorfield = new GetVectorField();
     auto* subspace = new Subspace4D2D();
     auto* image = new VectorFieldToImageData();
@@ -112,8 +111,7 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     renderer->SetInputConnection(draw_points1);
     point_set->SetInputConnection(critical_points);
     scalar_field->SetInputConnection(point_set);
-    point_source->SetX(s);
-    point_source->SetY(t);
+    point_source->SetCoordinates({(double)s,(double)t});
     draw_points2->SetInputConnection(scalar_field);
     draw_points2->SetSecondaryInputConnection(point_source);
     renderer->SetSecondaryInputConnection(draw_points2);
@@ -126,7 +124,7 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
 }
 
 int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
-    auto source = new VectorFieldSource(size,min,max,type);
+    auto source = new VectorFieldSource(2,2,size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
     auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D("Test",render_type,used_dimensions,additional_dimension,false,use_transparency);

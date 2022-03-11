@@ -7,21 +7,14 @@ CalculateFFField::CalculateFFField() {
 void CalculateFFField::InternalUpdate() {
     output_ = input_;
     int size = input_->GetVectorField()->GetSize();
-    std::vector<std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>> feature_flow_field;
-    feature_flow_field.reserve(size);
-    for(int s = 0; s < size; s++){
-        std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> txyd_vector;
-        txyd_vector.reserve(size);
-        for(int t = 0; t < size; t++){
-            std::vector<std::vector<std::vector<std::vector<double>>>> xyd_vector;
-            xyd_vector.reserve(size);
-            for(int x = 0; x < size; x++){
-                std::vector<std::vector<std::vector<double>>> yd_vector;
-                yd_vector.reserve(size);
-                for(int y = 0; y < size; y++){
-                    std::vector<std::vector<double>>d_vector;
-                    d_vector.reserve(2);
-                    for(int d = 0; d < 2; d++){
+    std::vector<VectorField*> fffs;
+    for(int d = 0; d < 2; d++){
+        std::vector<Vector> fff_vector;
+        fff_vector.reserve(size*size*size);
+        for(int s = 0; s < size; s++){
+            for(int t = 0; t < size; t++){
+                for(int x = 0; x < size; x++){
+                    for(int y = 0; y < size; y++){
                         //Calculate previous and next values per dimension
                         double x_factor = 1;
                         double y_factor = 1;
@@ -102,15 +95,16 @@ void CalculateFFField::InternalUpdate() {
                         fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
                         fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
                         fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
-                        d_vector.push_back(fff);
+                        auto vec = new Vector();
+                        vec->values_ = fff;
+                        fff_vector.push_back(*vec);
                     }
-                    yd_vector.push_back(d_vector);
                 }
-                xyd_vector.push_back(yd_vector);
             }
-            txyd_vector.push_back(xyd_vector);
         }
-        feature_flow_field.push_back(txyd_vector);
+        auto feature_flow_field = new VectorField(input_->GetVectorField()->GetDimensions(),input_->GetVectorField()->GetSize());
+        feature_flow_field->SetData(fff_vector);
+        fffs.push_back(feature_flow_field);
     }
-    output_->GetVectorField()->SetFeatureFlowField(std::move(feature_flow_field));
+    output_->GetVectorField()->SetFeatureFlowField(std::move(fffs));
 }

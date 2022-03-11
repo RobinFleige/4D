@@ -3,24 +3,31 @@
 #include <iostream>
 #include "ParameterDependentVectorField.h"
 
-std::vector<std::vector<VectorField*>>& ParameterDependentVectorField::GetData() {
-    return values_;
-}
-
 VectorField* ParameterDependentVectorField::GetVectorField(std::vector<int> ids) {
-    return values_[ids[0]][ids[1]];
+    return vector_fields[IDFromIDs(ids)];
 }
 
 Vector ParameterDependentVectorField::GetData(std::vector<int> ids) {
-    return values_[ids[0]][ids[1]]->GetData({ids[2],ids[3]});
+    std::vector<int> primary_ids;
+    std::vector<int> secondary_ids;
+    for(int i = 0; i < ids.size(); i++){
+        if(i < parameter_dimensions_){
+            primary_ids.push_back(ids[i]);
+        }else{
+            secondary_ids.push_back(ids[i]);
+        }
+    }
+    return GetVectorField(primary_ids)->GetData(secondary_ids);
 }
 
-ParameterDependentVectorField::ParameterDependentVectorField(int size) {
+ParameterDependentVectorField::ParameterDependentVectorField(int parameter_dimensions, int space_dimensions, int size) {
+    parameter_dimensions_ = parameter_dimensions;
+    space_dimensions_ = space_dimensions;
     size_ = size;
 }
 
-void ParameterDependentVectorField::SetData(std::vector<std::vector<VectorField*>> values) {
-    values_ = std::move(values);
+void ParameterDependentVectorField::SetData(std::vector<VectorField*> values) {
+    vector_fields = std::move(values);
 }
 
 int ParameterDependentVectorField::GetSize() {
@@ -28,7 +35,7 @@ int ParameterDependentVectorField::GetSize() {
 }
 
 Vector ParameterDependentVectorField::GetInterpolated(std::vector<double> ids) {
-    int points_count = pow(2,4);
+    int points_count = pow(2,parameter_dimensions_+space_dimensions_);
     std::vector<double> factors;
     factors.reserve(points_count);
     std::vector<std::vector<int>> id_set;
@@ -37,9 +44,9 @@ Vector ParameterDependentVectorField::GetInterpolated(std::vector<double> ids) {
     for(int i = 0; i < points_count; i++){
         double factor = 1;
         std::vector<int> rounded_ids;
-        rounded_ids.reserve(4);
+        rounded_ids.reserve(parameter_dimensions_+space_dimensions_);
 
-        for(int j = 0; j < 4; j++){
+        for(int j = 0; j < parameter_dimensions_+space_dimensions_; j++){
             if(i%((int)pow(2,j+1)) < (int)pow(2,j)){
                 factor*=(floor(ids[j])-ids[j]+1);
                 rounded_ids.push_back(floor(ids[j]));
@@ -54,13 +61,13 @@ Vector ParameterDependentVectorField::GetInterpolated(std::vector<double> ids) {
     }
 
     std::vector<double> values;
-    values.reserve(2);
-    for(int i = 0; i < 2; i++){
+    values.reserve(space_dimensions_);
+    for(int i = 0; i < space_dimensions_; i++){
         values.push_back(0);
     }
 
     for(int i = 0; i < points_count; i++){
-        for(int d = 0; d < 2; d++){
+        for(int d = 0; d < space_dimensions_; d++){
             values[d]+=factors[i]*GetData(id_set[i]).values_[d];
         }
     }
@@ -71,88 +78,35 @@ Vector ParameterDependentVectorField::GetInterpolated(std::vector<double> ids) {
     return *vec;
 }
 
-void ParameterDependentVectorField::SetFeatureFlowField(std::vector<std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>> fff) {
-    fff_ = std::move(fff);
+void ParameterDependentVectorField::SetFeatureFlowField(std::vector<VectorField*> fffs) {
+    fffs_ = std::move(fffs);
 }
 
-std::vector<double> ParameterDependentVectorField::GetFFF(int s, int t, int x, int y, int d) {
-    return fff_[s][t][x][y][0];
+Vector ParameterDependentVectorField::GetFFF(std::vector<int> ids, int d) {
+    return fffs_[d]->GetData(ids);
 }
 
-std::vector<double> ParameterDependentVectorField::GetInterpolatedFFF(double s, double t, double x, double y, int d) {
-    std::vector<double> factors;
-    for(int si = 0; si < 2; si++){
-        for(int ti = 0; ti < 2; ti++){
-            for(int xi = 0; xi < 2; xi++){
-                for(int yi = 0; yi < 2; yi++){
-                    double factor = 1;
-                    if(si == 0){
-                        factor = factor * (floor(s)-s+1);
-                    }else{
-                        factor = factor * (s-floor(s));
-                    }
-                    if(ti == 0){
-                        factor = factor * (floor(t)-t+1);
-                    }else{
-                        factor = factor * (t-floor(t));
-                    }
-                    if(xi == 0){
-                        factor = factor * (floor(x)-x+1);
-                    }else{
-                        factor = factor * (x-floor(x));
-                    }
-                    if(yi == 0){
-                        factor = factor * (floor(y)-y+1);
-                    }else{
-                        factor = factor * (y-floor(y));
-                    }
-                    factors.push_back(factor);
-                }
-            }
-        }
+Vector ParameterDependentVectorField::GetInterpolatedFFF(std::vector<double> ids, int d) {
+    return fffs_[d]->GetInterpolated(ids);
+}
+
+int ParameterDependentVectorField::IDFromIDs(std::vector<int> ids) {
+    int id = 0;
+    for(int i = 0; i < parameter_dimensions_; i++){
+        id+=ids[i]*(int)pow(size_,parameter_dimensions_-i-1);
     }
-    std::vector<int> sp;
-    std::vector<int> tp;
-    std::vector<int> yp;
-    std::vector<int> xp;
-    for(int si = 0; si < 2; si++){
-        for(int ti = 0; ti < 2; ti++){
-            for(int xi = 0; xi < 2; xi++){
-                for(int yi = 0; yi < 2; yi++){
-                    if(si == 0){
-                        sp.push_back(floor(s));
-                    }else{
-                        sp.push_back(ceil(s));
-                    }
-                    if(ti == 0){
-                        tp.push_back(floor(t));
-                    }else{
-                        tp.push_back(ceil(t));
-                    }
-                    if(xi == 0){
-                        xp.push_back(floor(x));
-                    }else{
-                        xp.push_back(ceil(x));
-                    }
-                    if(yi == 0){
-                        yp.push_back(floor(y));
-                    }else{
-                        yp.push_back(ceil(y));
-                    }
-                }
-            }
-        }
+    return id;
+}
+
+std::vector<int> ParameterDependentVectorField::IDsFromID(int id) {
+    std::vector<int> ids;
+    ids.reserve(parameter_dimensions_);
+    for(int i = 0; i < parameter_dimensions_; i++){
+        ids.push_back(id%(int)pow(size_,parameter_dimensions_-i)/(int)pow(size_,parameter_dimensions_-i-1));
     }
-    std::vector<double> values;
-    values.reserve(3);
-    for(int i = 0; i < 3; i++){
-        values.push_back(0);
-    }
-    for(int i = 0; i < 16; i++){
-        //std::cout<<sp[i]<<" "<<tp[i]<<" "<<xp[i]<<" "<<yp[i]<<std::endl;
-        values[0]+= factors[i]*fff_[sp[i]][tp[i]][xp[i]][yp[i]][d][0];
-        values[1]+= factors[i]*fff_[sp[i]][tp[i]][xp[i]][yp[i]][d][1];
-        values[2]+= factors[i]*fff_[sp[i]][tp[i]][xp[i]][yp[i]][d][2];
-    }
-    return values;
+    return ids;
+}
+
+int ParameterDependentVectorField::GetDimensions() {
+    return parameter_dimensions_+space_dimensions_;
 }

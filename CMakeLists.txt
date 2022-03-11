@@ -46,7 +46,6 @@ target_sources(prototype_lib PRIVATE
         lib/DataTypeFilter/GetVectorField.cpp
 
         lib/Source/PointSource.cpp
-        lib/Source/TestSource.cpp
         lib/Source/VectorFieldSource.cpp
 
         lib/Filter/CalculateBifurcationPoints.cpp

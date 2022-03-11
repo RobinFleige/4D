@@ -3,6 +3,8 @@ MEETING
 
 
     ToDo
+        FFF auf 4er Vektor erweitern
+        FFF Berechnung von Dimensionen unabhängig machen
         Adjust Parameterdepedent;
         FFF als VectorField speichern
         Change FFF Order (s,t,x,y); Change ImageRenderer4D accordingly

@@ -9,7 +9,6 @@ private:
     int dimensions_;
     int size_;
 
-public:
     int IDFromIDs(std::vector<int> ids);
     std::vector<int> IDsFromID(int id);
 public:

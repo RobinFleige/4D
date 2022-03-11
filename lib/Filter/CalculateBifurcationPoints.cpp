@@ -34,7 +34,7 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterat
                     if(input_->GetVectorField()->GetInterpolated({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]}).values_[1] > 0){
                         positive_y++;
                     }
-                    if(input_->GetVectorField()->GetInterpolatedFFF(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y],0)[2] > 0){
+                    if(input_->GetVectorField()->GetInterpolatedFFF({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]},0).values_[2] > 0){
                         positive_fff++;
                     }
                 }

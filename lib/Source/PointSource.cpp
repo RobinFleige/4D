@@ -1,18 +1,15 @@
 #include "PointSource.h"
 
-void PointSource::SetX(int x) {
-    x_ = x;
-    Invalidate();
-}
+#include <utility>
 
-void PointSource::SetY(int y) {
-    y_ = y;
+void PointSource::SetCoordinates(std::vector<double> coordinates) {
+    coordinates_ = std::move(coordinates);
     Invalidate();
 }
 
 void PointSource::InternalUpdate() {
     output_.clear();
-    output_.push_back(new Point({(double)x_,(double)y_,0}));
+    output_.push_back(new Point(coordinates_));
 }
 
 PointSource::PointSource() {
@@ -21,10 +18,6 @@ PointSource::PointSource() {
 
 
 void PointSource::OnChange(double value, int id) {
-    if(id == 0){
-        x_ = value;
-    }else if(id == 1){
-        y_ = value;
-    }
+    coordinates_[id] = value;
     Invalidate();
 }

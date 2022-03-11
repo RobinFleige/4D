@@ -10,9 +10,8 @@ enum VectorFieldExampleType{simple4d_without_y,simple4d,circle4d,double4d,simple
 
 class VectorFieldSource : public Source<ProcessObject*>{
 private:
-    int parameter_dimensions_ = 2;
-    int space_dimensions_ = 2;
-    int dimensions_ = 4;
+    int parameter_dimensions_;
+    int space_dimensions_;
 
     VectorFieldExampleType type_;
     int size_;
@@ -23,6 +22,6 @@ private:
     double Normalize(int i) const;
     void InternalUpdate() override;
 public:
-    VectorFieldSource(int size, double min, double max,VectorFieldExampleType type);
+    VectorFieldSource(int parameter_dimension, int space_dimensions, int size, double min, double max,VectorFieldExampleType type);
 
 };

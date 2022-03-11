@@ -3,13 +3,11 @@
 
 void VectorFieldSource::InternalUpdate(){
     output_ = new ProcessObject();
-    auto temp = new ParameterDependentVectorField(size_);
+    auto temp = new ParameterDependentVectorField(parameter_dimensions_, space_dimensions_, size_);
 
-    std::vector<std::vector<VectorField*>> data;
-    data.reserve(size_);
+    std::vector<VectorField*> data;
+    data.reserve(size_*size_);
     for(int s = 0; s < size_; s++){
-        std::vector<VectorField*> txy_vector;
-        txy_vector.reserve(size_);
         for(int t = 0; t < size_; t++){
             std::vector<Vector> xy_vector;
             xy_vector.reserve(size_*size_);
@@ -44,9 +42,8 @@ void VectorFieldSource::InternalUpdate(){
             }
             auto vectorField = new VectorField(2,size_);
             vectorField->SetData(xy_vector);
-            txy_vector.push_back(vectorField);
+            data.push_back(vectorField);
         }
-        data.push_back(std::move(txy_vector));
     }
     temp->SetData(std::move(data));
     output_->SetVectorField(temp);
@@ -56,7 +53,9 @@ double VectorFieldSource::Normalize(int i) const {
     return i*step_+min_;
 }
 
-VectorFieldSource::VectorFieldSource(int size, double min, double max, VectorFieldExampleType type) {
+VectorFieldSource::VectorFieldSource(int parameter_dimensions, int space_dimensions, int size, double min, double max, VectorFieldExampleType type) {
+    parameter_dimensions_ = parameter_dimensions;
+    space_dimensions_ = space_dimensions;
     size_ = size;
     min_= min;
     max_ = max;

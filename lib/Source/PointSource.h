@@ -7,12 +7,10 @@
 
 class PointSource : public Source<std::vector<Point*>>, public SliderObserver {
 private:
-    int x_;
-    int y_;
+    std::vector<double> coordinates_;
     void InternalUpdate() override;
 public:
-    void SetX(int x);
-    void SetY(int y);
+    void SetCoordinates(std::vector<double> coordinates);
     PointSource();
     void OnChange(double value, int id) override;
 };
