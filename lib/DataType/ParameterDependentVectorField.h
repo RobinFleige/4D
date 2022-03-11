@@ -28,4 +28,10 @@ public:
 
     int GetSize();
     int GetDimensions();
+    int GetParameterDimensions();
+    int GetSpaceDimensions();
+
+    int IDFromIDsFull(std::vector<int> ids);
+    std::vector<int> IDsFromIDFull(int id);
+
 };

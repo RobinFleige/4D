@@ -141,6 +141,28 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
     return EXIT_SUCCESS;
 }
 
+double Determinant(std::vector<std::vector<double>> matrix) {
+    if(matrix.size() == 1){
+        return matrix[0][0];
+    }else{
+        double value = 0;
+        for(int i = 0; i < matrix.size(); i++){
+            std::vector<std::vector<double>> next_matrix;
+            for(int x = 1; x < matrix.size(); x++){
+                std::vector<double> next_vector;
+                for(int y = 0; y < matrix.size(); y++){
+                    if(y != i){
+                        next_vector.push_back(matrix[x][y]);
+                    }
+                }
+                next_matrix.push_back(next_vector);
+            }
+            value += matrix[0][i]*pow(-1,i)*Determinant(next_matrix);
+        }
+        return value;
+    }
+}
+
 int main(int argc, char* argv[]){
     int size = 10;
     int min = -2;

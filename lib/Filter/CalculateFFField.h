@@ -7,6 +7,7 @@
 class CalculateFFField : public Filter<ProcessObject*,ProcessObject*> {
 private:
     void InternalUpdate() override;
+    double Determinant(std::vector<std::vector<double>> matrix);
 public:
     CalculateFFField();
 };

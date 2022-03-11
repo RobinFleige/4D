@@ -1,27 +1,27 @@
 MEETING
     Done
-
+        Bifurcation Curve berechnen
+        Transparenz
+        Einfärbung/Klassifizierung
 
     ToDo
-        FFF auf 4er Vektor erweitern
         FFF Berechnung von Dimensionen unabhängig machen
-        Adjust Parameterdepedent;
-        FFF als VectorField speichern
-        Change FFF Order (s,t,x,y); Change ImageRenderer4D accordingly
-        Test with 3D Space
-        VectorField Dimensionen parametrisieren
-
+        CalculateBifurcation Dimensionsunabhängig machen
+        Sources Dimensionsunabhängig machen
         ImageRenderer4D Make additionalParameter work -> Auch genutzte Dimensionen übergeben, um höhere Dimensionen zu ermöglichen
-        Rauschen testen
-        Vision aufschreiben auf Folien (Add: Kontaktkurven von kritischen Punkten im Raum sind Bifurkation, in Parameter-Projektion können es auch Fehler durch reduzierte Dimension sein)
+
+        Test with 3D Space
+
 
 
     Backlog
         FFF von FFF
         Sattel/Senke/Source prüfen; Fake Source prüfen
-        Fix CalculateCriticalPoints (after CalculateBifurcationPoints)
         Zacken aus BifurcationCurve rausbekommen (vermutlich nur wegen niedriger Subdivision Tiefe)
-
+        Rauschen testen
+        Vision aufschreiben auf Folien (Add: Kontaktkurven von kritischen Punkten im Raum sind Bifurkation, in Parameter-Projektion können es auch Fehler durch reduzierte Dimension sein)
+        Store Calculations for faster Example
+        Optimization: Start with reduced resolution and use subdivision to ignore big parts of the vectorfield
 
 
 
@@ -38,17 +38,6 @@ Formalisiert:
     FFF(2D+2):            Vektorfeld(3D+1)(x,y,det(v_x,v_y)); -> FFF darauf berechnen
 
 
-
-
-
-//TODO Filter zum Berechnen der Linien der Bifurkationen erstellen
-//TODO Filter um Teile aus ProcessObject wieder rauszuziehen (kritische Punkte, Bifurkationen, Vektorfeld?)
-
-
-//Backlog Store Calculations for faster Example
-//Backlog Optimization: Start with reduced resolution and use subdivision to ignore big parts of the vectorfield
-//Backlog Höhere Dimensionen
-//Backlog FFF entsprechend sortieren (s,t,x,y) statt (x,y,s,t)
 
 
 Vektorfelder:

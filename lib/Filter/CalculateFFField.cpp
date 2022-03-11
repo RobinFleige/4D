@@ -7,104 +7,94 @@ CalculateFFField::CalculateFFField() {
 void CalculateFFField::InternalUpdate() {
     output_ = input_;
     int size = input_->GetVectorField()->GetSize();
+
     std::vector<VectorField*> fffs;
-    for(int d = 0; d < 2; d++){
+    fffs.reserve(input_->GetVectorField()->GetParameterDimensions());
+    std::vector<std::vector<Vector>> fff_vectors;
+    fff_vectors.reserve(input_->GetVectorField()->GetParameterDimensions());
+
+    for(int d = 0; d < input_->GetVectorField()->GetParameterDimensions(); d++){
         std::vector<Vector> fff_vector;
-        fff_vector.reserve(size*size*size);
-        for(int s = 0; s < size; s++){
-            for(int t = 0; t < size; t++){
-                for(int x = 0; x < size; x++){
-                    for(int y = 0; y < size; y++){
-                        //Calculate previous and next values per dimension
-                        double x_factor = 1;
-                        double y_factor = 1;
-                        double p_factor = 1;
-                        Vector prev_value_x;
-                        Vector next_value_x;
-                        Vector prev_value_y;
-                        Vector next_value_y;
-                        Vector prev_value_p;
-                        Vector next_value_p;
+        fff_vector.reserve((int)pow(size,input_->GetVectorField()->GetDimensions()));
+        fff_vectors.push_back(fff_vector);
+    }
 
-                        if(x > 0){
-                            prev_value_x = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,x-0.5,(double)y});
-                        }else{
-                            prev_value_x = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,0,(double)y});
-                            x_factor=2;
-                        }
-                        if(x < input_->GetVectorField()->GetSize()-1){
-                            next_value_x = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,x+0.5,(double)y});
-                        }else{
-                            next_value_x = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,(double)input_->GetVectorField()->GetSize()-1,(double)y});
-                            x_factor=2;
-                        }
-                        if(y > 0){
-                            prev_value_y = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,(double)x,y-0.5});
-                        }else{
-                            prev_value_y = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,(double)x,0});
-                            y_factor=2;
-                        }
-                        if(y < input_->GetVectorField()->GetSize()-1){
-                            next_value_y = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,(double)x,y+0.5});
-                        }else{
-                            next_value_y = input_->GetVectorField()->GetInterpolated({(double)s,(double)t,(double)x,(double)input_->GetVectorField()->GetSize()-1});
-                            y_factor=2;
-                        }
+    for(int i = 0; i < (int)pow(size,input_->GetVectorField()->GetDimensions()); i++){
+        std::vector<Vector> derivatives;
+        std::vector<int> ids = input_->GetVectorField()->IDsFromIDFull(i);
 
-                        if(d == 0){
-                            if(s > 0){
-                                prev_value_p = input_->GetVectorField()->GetInterpolated({s-0.5,(double)t,(double)x,(double)y});
-                            }else{
-                                prev_value_p = input_->GetVectorField()->GetInterpolated({0,(double)t,(double)x,(double)y});
-                                p_factor=2;
-                            }
-                            if(s < input_->GetVectorField()->GetSize()-1){
-                                next_value_p = input_->GetVectorField()->GetInterpolated({s+0.5,(double)t,(double)x,(double)y});
-                            }else{
-                                next_value_p = input_->GetVectorField()->GetInterpolated({(double)input_->GetVectorField()->GetSize()-1,(double)t,(double)x,(double)y});
-                                p_factor=2;
-                            }
-                        }else{
-                            if(t > 0){
-                                prev_value_p = input_->GetVectorField()->GetInterpolated({(double)s,t-0.5,(double)x,(double)y});
-                            }else{
-                                prev_value_p = input_->GetVectorField()->GetInterpolated({(double)s,0,(double)x,(double)y});
-                                p_factor=2;
-                            }
-                            if(t < input_->GetVectorField()->GetSize()-1){
-                                next_value_p = input_->GetVectorField()->GetInterpolated({(double)s,t+0.5,(double)x,(double)y});
-                            }else{
-                                next_value_p = input_->GetVectorField()->GetInterpolated({(double)s,(double)input_->GetVectorField()->GetSize()-1,(double)x,(double)y});
-                                p_factor=2;
-                            }
-                        }
+        for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+            Vector prev;
+            Vector next;
+            double factor = 1;
+            std::vector<int> prev_ids = ids;
+            std::vector<int> next_ids = ids;
+            if(ids[d] == 0){
+                prev_ids[d] = 0;
+                factor = 2;
+            }else{
+                prev_ids[d] = ids[d]-1;
+            }
+            prev = input_->GetVectorField()->GetData(prev_ids);
+            if(ids[d] == input_->GetVectorField()->GetSize()-1){
+                next_ids[d] = input_->GetVectorField()->GetSize()-1;
+                factor = 2;
+            }else{
+                next_ids[d] = ids[d]+1;
+            }
+            next = input_->GetVectorField()->GetData(next_ids);
+            derivatives.push_back(Vector::Derivative(next,prev,factor));
+        }
 
-                        //Calculate derivatives per dimension
-                        std::vector<double> derivative_x;
-                        std::vector<double> derivative_y;
-                        std::vector<double> derivative_p;
-                        derivative_x.push_back((next_value_x.values_[0]-prev_value_x.values_[0])*x_factor);
-                        derivative_x.push_back((next_value_x.values_[1]-prev_value_x.values_[1])*x_factor);
-                        derivative_y.push_back((next_value_y.values_[0]-prev_value_y.values_[0])*y_factor);
-                        derivative_y.push_back((next_value_y.values_[1]-prev_value_y.values_[1])*y_factor);
-                        derivative_p.push_back((next_value_p.values_[0]-prev_value_p.values_[0])*p_factor);
-                        derivative_p.push_back((next_value_p.values_[1]-prev_value_p.values_[1])*p_factor);
-
-                        //Calculate determinants of derivative combinations
-                        std::vector<double> fff;
-                        fff.push_back(derivative_y[0]*derivative_p[1]-derivative_y[1]*derivative_p[0]);
-                        fff.push_back(derivative_p[0]*derivative_x[1]-derivative_p[1]*derivative_x[0]);
-                        fff.push_back(derivative_x[0]*derivative_y[1]-derivative_x[1]*derivative_y[0]);
-                        auto vec = new Vector();
-                        vec->values_ = fff;
-                        fff_vector.push_back(*vec);
-                    }
+        //ToDo FFF Berechnung von Dimensionen unabhängig machen
+        for(int d = 0; d < input_->GetVectorField()->GetParameterDimensions(); d++){
+            std::vector<double> fff;
+            for(int d2 = 0; d2< input_->GetVectorField()->GetParameterDimensions(); d2++){
+                if(d == d2){
+                    fff.push_back(Determinant({derivatives[2].values_,derivatives[3].values_}));
+                }else{
+                    fff.push_back(0);
                 }
             }
+
+            for(int d2 = 0; d2< input_->GetVectorField()->GetSpaceDimensions(); d2++){
+                fff.push_back(Determinant({derivatives[3].values_,derivatives[d].values_}));
+                fff.push_back(Determinant({derivatives[d].values_,derivatives[2].values_}));
+            }
+
+            auto vec = new Vector();
+            vec->values_ = fff;
+            fff_vectors[d].push_back(*vec);
         }
+    }
+
+    for(int d = 0; d < input_->GetVectorField()->GetParameterDimensions(); d++){
         auto feature_flow_field = new VectorField(input_->GetVectorField()->GetDimensions(),input_->GetVectorField()->GetSize());
-        feature_flow_field->SetData(fff_vector);
+        feature_flow_field->SetData(fff_vectors[d]);
         fffs.push_back(feature_flow_field);
+
     }
     output_->GetVectorField()->SetFeatureFlowField(std::move(fffs));
+}
+
+double CalculateFFField::Determinant(std::vector<std::vector<double>> matrix) {
+    if(matrix.size() == 1){
+        return matrix[0][0];
+    }else{
+        double value = 0;
+        for(int i = 0; i < matrix.size(); i++){
+            std::vector<std::vector<double>> next_matrix;
+            for(int x = 1; x < matrix.size(); x++){
+                std::vector<double> next_vector;
+                for(int y = 0; y < matrix.size(); y++){
+                    if(y != i){
+                        next_vector.push_back(matrix[x][y]);
+                    }
+                }
+                next_matrix.push_back(next_vector);
+            }
+            value += matrix[0][i]*pow(-1,i)*Determinant(next_matrix);
+        }
+        return value;
+    }
 }

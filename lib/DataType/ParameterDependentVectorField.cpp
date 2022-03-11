@@ -110,3 +110,28 @@ std::vector<int> ParameterDependentVectorField::IDsFromID(int id) {
 int ParameterDependentVectorField::GetDimensions() {
     return parameter_dimensions_+space_dimensions_;
 }
+
+int ParameterDependentVectorField::GetParameterDimensions() {
+    return parameter_dimensions_;
+}
+
+int ParameterDependentVectorField::IDFromIDsFull(std::vector<int> ids) {
+    int id = 0;
+    for(int i = 0; i < GetDimensions(); i++){
+        id+=ids[i]*(int)pow(size_,GetDimensions()-i-1);
+    }
+    return id;
+}
+
+std::vector<int> ParameterDependentVectorField::IDsFromIDFull(int id) {
+    std::vector<int> ids;
+    ids.reserve(GetDimensions());
+    for(int i = 0; i < GetDimensions(); i++){
+        ids.push_back(id%(int)pow(size_,GetDimensions()-i)/(int)pow(size_,GetDimensions()-i-1));
+    }
+    return ids;
+}
+
+int ParameterDependentVectorField::GetSpaceDimensions() {
+    return space_dimensions_;
+}
