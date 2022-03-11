@@ -28,13 +28,13 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterat
         for(int t = 0; t < 2; t++){
             for(int x = 0; x < 2; x++){
                 for(int y = 0; y < 2; y++){
-                    if(input_->GetVectorField()->GetInterpolated(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y])[0] > 0){
+                    if(input_->GetVectorField()->GetInterpolated({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]}).values_[0] > 0){
                         positive_x++;
                     }
-                    if(input_->GetVectorField()->GetInterpolated(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y])[1] > 0){
+                    if(input_->GetVectorField()->GetInterpolated({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]}).values_[1] > 0){
                         positive_y++;
                     }
-                    if(input_->GetVectorField()->GetInterpolatedFFF3(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]) > 0){
+                    if(input_->GetVectorField()->GetInterpolatedFFF(min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y],0)[2] > 0){
                         positive_fff++;
                     }
                 }
@@ -97,10 +97,10 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterat
                 double sum_x;
                 double sum_y;
                 for(int a = 0; a < 2; a++){
-                    sum_x+=input_->GetVectorField()->GetInterpolated(mid[0],mid[1],min_max_set[2][0],min_max_set[3][a])[0];
-                    sum_x-=input_->GetVectorField()->GetInterpolated(mid[0],mid[1],min_max_set[2][1],min_max_set[3][a])[0];
-                    sum_y+=input_->GetVectorField()->GetInterpolated(mid[0],mid[1],min_max_set[2][a],min_max_set[3][0])[1];
-                    sum_y-=input_->GetVectorField()->GetInterpolated(mid[0],mid[1],min_max_set[2][a],min_max_set[3][1])[1];
+                    sum_x+=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][0],min_max_set[3][a]}).values_[0];
+                    sum_x-=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][1],min_max_set[3][a]}).values_[0];
+                    sum_y+=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][a],min_max_set[3][0]}).values_[1];
+                    sum_y-=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][a],min_max_set[3][1]}).values_[1];
                 }
                 if(sum_x > 0){
                     if(sum_y > 0){

@@ -39,6 +39,7 @@ target_sources(prototype_lib PRIVATE
         lib/DataType/ParameterDependentVectorField.cpp
         lib/DataType/Point.cpp
         lib/DataType/ProcessObject.cpp
+        lib/DataType/Vector.cpp
         lib/DataType/VectorField.cpp
 
         lib/DataTypeFilter/GetPointsSet.cpp
@@ -51,7 +52,6 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/CalculateBifurcationPoints.cpp
         lib/Filter/CalculateCriticalPoints.cpp
         lib/Filter/CalculateFFField.cpp
-        lib/Filter/CalculateFFPoints.cpp
         lib/Filter/DrawPointsOnImage.cpp
         lib/Filter/LIC.cpp
         lib/Filter/PointSetSubspace.cpp

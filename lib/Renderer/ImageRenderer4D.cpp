@@ -64,10 +64,12 @@ void ImageRenderer4D::InternalUpdate() {
         }
 
         if(type_ == RenderType::line) {
-            double p0[3] = {critical_points[i]->GetCoordinates()[0]-critical_points[i]->GetFFF()[0][2]   ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]-critical_points[i]->GetFFF()[0][0]};
-            double p1[3] = {critical_points[i]->GetCoordinates()[0]+critical_points[i]->GetFFF()[0][2]   ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[0][0]};
-            double p2[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]-critical_points[i]->GetFFF()[1][2]  ,critical_points[i]->GetCoordinates()[2]-critical_points[i]->GetFFF()[1][0]};
-            double p3[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]+critical_points[i]->GetFFF()[1][2]  ,critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[1][0]};
+            std::vector<double> fff1 = input_->GetVectorField()->GetInterpolatedFFF(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3],0);
+            std::vector<double> fff2 = input_->GetVectorField()->GetInterpolatedFFF(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3],1);
+            double p0[3] = {critical_points[i]->GetCoordinates()[0]-fff1[2]  ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]-fff1[0]};
+            double p1[3] = {critical_points[i]->GetCoordinates()[0]+fff1[2]   ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]+fff1[0]};
+            double p2[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]-fff2[2]  ,critical_points[i]->GetCoordinates()[2]-fff2[0]};
+            double p3[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]+fff2[2]  ,critical_points[i]->GetCoordinates()[2]+fff2[0]};
             points->InsertNextPoint(p0);
             points->InsertNextPoint(p1);
             points->InsertNextPoint(p2);
@@ -83,10 +85,12 @@ void ImageRenderer4D::InternalUpdate() {
         }
 
         if(type_ == RenderType::triangle) {
+            std::vector<double> fff1 = input_->GetVectorField()->GetInterpolatedFFF(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3],0);
+            std::vector<double> fff2 = input_->GetVectorField()->GetInterpolatedFFF(critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3],1);
             double p0[3] = {critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3],critical_points[i]->GetCoordinates()[1]};
-            double p1[3] = {critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[0][0],critical_points[i]->GetCoordinates()[3]+critical_points[i]->GetFFF()[0][1],critical_points[i]->GetCoordinates()[1]};
-            double p2[3] = {critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[1][0],critical_points[i]->GetCoordinates()[3]+critical_points[i]->GetFFF()[1][1],critical_points[i]->GetCoordinates()[1]+critical_points[i]->GetFFF()[1][2]};
-            double p3[3] = {critical_points[i]->GetCoordinates()[2]+critical_points[i]->GetFFF()[1][0]+critical_points[i]->GetFFF()[0][0],critical_points[i]->GetCoordinates()[3]+critical_points[i]->GetFFF()[1][1]+critical_points[i]->GetFFF()[0][1],critical_points[i]->GetCoordinates()[1]+critical_points[i]->GetFFF()[1][2]};
+            double p1[3] = {critical_points[i]->GetCoordinates()[2]+fff1[0],critical_points[i]->GetCoordinates()[3]+fff1[1],critical_points[i]->GetCoordinates()[1]};
+            double p2[3] = {critical_points[i]->GetCoordinates()[2]+fff2[0],critical_points[i]->GetCoordinates()[3]+fff2[1],critical_points[i]->GetCoordinates()[1]+fff2[2]};
+            double p3[3] = {critical_points[i]->GetCoordinates()[2]+fff2[0]+fff1[0],critical_points[i]->GetCoordinates()[3]+fff2[1]+fff1[1],critical_points[i]->GetCoordinates()[1]+fff2[2]};
             points->InsertNextPoint(p0);
             points->InsertNextPoint(p1);
             points->InsertNextPoint(p2);

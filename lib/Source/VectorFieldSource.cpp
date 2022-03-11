@@ -11,11 +11,9 @@ void VectorFieldSource::InternalUpdate(){
         std::vector<VectorField*> txy_vector;
         txy_vector.reserve(size_);
         for(int t = 0; t < size_; t++){
-            std::vector<std::vector<std::vector<double>>> xy_vector;
-            xy_vector.reserve(size_);
+            std::vector<Vector> xy_vector;
+            xy_vector.reserve(size_*size_);
             for(int x = 0; x < size_; x++){
-                std::vector<std::vector<double>> y_vector;
-                y_vector.reserve(size_);
                 for(int y = 0; y < size_; y++){
                     std::vector<double> vector;
                     vector.reserve(2);
@@ -39,11 +37,12 @@ void VectorFieldSource::InternalUpdate(){
                         vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
                         vector.push_back(Normalize(y));
                     }
-                    y_vector.push_back(vector);
+                    auto vec = new Vector();
+                    vec->values_ = vector;
+                    xy_vector.push_back(*vec);
                 }
-                xy_vector.push_back(std::move(y_vector));
             }
-            auto vectorField = new VectorField(size_);
+            auto vectorField = new VectorField(2,size_);
             vectorField->SetData(xy_vector);
             txy_vector.push_back(vectorField);
         }

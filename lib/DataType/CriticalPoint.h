@@ -12,7 +12,6 @@ class CriticalPoint : public Point {
 
 public:
     CriticalPoint(std::vector<double> coordinates,CriticalPointType type);
-    void AddFFF(std::vector<double> fff);
     CriticalPointType GetCriticalPointType();
 
 };

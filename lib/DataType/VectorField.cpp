@@ -1,35 +1,80 @@
-#include <valarray>
 #include "VectorField.h"
 
-std::vector<std::vector<std::vector<double>>>& VectorField::GetData() {
-    return values_;
-}
-
-VectorField::VectorField(int size) {
+VectorField::VectorField(int dimensions, int size) {
+    dimensions_ = dimensions;
     size_ = size;
 }
 
-void VectorField::SetData(std::vector<std::vector<std::vector<double>>> values) {
-    values_ = std::move(values);
+void VectorField::SetData(std::vector<Vector> vectors) {
+    vectors_ = std::move(vectors);
 }
 
-int VectorField::GetSize() {
+int VectorField::GetSize() const {
     return size_;
 }
 
-std::vector<double>& VectorField::GetData(int x, int y) {
-    return values_[x][y];
+Vector VectorField::GetData(std::vector<int> ids) {
+    int id = IDFromIDs(ids);
+    return vectors_[id];
 }
 
-std::vector<double> VectorField::GetInterpolated(double x, double y) {
-    std::vector<double> factor;
-    factor.push_back((floor(x)-x+1)*(floor(y)-y+1));
-    factor.push_back((x-floor(x))*(floor(y)-y+1));
-    factor.push_back((floor(x)-x+1)*(y-floor(y)));
-    factor.push_back((x-floor(x))*(y-floor(y)));
+Vector VectorField::GetInterpolated(std::vector<double> ids) {
+    int points_count = pow(2,dimensions_);
+    std::vector<double> factors;
+    factors.reserve(points_count);
+    std::vector<std::vector<int>> id_set;
+    id_set.reserve(points_count);
 
-    std::vector<double> value;
-    value.push_back(factor[0] * values_[floor(x)][floor(y)][0] + factor[1] * values_[ceil(x)][floor(y)][0]+factor[2] * values_[floor(x)][ceil(y)][0]+factor[3]*values_[ceil(x)][ceil(y)][0]);
-    value.push_back(factor[0] * values_[floor(x)][floor(y)][1] + factor[1] * values_[ceil(x)][floor(y)][1]+factor[2] * values_[floor(x)][ceil(y)][1]+factor[3]*values_[ceil(x)][ceil(y)][1]);
-    return value;
+    for(int i = 0; i < points_count; i++){
+        double factor = 1;
+        std::vector<int> rounded_ids;
+        rounded_ids.reserve(dimensions_);
+
+        for(int j = 0; j < dimensions_; j++){
+            if(i%((int)pow(2,j+1)) < (int)pow(2,j)){
+                factor*=(floor(ids[j])-ids[j]+1);
+                rounded_ids.push_back(floor(ids[j]));
+            }else{
+                factor*=(ids[j]-floor(ids[j]));
+                rounded_ids.push_back(ceil(ids[j]));
+            }
+        }
+
+        factors.push_back(factor);
+        id_set.push_back(rounded_ids);
+    }
+
+    std::vector<double> values;
+    values.reserve(dimensions_);
+    for(int i = 0; i < dimensions_; i++){
+        values.push_back(0);
+    }
+
+    for(int i = 0; i < points_count; i++){
+        for(int d = 0; d < dimensions_; d++){
+            values[d]+=factors[i]*GetData(id_set[i]).values_[d];
+        }
+    }
+
+    auto vec = new Vector();
+    vec->values_ = values;
+
+    return *vec;
+}
+
+int VectorField::IDFromIDs(std::vector<int> ids) {
+    int id = 0;
+    for(int i = 0; i < dimensions_; i++){
+        id+=ids[i]*(int)pow(size_,dimensions_-i-1);
+    }
+    return id;
+}
+
+std::vector<int> VectorField::IDsFromID(int id) {
+    std::vector<int> ids;
+    ids.reserve(dimensions_);
+    for(int i = 0; i < dimensions_; i++){
+        ids.push_back(id%(int)pow(size_,dimensions_-i)/(int)pow(size_,dimensions_-i-1));
+    }
+    return ids;
 }

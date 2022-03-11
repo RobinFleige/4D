@@ -12,11 +12,11 @@ public:
     explicit ParameterDependentVectorField(int size);
     void SetData(std::vector<std::vector<VectorField*>>  values);
     std::vector<std::vector<VectorField*>>&  GetData();
-    VectorField* GetData(int s, int t);
-    std::vector<double>& GetData(int s, int t, int x, int y);
+    VectorField* GetVectorField(std::vector<int> ids);
+    Vector GetData(std::vector<int> ids);
     int GetSize();
-    std::vector<double> GetInterpolated(double s, double t, double x, double y);
+    Vector GetInterpolated(std::vector<double> ids);
     void SetFeatureFlowField(std::vector<std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>> fff);
-    double GetFFF3(int s, int t, int x, int y);
-    double GetInterpolatedFFF3(int s, int t, int x, int y);
+    std::vector<double> GetFFF(int s, int t, int x, int y, int d);
+    std::vector<double> GetInterpolatedFFF(double s, double t, double x, double y, int d);
 };

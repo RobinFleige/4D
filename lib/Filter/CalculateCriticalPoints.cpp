@@ -19,21 +19,21 @@ void CalculateCriticalPoints::InternalUpdate() {
 }
 
 std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate, int max_iterations, std::vector<std::vector<double>> ids_set) {
-    std::vector<std::vector<double>> pixel_set;
+    std::vector<Vector> pixel_set;
     for(int i = 0; i < 4; i++){
         if(interpolate){
-            pixel_set.push_back(input_->GetVectorField()->GetData(ids_set[i][0],ids_set[i][1])->GetInterpolated(ids_set[i][2], ids_set[i][3]));
+            pixel_set.push_back(input_->GetVectorField()->GetVectorField({(int)ids_set[i][0],(int)ids_set[i][1]})->GetInterpolated({ids_set[i][2], ids_set[i][3]}));
         }else{
-            pixel_set.push_back(input_->GetVectorField()->GetData(floor(ids_set[i][0]),floor(ids_set[i][1]),floor(ids_set[i][2]),floor(ids_set[i][3])));
+            pixel_set.push_back(input_->GetVectorField()->GetData({(int)floor(ids_set[i][0]),(int)floor(ids_set[i][1]),(int)floor(ids_set[i][2]),(int)floor(ids_set[i][3])}));
         }
     }
     int positive_x = 0;
     int positive_y = 0;
     for(int i = 0; i < 4; i++){
-        if(pixel_set[i][0] > 0){
+        if(pixel_set[i].values_[0] > 0){
             positive_x++;
         }
-        if(pixel_set[i][1] > 0){
+        if(pixel_set[i].values_[1] > 0){
             positive_y++;
         }
     }
@@ -62,14 +62,14 @@ std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate,
             }
             return critical_points;
         }else{
-            if(pixel_set[0][0] > 0){
-                if(pixel_set[0][1] > 0){
+            if(pixel_set[0].values_[0] > 0){
+                if(pixel_set[0].values_[1] > 0){
                     return {new CriticalPoint(mid,CriticalPointType::sink)};
                 }else{
                     return {new CriticalPoint(mid,CriticalPointType::saddle)};
                 }
             }else{
-                if(pixel_set[0][1] > 0){
+                if(pixel_set[0].values_[1] > 0){
                     return {new CriticalPoint(mid,CriticalPointType::saddle)};
                 }else{
                     return {new CriticalPoint(mid,CriticalPointType::source)};

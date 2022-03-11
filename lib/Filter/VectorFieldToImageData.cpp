@@ -7,9 +7,9 @@ void VectorFieldToImageData::InternalUpdate() {
     for(int x = 0; x < input_->GetSize(); x++){
         for(int y = 0; y < input_->GetSize(); y++){
             auto* pixel = static_cast<double*>(output_->GetScalarPointer(x, y, 0));
-            const std::vector<double>& values = input_->GetData(x,y);
-            pixel[0] = values[0];
-            pixel[1] = values[1];
+            const Vector values = input_->GetData({x,y});
+            pixel[0] = values.values_[0];
+            pixel[1] = values.values_[1];
             pixel[2] = 0;
         }
     }

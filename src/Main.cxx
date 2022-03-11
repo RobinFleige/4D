@@ -13,7 +13,6 @@
 #include <Filter/PointSetSubspace.h>
 #include <Filter/Subspace4D2D.h>
 #include <DataTypeFilter/GetPointsSet.h>
-#include <Filter/CalculateFFPoints.h>
 #include <Renderer/ImageRenderer4D.h>
 #include <Filter/CalculateFFField.h>
 #include <vtkSimplePointsReader.h>
@@ -130,7 +129,6 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
     auto source = new VectorFieldSource(size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
     auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
-    auto feature_flow_points = new CalculateFFPoints();
     auto renderer = new ImageRenderer4D("Test",render_type,used_dimensions,additional_dimension,false,use_transparency);
 
     feature_flow_field->SetInputConnection(source);
@@ -138,9 +136,7 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
     bifurcation->SetInputConnection(feature_flow_field);
     bifurcation->SetCalculateCriticalPoints(true);
     bifurcation->Update();
-    feature_flow_points->SetInputConnection(bifurcation);
-    feature_flow_points->Update();
-    renderer->SetInputConnection(feature_flow_points);
+    renderer->SetInputConnection(bifurcation);
     renderer->Update();
     renderer->GetInteractor()->Start();
 
@@ -148,9 +144,8 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
 }
 
 int main(int argc, char* argv[]){
-    int size = 20;
+    int size = 10;
     int min = -2;
     int max = 2;
-    VectorFieldExampleType type = VectorFieldExampleType::circle4d;
-    return render_general(size,min,max,type,{0,1,2},3,2,false,RenderType::point);
+    return render_general(size,min,max,VectorFieldExampleType::simple4d,{0,1,2},3,2,false,RenderType::point);
 }
