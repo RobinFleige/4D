@@ -5,12 +5,10 @@ MEETING
         Einfärbung/Klassifizierung
 
     ToDo
-        FFF Berechnung von Dimensionen unabhängig machen
         CalculateBifurcation Dimensionsunabhängig machen
         Sources Dimensionsunabhängig machen
-        ImageRenderer4D Make additionalParameter work -> Auch genutzte Dimensionen übergeben, um höhere Dimensionen zu ermöglichen
-
         Test with 3D Space
+        ImageRenderer4D Make additionalParameter work -> Auch genutzte Dimensionen übergeben, um höhere Dimensionen zu ermöglichen
 
 
 
