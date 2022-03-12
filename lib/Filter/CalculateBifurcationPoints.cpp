@@ -4,77 +4,76 @@
 
 
 void CalculateBifurcationPoints::InternalUpdate() {
-    int size_minus_1 = input_->GetVectorField()->GetSize()-1;
     output_ = input_;
-    for(int s = 1; s < size_minus_1; s++){
-        for(int t = 1; t < size_minus_1; t++){
-            for(int x = 0; x < size_minus_1; x++){
-                for(int y = 0; y < size_minus_1; y++){
-                    //Dimension{min,max}
-                    std::vector<std::vector<double>> min_max_set = {{(double)s,(double)s+1},{(double)t,(double)t+1},{(double)x,(double)x+1},{(double)y,(double)y+1}};
-                    //std::cout<<s<<" "<<t<<" "<<x<<" "<<y<<std::endl;
-                    output_->AppendCriticalPoints(Subdivide(subdivision_depth_,min_max_set));
-                }
+    for(int i = 0; i < pow(input_->GetVectorField()->GetSize(),input_->GetVectorField()->GetDimensions()); i++){
+        std::vector<int> ids = input_->GetVectorField()->IDsFromIDFull(i);
+        bool out_of_border = false;
+        for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+            if(ids[d] == input_->GetVectorField()->GetSize()-1){
+                out_of_border = true;
             }
+        }
+        if(!out_of_border){
+            std::vector<std::vector<double>> min_max_set;
+            min_max_set.reserve(input_->GetVectorField()->GetDimensions());
+            for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+                min_max_set.push_back({(double)ids[d],(double)ids[d]+1});
+            }
+            output_->AppendCriticalPoints(Subdivide(subdivision_depth_,min_max_set));
         }
     }
 }
 
 std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterations, std::vector<std::vector<double>> min_max_set) {
-    int positive_x = 0;
-    int positive_y = 0;
-    int positive_fff = 0;
-    for(int s = 0; s < 2; s++){
-        for(int t = 0; t < 2; t++){
-            for(int x = 0; x < 2; x++){
-                for(int y = 0; y < 2; y++){
-                    if(input_->GetVectorField()->GetInterpolated({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]}).values_[0] > 0){
-                        positive_x++;
-                    }
-                    if(input_->GetVectorField()->GetInterpolated({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]}).values_[1] > 0){
-                        positive_y++;
-                    }
-                    if(input_->GetVectorField()->GetInterpolatedFFF({min_max_set[0][s],min_max_set[1][t],min_max_set[2][x],min_max_set[3][y]},0).values_[0] > 0){
-                        positive_fff++;
-                    }
-                }
+    int count = pow(2,input_->GetVectorField()->GetDimensions());
+    std::vector<int> positive_counts;
+    positive_counts.reserve(input_->GetVectorField()->GetSpaceDimensions()+1);
+    for(int i = 0; i < input_->GetVectorField()->GetSpaceDimensions()+1; i++){
+        positive_counts.push_back(0);
+    }
+
+    for(int i = 0; i < count; i++){
+        std::vector<double> ids;
+        ids.reserve(input_->GetVectorField()->GetDimensions());
+        for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+            if((i%(int)pow(2,d+1))<pow(2,d)){
+                ids.push_back(min_max_set[d][0]);
+            }else{
+                ids.push_back(min_max_set[d][1]);
             }
+        }
+
+        for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
+            if(input_->GetVectorField()->GetInterpolated(ids).values_[d] > 0){
+                positive_counts[d]+=1;
+            }
+        }
+        if(input_->GetVectorField()->GetInterpolatedFFF(ids,0).values_[0] > 0){
+            positive_counts[input_->GetVectorField()->GetSpaceDimensions()]+=1;
         }
     }
 
-    if(positive_x != 0 && positive_x != 16 && positive_y != 0 && positive_y != 16 && ((positive_fff != 0 && positive_fff != 16) || calculate_critical_points_)){
-        if(max_iterations > 0){
+    bool value_change = true;
+    bool fff_change = positive_counts[input_->GetVectorField()->GetSpaceDimensions()] != 0 && positive_counts[input_->GetVectorField()->GetSpaceDimensions()] != count;
+    for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
+        if(positive_counts[d] == 0 || positive_counts[d] == count){
+            value_change = false;
+        }
+    }
 
+    if(value_change && (fff_change || calculate_critical_points_)){
+        if(max_iterations > 0){
             std::vector<std::vector<std::vector<double>>> next_min_max_sets;
-            for(int s = 0; s < 2; s++){
-                for(int t = 0; t < 2; t++){
-                    for(int x = 0; x < 2; x++){
-                        for(int y = 0; y < 2; y++){
-                            std::vector<std::vector<double>> next_min_max_set;
-                            if(s == 0){
-                                next_min_max_set.push_back({min_max_set[0][0],(min_max_set[0][0]+min_max_set[0][1])/2});
-                            }else{
-                                next_min_max_set.push_back({(min_max_set[0][0]+min_max_set[0][1])/2,min_max_set[0][1]});
-                            }
-                            if(t == 0){
-                                next_min_max_set.push_back({min_max_set[1][0],(min_max_set[1][0]+min_max_set[1][1])/2});
-                            }else{
-                                next_min_max_set.push_back({(min_max_set[1][0]+min_max_set[1][1])/2,min_max_set[1][1]});
-                            }
-                            if(x == 0){
-                                next_min_max_set.push_back({min_max_set[2][0],(min_max_set[2][0]+min_max_set[2][1])/2});
-                            }else{
-                                next_min_max_set.push_back({(min_max_set[2][0]+min_max_set[2][1])/2,min_max_set[2][1]});
-                            }
-                            if(y == 0){
-                                next_min_max_set.push_back({min_max_set[3][0],(min_max_set[3][0]+min_max_set[3][1])/2});
-                            }else{
-                                next_min_max_set.push_back({(min_max_set[3][0]+min_max_set[3][1])/2,min_max_set[3][1]});
-                            }
-                            next_min_max_sets.push_back(next_min_max_set);
-                        }
+            for(int i = 0; i < count; i++){
+                std::vector<std::vector<double>> next_min_max_set;
+                for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+                    if((i%(int)pow(2,d+1))<pow(2,d)){
+                        next_min_max_set.push_back({min_max_set[d][0],(min_max_set[d][0]+min_max_set[d][1])/2});
+                    }else{
+                        next_min_max_set.push_back({(min_max_set[d][0]+min_max_set[d][1])/2,min_max_set[d][1]});
                     }
                 }
+                next_min_max_sets.push_back(next_min_max_set);
             }
 
             std::vector<CriticalPoint*> critical_points;
@@ -88,32 +87,58 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_iterat
             return critical_points;
         }else{
             std::vector<double> mid;
-            for(int i = 0; i < 4; i++){
+            for(int i = 0; i < input_->GetVectorField()->GetDimensions(); i++){
                 mid.push_back((min_max_set[i][0]+min_max_set[i][1])/2);
             }
-            if(positive_fff != 0 && positive_fff != 16){
+            if(fff_change){
                 return {new CriticalPoint(mid,CriticalPointType::bifurcation)};
             }else{
-                double sum_x;
-                double sum_y;
-                for(int a = 0; a < 2; a++){
-                    sum_x+=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][0],min_max_set[3][a]}).values_[0];
-                    sum_x-=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][1],min_max_set[3][a]}).values_[0];
-                    sum_y+=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][a],min_max_set[3][0]}).values_[1];
-                    sum_y-=input_->GetVectorField()->GetInterpolated({mid[0],mid[1],min_max_set[2][a],min_max_set[3][1]}).values_[1];
+                std::vector<double> dimension_sum;
+                dimension_sum.reserve(input_->GetVectorField()->GetSpaceDimensions());
+                for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
+                    dimension_sum.push_back(0);
+                    for(int d2 = 0; d2 < pow(2,input_->GetVectorField()->GetSpaceDimensions()); d2++){
+                        std::vector<double> ids;
+                        bool plus;
+                        for(int d3 = 0; d3 < input_->GetVectorField()->GetParameterDimensions(); d3++){
+                            ids.push_back(mid[d3]);
+                        }
+                        for(int d3 = 0; d3 < input_->GetVectorField()->GetSpaceDimensions(); d3++){
+                            if((d2%(int)pow(2,d3+1))<pow(2,d3)){
+                                ids.push_back(min_max_set[d3+input_->GetVectorField()->GetParameterDimensions()][0]);
+                                if(d3 == d){
+                                    plus = true;
+                                }
+                            }else{
+                                ids.push_back(min_max_set[d3+input_->GetVectorField()->GetParameterDimensions()][1]);
+                                if(d3 == d){
+                                    plus = false;
+                                }
+                            }
+                        }
+
+                        if(plus){
+                            dimension_sum[d]+=input_->GetVectorField()->GetInterpolated(ids).values_[d];
+                        }else{
+                            dimension_sum[d]-=input_->GetVectorField()->GetInterpolated(ids).values_[d];
+                        }
+                    }
+
                 }
-                if(sum_x > 0){
-                    if(sum_y > 0){
-                        return {new CriticalPoint(mid,CriticalPointType::sink)};
-                    }else{
-                        return {new CriticalPoint(mid,CriticalPointType::saddle)};
+
+                int positive_dimensions = 0;
+                for(int i = 0; i < input_->GetVectorField()->GetSpaceDimensions(); i++){
+                    if(dimension_sum[i] > 0){
+                        positive_dimensions++;
                     }
+                }
+
+                if(positive_dimensions == 0){
+                    return {new CriticalPoint(mid,CriticalPointType::sink)};
+                }else if(positive_dimensions == input_->GetVectorField()->GetSpaceDimensions()){
+                    return {new CriticalPoint(mid,CriticalPointType::source)};
                 }else{
-                    if(sum_y > 0){
-                        return {new CriticalPoint(mid,CriticalPointType::saddle)};
-                    }else{
-                        return {new CriticalPoint(mid,CriticalPointType::source)};
-                    }
+                    return {new CriticalPoint(mid,CriticalPointType::saddle)};
                 }
             }
         }

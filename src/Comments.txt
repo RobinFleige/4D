@@ -5,10 +5,10 @@ MEETING
         Einfärbung/Klassifizierung
 
     ToDo
-        CalculateBifurcation Dimensionsunabhängig machen
         Sources Dimensionsunabhängig machen
         Test with 3D Space
         ImageRenderer4D Make additionalParameter work -> Auch genutzte Dimensionen übergeben, um höhere Dimensionen zu ermöglichen
+        Test with 3D Parameter
 
 
 
