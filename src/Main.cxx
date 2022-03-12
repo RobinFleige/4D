@@ -123,8 +123,8 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     return EXIT_SUCCESS;
 }
 
-int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
-    auto source = new VectorFieldSource(2,2,size,min,max,type);
+int render_general(int param_dim, int space_dim, int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
+    auto source = new VectorFieldSource(param_dim,space_dim,size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
     auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D("Test",render_type,used_dimensions,additional_dimension,false,use_transparency);
@@ -141,31 +141,9 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
     return EXIT_SUCCESS;
 }
 
-double Determinant(std::vector<std::vector<double>> matrix) {
-    if(matrix.size() == 1){
-        return matrix[0][0];
-    }else{
-        double value = 0;
-        for(int i = 0; i < matrix.size(); i++){
-            std::vector<std::vector<double>> next_matrix;
-            for(int x = 1; x < matrix.size(); x++){
-                std::vector<double> next_vector;
-                for(int y = 0; y < matrix.size(); y++){
-                    if(y != i){
-                        next_vector.push_back(matrix[x][y]);
-                    }
-                }
-                next_matrix.push_back(next_vector);
-            }
-            value += matrix[0][i]*pow(-1,i)*Determinant(next_matrix);
-        }
-        return value;
-    }
-}
-
 int main(int argc, char* argv[]){
     int size = 10;
     int min = -2;
     int max = 2;
-    return render_general(size, min, max, VectorFieldExampleType::simple3d2d, {0, 1, 2}, 3, 2, false, RenderType::point);
+    return render_general(3,2,size, min, max, VectorFieldExampleType::simple3d2d, {0, 1, 2}, 3, 0, false, RenderType::point);
 }

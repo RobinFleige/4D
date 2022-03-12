@@ -45,8 +45,8 @@ void VectorFieldSource::InternalUpdate(){
             }
             if(type_ == VectorFieldExampleType::simple3d2d){
                 vector.reserve(2);
-                vector.push_back(Normalize(ids[3])*Normalize(ids[3])-Normalize(ids[0])-Normalize(ids[1]));
-                vector.push_back(Normalize(ids[4])+Normalize(ids[2]));
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])-Normalize(ids[0])-Normalize(ids[1])-Normalize(ids[2]));
+                vector.push_back(Normalize(ids[4]));
             }
             auto vec = new Vector();
             vec->values_ = vector;

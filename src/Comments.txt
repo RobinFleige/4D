@@ -4,10 +4,10 @@ MEETING
         Transparenz
         Einfärbung/Klassifizierung
         3D Space funktioniert
+        3D Parameter funktioniert
 
 
     ToDo
-        3D Parameter fixen (es werden keine kritischen Punkte gefunden)
         ImageRenderer4D Make additionalParameter work -> Auch genutzte Dimensionen übergeben, um höhere Dimensionen zu ermöglichen
 
 
