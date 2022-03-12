@@ -167,5 +167,5 @@ int main(int argc, char* argv[]){
     int size = 10;
     int min = -2;
     int max = 2;
-    return render_general(size,min,max,VectorFieldExampleType::simple4d,{0,1,2},3,2,false,RenderType::point);
+    return render_general(size, min, max, VectorFieldExampleType::simple3d2d, {0, 1, 2}, 3, 2, false, RenderType::point);
 }

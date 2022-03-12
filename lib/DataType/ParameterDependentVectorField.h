@@ -12,8 +12,6 @@ private:
     std::vector<VectorField*> fffs_;
     //Parameterrichtung,s,t,x,y,fff
 
-    int IDFromIDs(std::vector<int> ids);
-    std::vector<int> IDsFromID(int id);
 public:
     explicit ParameterDependentVectorField(int parameter_dimensions, int space_dimensions, int size);
 
@@ -31,7 +29,11 @@ public:
     int GetParameterDimensions();
     int GetSpaceDimensions();
 
-    int IDFromIDsFull(std::vector<int> ids);
-    std::vector<int> IDsFromIDFull(int id);
+    int IDFromParameterIDs(std::vector<int> ids);
+    std::vector<int> ParameterIDsFromID(int id);
+    int IDFromSpaceIDs(std::vector<int> ids);
+    std::vector<int> SpaceIDsFromID(int id);
+    int IDFromIDs(std::vector<int> ids);
+    std::vector<int> IDsFromID(int id);
 
 };

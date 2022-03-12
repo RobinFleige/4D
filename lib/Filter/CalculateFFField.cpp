@@ -21,7 +21,7 @@ void CalculateFFField::InternalUpdate() {
 
     for(int i = 0; i < (int)pow(size,input_->GetVectorField()->GetDimensions()); i++){
         std::vector<Vector> derivatives;
-        std::vector<int> ids = input_->GetVectorField()->IDsFromIDFull(i);
+        std::vector<int> ids = input_->GetVectorField()->IDsFromID(i);
 
         for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
             Vector prev;

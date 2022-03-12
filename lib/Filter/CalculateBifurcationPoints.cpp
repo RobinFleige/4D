@@ -6,7 +6,7 @@
 void CalculateBifurcationPoints::InternalUpdate() {
     output_ = input_;
     for(int i = 0; i < pow(input_->GetVectorField()->GetSize(),input_->GetVectorField()->GetDimensions()); i++){
-        std::vector<int> ids = input_->GetVectorField()->IDsFromIDFull(i);
+        std::vector<int> ids = input_->GetVectorField()->IDsFromID(i);
         bool out_of_border = false;
         for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
             if(ids[d] == input_->GetVectorField()->GetSize()-1){

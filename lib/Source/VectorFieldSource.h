@@ -6,7 +6,7 @@
 #include "../DataType/ProcessObject.h"
 #include <vtkPointData.h>
 
-enum VectorFieldExampleType{simple4d_without_y,simple4d,circle4d,double4d,simple5d};
+enum VectorFieldExampleType{simple2d2d_without_y,simple2d2d,circle2d2d,double2d2d,simple2d3d,simple3d2d,simple3d3d,simple2d4d,simple4d2d};
 
 class VectorFieldSource : public Source<ProcessObject*>{
 private:
@@ -22,6 +22,6 @@ private:
     double Normalize(int i) const;
     void InternalUpdate() override;
 public:
-    VectorFieldSource(int parameter_dimension, int space_dimensions, int size, double min, double max,VectorFieldExampleType type);
+    VectorFieldSource(int parameter_dimension, int space_dimensions, int size, double min, double max, VectorFieldExampleType type);
 
 };

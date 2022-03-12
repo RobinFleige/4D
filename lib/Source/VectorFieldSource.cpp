@@ -4,48 +4,59 @@
 void VectorFieldSource::InternalUpdate(){
     output_ = new ProcessObject();
     auto temp = new ParameterDependentVectorField(parameter_dimensions_, space_dimensions_, size_);
-
-    std::vector<VectorField*> data;
-    data.reserve(size_*size_);
-    for(int s = 0; s < size_; s++){
-        for(int t = 0; t < size_; t++){
-            std::vector<Vector> xy_vector;
-            xy_vector.reserve(size_*size_);
-            for(int x = 0; x < size_; x++){
-                for(int y = 0; y < size_; y++){
-                    std::vector<double> vector;
-                    vector.reserve(2);
-                    if(type_ == VectorFieldExampleType::simple4d){
-                        vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                        vector.push_back(Normalize(y)+Normalize(s));
-                    }
-                    if(type_ == VectorFieldExampleType::double4d){
-                        vector.push_back((Normalize(x)*Normalize(x)+Normalize(t))*((Normalize(y)-1))-(Normalize(x)*Normalize(x)+Normalize(s))*((Normalize(y)+1)));
-                        vector.push_back(((Normalize(y)-1))*((Normalize(y)+1)));
-                    }
-                    if(type_ == VectorFieldExampleType::circle4d){
-                        vector.push_back(Normalize(x)*Normalize(x)+Normalize(t)*Normalize(t)+Normalize(s)*Normalize(s)-1);
-                        vector.push_back(Normalize(y));
-                    }
-                    if(type_ == VectorFieldExampleType::simple4d_without_y){
-                        vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                        vector.push_back(Normalize(y));
-                    }
-                    if(type_ == VectorFieldExampleType::simple5d){
-                        vector.push_back(Normalize(x)*Normalize(x)-Normalize(s)-Normalize(t));
-                        vector.push_back(Normalize(y));
-                    }
-                    auto vec = new Vector();
-                    vec->values_ = vector;
-                    xy_vector.push_back(*vec);
-                }
+    std::vector<VectorField*> fields;
+    fields.reserve(pow(size_,parameter_dimensions_));
+    for(int p = 0; p < pow(size_,parameter_dimensions_); p++){
+        std::vector<int> parameter_ids = temp->ParameterIDsFromID(p);
+        std::vector<Vector> vectors;
+        vectors.reserve(pow(size_,space_dimensions_));
+        for(int d = 0; d < pow(size_,space_dimensions_); d++){
+            std::vector<int> space_ids = temp->SpaceIDsFromID(d);
+            std::vector<int> ids = parameter_ids;
+            for(int d2 = 0; d2 < space_dimensions_; d2++){
+                ids.push_back(space_ids[d2]);
             }
-            auto vectorField = new VectorField(2,size_);
-            vectorField->SetData(xy_vector);
-            data.push_back(vectorField);
+            std::vector<double> vector;
+            if(type_ == VectorFieldExampleType::simple2d2d){
+                vector.reserve(2);
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
+                vector.push_back(Normalize(ids[3])+Normalize(ids[0]));
+            }
+            if(type_ == VectorFieldExampleType::double2d2d){
+                vector.reserve(2);
+                vector.push_back((Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1]))*((Normalize(ids[3])-1))-(Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[0]))*((Normalize(ids[3])+1)));
+                vector.push_back(((Normalize(ids[3])-1))*((Normalize(ids[3])+1)));
+            }
+            if(type_ == VectorFieldExampleType::circle2d2d){
+                vector.reserve(2);
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[3]));
+            }
+            if(type_ == VectorFieldExampleType::simple2d2d_without_y){
+                vector.reserve(2);
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
+                vector.push_back(Normalize(ids[3]));
+            }
+            if(type_ == VectorFieldExampleType::simple2d3d){
+                vector.reserve(3);
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
+                vector.push_back(Normalize(ids[3]));
+                vector.push_back(Normalize(ids[4]));
+            }
+            if(type_ == VectorFieldExampleType::simple3d2d){
+                vector.reserve(2);
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])-Normalize(ids[0])-Normalize(ids[1]));
+                vector.push_back(Normalize(ids[4])+Normalize(ids[2]));
+            }
+            auto vec = new Vector();
+            vec->values_ = vector;
+            vectors.push_back(*vec);
         }
+        auto vectorField = new VectorField(2,size_);
+        vectorField->SetData(vectors);
+        fields.push_back(vectorField);
     }
-    temp->SetData(std::move(data));
+    temp->SetData(std::move(fields));
     output_->SetVectorField(temp);
 }
 
