@@ -83,6 +83,7 @@ std::vector<CriticalPoint*> CalculateCriticalPoints::Subdivide(bool interpolate,
 }
 
 CalculateCriticalPoints::CalculateCriticalPoints(int subdivision_depth) {
+    name_ = "CalculateCriticalPoints";
     subdivision_depth_ = subdivision_depth;
     Invalidate();
 }

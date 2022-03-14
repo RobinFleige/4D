@@ -65,6 +65,7 @@ double VectorFieldSource::Normalize(int i) const {
 }
 
 VectorFieldSource::VectorFieldSource(int parameter_dimensions, int space_dimensions, int size, double min, double max, VectorFieldExampleType type) {
+    name_ = "VectorFieldSource";
     parameter_dimensions_ = parameter_dimensions;
     space_dimensions_ = space_dimensions;
     size_ = size;

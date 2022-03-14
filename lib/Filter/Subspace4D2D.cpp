@@ -1,6 +1,7 @@
 #include "Subspace4D2D.h"
 
 Subspace4D2D::Subspace4D2D() {
+    name_ = "Subspace4D2D";
     values_={0,0};
     Invalidate();
 }

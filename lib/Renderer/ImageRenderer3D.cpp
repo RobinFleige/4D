@@ -3,11 +3,12 @@ void ImageRenderer3D::InternalUpdate() {
     input_ = input_connection_->GetOutput();
     surface_->SetInputData(input_);
     surface_->Update();
-    window_->SetWindowName(name_.c_str());
+    window_->SetWindowName(window_name_.c_str());
     window_->Render();
 }
 
 ImageRenderer3D::ImageRenderer3D(){
+    name_ = "ImageRenderer3D";
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
     window_ = vtkSmartPointer<vtkRenderWindow>::New();
     surface_ = vtkSmartPointer<vtkFlyingEdges3D>::New();
@@ -47,6 +48,6 @@ void ImageRenderer3D::OnChange(double value, int id) {
 }
 
 void ImageRenderer3D::SetName(std::string name) {
-    name_ = name;
+    window_name_ = name;
     Invalidate();
 }

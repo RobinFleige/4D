@@ -13,6 +13,7 @@ void PointSource::InternalUpdate() {
 }
 
 PointSource::PointSource() {
+    name_ = "PointSource";
     Invalidate();
 }
 

@@ -9,6 +9,7 @@
 
 template<class InputType> class Renderer : public HasInput<InputType>{
 protected:
+    std::string window_name_ = "Test";
     vtkSmartPointer<vtkRenderer> renderer_;
     vtkSmartPointer<vtkRenderWindow> window_;
     vtkSmartPointer<vtkRenderWindowInteractor> interactor_;
@@ -20,9 +21,9 @@ public:
             this->input_ = this->input_connection_->GetOutput();
         }
         if(this->updatable_){
-            std::cout<<"Start "<<typeid(this).name()<<std::endl;
+            std::cout<<"Start "<<this->name_<<std::endl;
             this->InternalUpdate();
-            std::cout<<"End "<<typeid(this).name()<<std::endl;
+            std::cout<<"End "<<this->name_<<std::endl;
             this->updatable_ = false;
         }
     }

@@ -1,6 +1,7 @@
 #include "CalculateFFField.h"
 
 CalculateFFField::CalculateFFField() {
+    name_ = "CalculateFFField";
     Invalidate();
 }
 

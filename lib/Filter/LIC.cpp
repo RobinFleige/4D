@@ -1,6 +1,7 @@
 #include "./LIC.h"
 
 LIC::LIC() {
+    name_ = "LIC";
     lic = vtkSmartPointer<vtkImageDataLIC2D>::New();
     scale = vtkSmartPointer<vtkImageShiftScale>::New();
     updatable_ = true;

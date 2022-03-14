@@ -14,6 +14,7 @@ void DrawPointsOnImage::InternalUpdate() {
 }
 
 DrawPointsOnImage::DrawPointsOnImage(int x_id, int y_id) {
+    name_ = "DrawPointsOnImage";
     output_ = vtkSmartPointer<vtkImageData>::New();
     x_id_ = x_id;
     y_id_ = y_id;

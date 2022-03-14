@@ -115,11 +115,12 @@ void ImageRenderer4D::InternalUpdate() {
     polyData->SetVerts(vertices);
     polyData->GetCellData()->SetScalars(cellData);
     mapper_->SetInputData(polyData);
+    window_->SetWindowName(window_name_.c_str());
     window_->Render();
 }
 
-ImageRenderer4D::ImageRenderer4D(std::string name, RenderType type, std::vector<int> used_dimensions, int supportive_dimension, bool show_axes, bool use_transparency){
-    name_ = name;
+ImageRenderer4D::ImageRenderer4D(RenderType type, std::vector<int> used_dimensions, int supportive_dimension, bool show_axes, bool use_transparency){
+    name_ = "ImageRenderer4D";
     type_ = type;
     supportive_dimension_ = supportive_dimension;
     use_transparency_ = use_transparency;
@@ -148,11 +149,14 @@ ImageRenderer4D::ImageRenderer4D(std::string name, RenderType type, std::vector<
     }
 
     window_->SetSize(1000, 1000);
-    window_->SetWindowName(name_.c_str());
     window_->AddRenderer(renderer_);
 
     interactor_->SetRenderWindow(window_);
     vtkNew<vtkInteractorStyleTrackballCamera> style;
     interactor_->SetInteractorStyle(style);
+    Invalidate();
+}
+void ImageRenderer4D::SetName(std::string name) {
+    window_name_ = name;
     Invalidate();
 }

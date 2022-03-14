@@ -16,6 +16,7 @@ void VectorFieldToImageData::InternalUpdate() {
 }
 
 VectorFieldToImageData::VectorFieldToImageData() {
+    name_ = "VectorFieldToImageData";
     output_ = vtkSmartPointer<vtkImageData>::New();
     Invalidate();
 }

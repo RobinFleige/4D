@@ -41,7 +41,6 @@ enum RenderType {point,line,triangle};
 
 class ImageRenderer4D : public Renderer<ProcessObject*> {
 private:
-    std::string name_ = "Test";
     vtkSmartPointer<vtkPolyDataMapper> mapper_;
     vtkSmartPointer<vtkActor> actor_;
     RenderType type_;
@@ -51,5 +50,6 @@ private:
 
     void InternalUpdate() override;
 public:
-    ImageRenderer4D(std::string name, RenderType type, std::vector<int> used_dimensions, int supportive_dimension, bool show_axes, bool use_transparency);
+    ImageRenderer4D(RenderType type, std::vector<int> used_dimensions, int supportive_dimension, bool show_axes, bool use_transparency);
+    void SetName(std::string name);
 };

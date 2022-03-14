@@ -29,6 +29,7 @@ void PointSetSubspace::OnChange(double value, int id) {
 }
 
 PointSetSubspace::PointSetSubspace() {
+    name_ = "PointSetSubspace";
     s_ = 0;
     t_ = 0;
     Invalidate();

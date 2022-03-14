@@ -17,7 +17,6 @@
 
 class ImageRenderer3D : public Renderer<vtkSmartPointer<vtkImageData>>, public SliderObserver {
 private:
-    std::string name_ = "Test";
     vtkSmartPointer<vtkFlyingEdges3D> surface_;
     vtkSmartPointer<vtkPolyDataMapper> mapper_;
     vtkSmartPointer<vtkActor> actor_;

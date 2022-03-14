@@ -2,11 +2,12 @@
 void ImageRenderer2D::InternalUpdate() {
     input_ = input_connection_->GetOutput();
     actor_->GetMapper()->SetInputData((input_));
-    window_->SetWindowName(name_.c_str());
+    window_->SetWindowName(window_name_.c_str());
     window_->Render();
 }
 
 ImageRenderer2D::ImageRenderer2D(){
+    name_ = "ImageRenderer2D";
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
     window_ = vtkSmartPointer<vtkRenderWindow>::New();
     interactor_ = vtkSmartPointer<vtkRenderWindowInteractor>::New();
@@ -29,6 +30,6 @@ void ImageRenderer2D::OnChange(double value, int id) {
 }
 
 void ImageRenderer2D::SetName(std::string name) {
-    name_ = name;
+    window_name_ = name;
     Invalidate();
 }

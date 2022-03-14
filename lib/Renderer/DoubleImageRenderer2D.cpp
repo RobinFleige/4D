@@ -5,12 +5,13 @@ void DoubleImageRenderer2D::InternalUpdate() {
     secondary_input_ = secondary_input_connection_->GetOutput();
     actor_->GetMapper()->SetInputData((input_));
     secondary_actor_->GetMapper()->SetInputData((secondary_input_));
-    window_->SetWindowName(name_.c_str());
+    window_->SetWindowName(window_name_.c_str());
     window_->Render();
 
 }
 
 DoubleImageRenderer2D::DoubleImageRenderer2D() {
+    name_ = "DoubleImageRenderer2D";
     renderer_ = vtkSmartPointer<vtkRenderer>::New();
     window_ = vtkSmartPointer<vtkRenderWindow>::New();
     interactor_ = vtkSmartPointer<vtkRenderWindowInteractor>::New();
@@ -37,6 +38,6 @@ void DoubleImageRenderer2D::OnChange(double value, int id) {
 }
 
 void DoubleImageRenderer2D::SetName(std::string name) {
-    name_ = name;
+    window_name_ = name;
     Invalidate();
 }

@@ -18,6 +18,7 @@ public:
 
 
 template<class T> Subspace<T>::Subspace() {
+    this->name_ = "Subspace";
     this->Invalidate();
 }
 

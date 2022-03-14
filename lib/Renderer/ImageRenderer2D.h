@@ -13,7 +13,6 @@
 
 class ImageRenderer2D : public Renderer<vtkSmartPointer<vtkImageData>>, public SliderObserver {
 private:
-    std::string name_ = "Test";
     vtkNew<vtkImageActor> actor_;
     void InternalUpdate() override;
 public:

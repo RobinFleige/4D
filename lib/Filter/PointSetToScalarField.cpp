@@ -14,6 +14,7 @@ void PointSetToScalarField::InternalUpdate() {
 }
 
 PointSetToScalarField::PointSetToScalarField(int size) {
+    name_ = "PointSetToScalarField";
     size_ = size;
     Invalidate();
 }

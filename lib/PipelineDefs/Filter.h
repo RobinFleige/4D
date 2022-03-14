@@ -10,9 +10,9 @@ public:
             this->input_ = this->input_connection_->GetOutput();
         }
         if(this->updatable_){
-            std::cout<<"Start "<<typeid(this).name()<<std::endl;
+            std::cout<<"Start "<<this->name_<<std::endl;
             this->InternalUpdate();
-            std::cout<<"End "<<typeid(this).name()<<std::endl;
+            std::cout<<"End "<<this->name_<<std::endl;
             this->updatable_ = false;
             for(int i = 0; i < this->output_connections_.size(); i++){
                 this->output_connections_[i]->Invalidate();

@@ -34,6 +34,7 @@ void PointSetTo3D::SetParameterID(int id) {
 }
 
 PointSetTo3D::PointSetTo3D(int size) {
+    name_ = "PointSetTo3D";
     size_ = size;
     Invalidate();
 }

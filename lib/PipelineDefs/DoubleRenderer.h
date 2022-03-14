@@ -5,6 +5,7 @@
 
 template<class InputType1, class InputType2> class DoubleRenderer : public HasSecondaryInput<InputType1, InputType2>{
 protected:
+    std::string window_name_ = "Test";
     vtkSmartPointer<vtkRenderer> renderer_;
     vtkSmartPointer<vtkRenderWindow> window_;
     vtkSmartPointer<vtkRenderWindowInteractor> interactor_;
