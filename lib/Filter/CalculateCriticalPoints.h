@@ -6,9 +6,8 @@
 #include "../PipelineDefs/Filter.h"
 #include "../DataType/CriticalPoint.h"
 #include "../DataType/ParameterDependentVectorField.h"
-#include "../DataType/ProcessObject.h"
 
-class CalculateCriticalPoints : public Filter<ProcessObject*,ProcessObject*> {
+class CalculateCriticalPoints : public Filter<ParameterDependentVectorField*,ParameterDependentVectorField*> {
 private:
     int subdivision_depth_;
 

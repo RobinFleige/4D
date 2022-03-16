@@ -1,6 +1,3 @@
-#include <utility>
-#include <valarray>
-#include <iostream>
 #include "ParameterDependentVectorField.h"
 
 VectorField* ParameterDependentVectorField::GetVectorField(std::vector<int> ids) {
@@ -151,4 +148,14 @@ std::vector<int> ParameterDependentVectorField::IDsFromID(int id) {
 
 int ParameterDependentVectorField::GetSpaceDimensions() {
     return space_dimensions_;
+}
+
+std::vector<CriticalPoint*> ParameterDependentVectorField::GetCriticalPoints() {
+    return critical_points_;
+}
+
+void ParameterDependentVectorField::AppendCriticalPoints(std::vector<CriticalPoint *> critical_points) {
+    for(int i = 0; i < critical_points.size(); i++){
+        critical_points_.push_back(critical_points[i]);
+    }
 }

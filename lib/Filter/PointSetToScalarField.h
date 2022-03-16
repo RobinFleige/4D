@@ -3,8 +3,8 @@
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
+#include <DataType/CriticalPoint.h>
 #include "../PipelineDefs/Filter.h"
-#include "DataType/ProcessObject.h"
 
 class PointSetToScalarField : public Filter<std::vector<CriticalPoint*>,vtkSmartPointer<vtkImageData>> {
 private:

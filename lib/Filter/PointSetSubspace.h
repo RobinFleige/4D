@@ -5,9 +5,9 @@
 #include <vtkPoints.h>
 #include "../PipelineDefs/Filter.h"
 #include "../Slider/SliderObserver.h"
-#include "DataType/ProcessObject.h"
+#include "DataType/ParameterDependentVectorField.h"
 
-class PointSetSubspace : public Filter<ProcessObject*,std::vector<Point*>>, public SliderObserver{
+class PointSetSubspace : public Filter<ParameterDependentVectorField*,std::vector<Point*>>, public SliderObserver{
 private:
     double s_;
     double t_;

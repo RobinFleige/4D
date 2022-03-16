@@ -5,18 +5,18 @@
 
 void CalculateBifurcationPoints::InternalUpdate() {
     output_ = input_;
-    for(int i = 0; i < pow(input_->GetVectorField()->GetSize(),input_->GetVectorField()->GetDimensions()); i++){
-        std::vector<int> ids = input_->GetVectorField()->IDsFromID(i);
+    for(int i = 0; i < pow(input_->GetSize(),input_->GetDimensions()); i++){
+        std::vector<int> ids = input_->IDsFromID(i);
         bool out_of_border = false;
-        for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
-            if(ids[d] == input_->GetVectorField()->GetSize()-1){
+        for(int d = 0; d < input_->GetDimensions(); d++){
+            if(ids[d] == input_->GetSize()-1){
                 out_of_border = true;
             }
         }
         if(!out_of_border){
             std::vector<std::vector<double>> min_max_set;
-            min_max_set.reserve(input_->GetVectorField()->GetDimensions());
-            for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+            min_max_set.reserve(input_->GetDimensions());
+            for(int d = 0; d < input_->GetDimensions(); d++){
                 min_max_set.push_back({(double)ids[d],(double)ids[d]+1});
             }
             output_->AppendCriticalPoints(Subdivide(param_subdivision_depth_,subdivision_depth_,min_max_set));
@@ -26,18 +26,18 @@ void CalculateBifurcationPoints::InternalUpdate() {
 
 std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_iterations, int max_iterations, std::vector<std::vector<double>> min_max_set) {
     //Setup
-    int count = pow(2,input_->GetVectorField()->GetDimensions());
+    int count = pow(2,input_->GetDimensions());
     std::vector<int> positive_counts;
-    positive_counts.reserve(input_->GetVectorField()->GetSpaceDimensions()+1);
-    for(int i = 0; i < input_->GetVectorField()->GetSpaceDimensions()+1; i++){
+    positive_counts.reserve(input_->GetSpaceDimensions()+1);
+    for(int i = 0; i < input_->GetSpaceDimensions()+1; i++){
         positive_counts.push_back(0);
     }
 
     //Check for positive and non-positive values for every corner
     for(int i = 0; i < count; i++){
         std::vector<double> ids;
-        ids.reserve(input_->GetVectorField()->GetDimensions());
-        for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+        ids.reserve(input_->GetDimensions());
+        for(int d = 0; d < input_->GetDimensions(); d++){
             if((i%(int)pow(2,d+1))<pow(2,d)){
                 ids.push_back(min_max_set[d][0]);
             }else{
@@ -45,20 +45,20 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
             }
         }
 
-        for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
-            if(input_->GetVectorField()->GetInterpolated(ids).values_[d] > 0){
+        for(int d = 0; d < input_->GetSpaceDimensions(); d++){
+            if(input_->GetInterpolated(ids).values_[d] > 0){
                 positive_counts[d]+=1;
             }
         }
-        if(input_->GetVectorField()->GetInterpolatedFFF(ids,0).values_[0] > 0){
-            positive_counts[input_->GetVectorField()->GetSpaceDimensions()]+=1;
+        if(input_->GetInterpolatedFFF(ids,0).values_[0] > 0){
+            positive_counts[input_->GetSpaceDimensions()]+=1;
         }
     }
 
     //Calculate if sign change happens
     bool value_change = true;
-    bool fff_change = positive_counts[input_->GetVectorField()->GetSpaceDimensions()] != 0 && positive_counts[input_->GetVectorField()->GetSpaceDimensions()] != count;
-    for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
+    bool fff_change = positive_counts[input_->GetSpaceDimensions()] != 0 && positive_counts[input_->GetSpaceDimensions()] != count;
+    for(int d = 0; d < input_->GetSpaceDimensions(); d++){
         if(positive_counts[d] == 0 || positive_counts[d] == count){
             value_change = false;
         }
@@ -73,7 +73,7 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
                 next_min_max_sets.reserve(count);
                 for(int i = 0; i < count; i++){
                     std::vector<std::vector<double>> next_min_max_set;
-                    for(int d = 0; d < input_->GetVectorField()->GetDimensions(); d++){
+                    for(int d = 0; d < input_->GetDimensions(); d++){
                         if((i%(int)pow(2,d+1))<pow(2,d)){
                             next_min_max_set.push_back({min_max_set[d][0],(min_max_set[d][0]+min_max_set[d][1])/2});
                         }else{
@@ -83,19 +83,19 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
                     next_min_max_sets.push_back(next_min_max_set);
                 }
             }else{
-                int temp_count = (int)pow(2,input_->GetVectorField()->GetSpaceDimensions());
+                int temp_count = (int)pow(2,input_->GetSpaceDimensions());
                 //If Not Parameter Subdivision
                 next_min_max_sets.reserve(temp_count);
                 for(int i = 0; i < temp_count; i++){
                     std::vector<std::vector<double>> next_min_max_set;
-                    for(int d = 0; d < input_->GetVectorField()->GetParameterDimensions(); d++){
+                    for(int d = 0; d < input_->GetParameterDimensions(); d++){
                         next_min_max_set.push_back({min_max_set[d][0],min_max_set[d][1]});
                     }
-                    for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
+                    for(int d = 0; d < input_->GetSpaceDimensions(); d++){
                         if((i%(int)pow(2,d+1))<pow(2,d)){
-                            next_min_max_set.push_back({min_max_set[d+input_->GetVectorField()->GetParameterDimensions()][0],(min_max_set[d+input_->GetVectorField()->GetParameterDimensions()][0]+min_max_set[d+input_->GetVectorField()->GetParameterDimensions()][1])/2});
+                            next_min_max_set.push_back({min_max_set[d+input_->GetParameterDimensions()][0],(min_max_set[d+input_->GetParameterDimensions()][0]+min_max_set[d+input_->GetParameterDimensions()][1])/2});
                         }else{
-                            next_min_max_set.push_back({(min_max_set[d+input_->GetVectorField()->GetParameterDimensions()][0]+min_max_set[d+input_->GetVectorField()->GetParameterDimensions()][1])/2,min_max_set[d+input_->GetVectorField()->GetParameterDimensions()][1]});
+                            next_min_max_set.push_back({(min_max_set[d+input_->GetParameterDimensions()][0]+min_max_set[d+input_->GetParameterDimensions()][1])/2,min_max_set[d+input_->GetParameterDimensions()][1]});
                         }
                     }
                     next_min_max_sets.push_back(next_min_max_set);
@@ -116,7 +116,7 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
             //Create new CriticalPoint
             //Calculate Coordinates
             std::vector<double> mid;
-            for(int i = 0; i < input_->GetVectorField()->GetDimensions(); i++){
+            for(int i = 0; i < input_->GetDimensions(); i++){
                 mid.push_back((min_max_set[i][0]+min_max_set[i][1])/2);
             }
             //If FFF Changed it is a Bifurcation
@@ -125,23 +125,23 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
             }else{
                 //Else check for Vector Direction
                 std::vector<double> dimension_sum;
-                dimension_sum.reserve(input_->GetVectorField()->GetSpaceDimensions());
-                for(int d = 0; d < input_->GetVectorField()->GetSpaceDimensions(); d++){
+                dimension_sum.reserve(input_->GetSpaceDimensions());
+                for(int d = 0; d < input_->GetSpaceDimensions(); d++){
                     dimension_sum.push_back(0);
-                    for(int d2 = 0; d2 < pow(2,input_->GetVectorField()->GetSpaceDimensions()); d2++){
+                    for(int d2 = 0; d2 < pow(2,input_->GetSpaceDimensions()); d2++){
                         std::vector<double> ids;
                         bool plus;
-                        for(int d3 = 0; d3 < input_->GetVectorField()->GetParameterDimensions(); d3++){
+                        for(int d3 = 0; d3 < input_->GetParameterDimensions(); d3++){
                             ids.push_back(mid[d3]);
                         }
-                        for(int d3 = 0; d3 < input_->GetVectorField()->GetSpaceDimensions(); d3++){
+                        for(int d3 = 0; d3 < input_->GetSpaceDimensions(); d3++){
                             if((d2%(int)pow(2,d3+1))<pow(2,d3)){
-                                ids.push_back(min_max_set[d3+input_->GetVectorField()->GetParameterDimensions()][0]);
+                                ids.push_back(min_max_set[d3+input_->GetParameterDimensions()][0]);
                                 if(d3 == d){
                                     plus = true;
                                 }
                             }else{
-                                ids.push_back(min_max_set[d3+input_->GetVectorField()->GetParameterDimensions()][1]);
+                                ids.push_back(min_max_set[d3+input_->GetParameterDimensions()][1]);
                                 if(d3 == d){
                                     plus = false;
                                 }
@@ -149,9 +149,9 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
                         }
 
                         if(plus){
-                            dimension_sum[d]+=input_->GetVectorField()->GetInterpolated(ids).values_[d];
+                            dimension_sum[d]+=input_->GetInterpolated(ids).values_[d];
                         }else{
-                            dimension_sum[d]-=input_->GetVectorField()->GetInterpolated(ids).values_[d];
+                            dimension_sum[d]-=input_->GetInterpolated(ids).values_[d];
                         }
                     }
 
@@ -159,7 +159,7 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
 
                 //Calculate in how many Dimensions the neighbouring vector shows towards the coordinates
                 int positive_dimensions = 0;
-                for(int i = 0; i < input_->GetVectorField()->GetSpaceDimensions(); i++){
+                for(int i = 0; i < input_->GetSpaceDimensions(); i++){
                     if(dimension_sum[i] > 0){
                         positive_dimensions++;
                     }
@@ -168,7 +168,7 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
                 //If all dimensions show towards, it is a sink; If al dimensions show away it is a source; Else it is a saddle
                 if(positive_dimensions == 0){
                     return {new CriticalPoint(mid,CriticalPointType::sink)};
-                }else if(positive_dimensions == input_->GetVectorField()->GetSpaceDimensions()){
+                }else if(positive_dimensions == input_->GetSpaceDimensions()){
                     return {new CriticalPoint(mid,CriticalPointType::source)};
                 }else{
                     return {new CriticalPoint(mid,CriticalPointType::saddle)};

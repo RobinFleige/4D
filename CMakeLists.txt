@@ -38,12 +38,10 @@ target_sources(prototype_lib PRIVATE
         lib/DataType/CriticalPoint.cpp
         lib/DataType/ParameterDependentVectorField.cpp
         lib/DataType/Point.cpp
-        lib/DataType/ProcessObject.cpp
         lib/DataType/Vector.cpp
         lib/DataType/VectorField.cpp
 
         lib/DataTypeFilter/GetPointsSet.cpp
-        lib/DataTypeFilter/GetVectorField.cpp
 
         lib/Source/PointSource.cpp
         lib/Source/VectorFieldSource.cpp
@@ -55,9 +53,8 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/LIC.cpp
         lib/Filter/PointSetSubspace.cpp
         lib/Filter/PointSetToScalarField.cpp
-        lib/Filter/PointSetTo3D.cpp
         lib/Filter/Subspace.cpp
-        lib/Filter/Subspace4D2D.cpp
+        lib/DataTypeFilter/GetVectorField.cpp
         lib/Filter/VectorFieldToImageData.cpp
 
         lib/Renderer/DoubleImageRenderer2D.cpp

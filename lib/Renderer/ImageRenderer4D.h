@@ -17,7 +17,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkFlyingEdges3D.h>
 #include <vtkTriangle.h>
-#include <DataType/ProcessObject.h>
+#include <DataType/ParameterDependentVectorField.h>
 #include "../PipelineDefs/Renderer.h"
 #include "../Slider/SliderObserver.h"
 #include <vtkImageActor.h>
@@ -33,13 +33,12 @@
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkFlyingEdges3D.h>
-#include <DataType/ProcessObject.h>
 #include "../PipelineDefs/Renderer.h"
 #include "../Slider/SliderObserver.h"
 
 enum RenderType {point,line,triangle};
 
-class ImageRenderer4D : public Renderer<ProcessObject*> {
+class ImageRenderer4D : public Renderer<ParameterDependentVectorField*> {
 private:
     vtkSmartPointer<vtkPolyDataMapper> mapper_;
     vtkSmartPointer<vtkActor> actor_;

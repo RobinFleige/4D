@@ -6,11 +6,10 @@
 #include <vtkSliderWidget.h>
 #include <Renderer/DoubleImageRenderer2D.h>
 #include <Renderer/ImageRenderer3D.h>
-#include <Filter/PointSetTo3D.h>
 #include <Filter/PointSetToScalarField.h>
 #include <Filter/VectorFieldToImageData.h>
 #include <Filter/PointSetSubspace.h>
-#include <Filter/Subspace4D2D.h>
+#include <DataTypeFilter/GetVectorField.h>
 #include <DataTypeFilter/GetPointsSet.h>
 #include <Renderer/ImageRenderer4D.h>
 #include <Filter/CalculateFFField.h>
@@ -30,9 +29,8 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     int s = size / 2;
     int t = size / 2;
 
-    auto* source = new VectorFieldSource(2,2,size,min,max,type);
-    auto* vectorfield = new GetVectorField();
-    auto* subspace = new Subspace4D2D();
+    auto* source = new VectorFieldSource(size,min,max,type);
+    auto* subspace = new GetVectorField(2);
     auto* image = new VectorFieldToImageData();
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
@@ -90,8 +88,7 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     sliderWidget2->AddObserver(vtkCommand::InteractionEvent, slider2);
 
     source->Update();
-    vectorfield->SetInputConnection(source);
-    subspace->SetInputConnection(vectorfield);
+    subspace->SetInputConnection(source);
     subspace->SetId(s,0);
     subspace->SetId(t,0);
     subspace->Update();
@@ -123,8 +120,8 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     return EXIT_SUCCESS;
 }
 
-int render_general(int param_dim, int space_dim, int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
-    auto source = new VectorFieldSource(param_dim,space_dim,size,min,max,type);
+int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
+    auto source = new VectorFieldSource(size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
     auto bifurcation = new CalculateBifurcationPoints(2,subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type,used_dimensions,additional_dimension,false,use_transparency);
@@ -145,5 +142,5 @@ int main(int argc, char* argv[]){
     int size = 4;
     int min = -2;
     int max = 2;
-    return render_general(2,2,size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3, 4, false, RenderType::point);
+    return render_general(size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3, 4, false, RenderType::point);
 }

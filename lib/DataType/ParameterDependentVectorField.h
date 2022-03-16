@@ -1,6 +1,10 @@
 #pragma once
 
 #include "VectorField.h"
+#include "CriticalPoint.h"
+#include <utility>
+#include <valarray>
+#include <iostream>
 
 class ParameterDependentVectorField {
 private:
@@ -10,6 +14,7 @@ private:
 
     std::vector<VectorField*>  vector_fields;
     std::vector<VectorField*> fffs_;
+    std::vector<CriticalPoint*> critical_points_;
     //Parameterrichtung,s,t,x,y,fff
 
 public:
@@ -23,6 +28,9 @@ public:
     Vector GetInterpolated(std::vector<double> ids);
     Vector GetFFF(std::vector<int> ids, int d);
     Vector GetInterpolatedFFF(std::vector<double> ids, int d);
+
+    void AppendCriticalPoints(std::vector<CriticalPoint*> critical_points);
+    std::vector<CriticalPoint*> GetCriticalPoints();
 
     int GetSize();
     int GetDimensions();

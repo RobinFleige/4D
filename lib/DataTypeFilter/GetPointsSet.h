@@ -1,9 +1,9 @@
 #pragma once
-#include <DataType/ProcessObject.h>
+#include <DataType/ParameterDependentVectorField.h>
 #include <PipelineDefs/Filter.h>
 #include <DataType/Point.h>
 
-class GetPointsSet : public Filter<ProcessObject*, std::vector <CriticalPoint*>> {
+class GetPointsSet : public Filter<ParameterDependentVectorField*, std::vector <CriticalPoint*>> {
 private:
     void InternalUpdate() override;
 public:

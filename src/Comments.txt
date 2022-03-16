@@ -8,7 +8,11 @@ MEETING
 
 
     ToDo
+        CriticalPointSet in ParameterDependentVectorField; GetVectorField löschen; Subspace4D2D zu GetVectorField
         ImageRenderer4D Make additionalParameter work -> Auch genutzte Dimensionen übergeben, um höhere Dimensionen zu ermöglichen
+        3D Double Renderer (Wie Double2D, aber mit der 3D Visualisierung für 3 Parameter)
+        Source nicht dimensionen übergeben, sondern aus Enum switchen
+        c++ aufbessern (Referenz vs Pointer; Copy statt Pointer; Erstellen von Objekten aus Schleifen auslagern wenn möglich)
 
 
 
