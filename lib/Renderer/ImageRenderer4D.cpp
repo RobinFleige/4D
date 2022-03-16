@@ -19,7 +19,7 @@ void ImageRenderer4D::InternalUpdate() {
     }
 
     for(int i = 0; i < critical_points.size(); i++){
-        int transparency = (int)abs(((int)critical_points[i]->GetCoordinates()[0])-((int)input_->GetSize()/2));
+        int transparency = (int)abs(((int)critical_points[i]->GetCoordinates()[supportive_dimension_])-((int)input_->GetSize()/2));
         if(transparency < 0){
             transparency = 0;
         }else if(transparency > input_->GetSize()-1){
@@ -57,7 +57,7 @@ void ImageRenderer4D::InternalUpdate() {
 
 
         if(type_ == RenderType::point){
-            double p0[3] = {critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2]};
+            double p0[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]],critical_points[i]->GetCoordinates()[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]};
             vtkIdType pid[1];
             pid[0] = points->InsertNextPoint(p0);
             vertices->InsertNextCell(1,pid);

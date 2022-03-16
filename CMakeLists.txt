@@ -42,24 +42,21 @@ target_sources(prototype_lib PRIVATE
         lib/DataType/VectorField.cpp
 
         lib/DataTypeFilter/GetPointsSet.cpp
+        lib/DataTypeFilter/GetVectorField.cpp
 
         lib/Source/PointSource.cpp
         lib/Source/VectorFieldSource.cpp
 
         lib/Filter/CalculateBifurcationPoints.cpp
-        lib/Filter/CalculateCriticalPoints.cpp
         lib/Filter/CalculateFFField.cpp
         lib/Filter/DrawPointsOnImage.cpp
         lib/Filter/LIC.cpp
         lib/Filter/PointSetSubspace.cpp
         lib/Filter/PointSetToScalarField.cpp
         lib/Filter/Subspace.cpp
-        lib/DataTypeFilter/GetVectorField.cpp
         lib/Filter/VectorFieldToImageData.cpp
 
         lib/Renderer/DoubleImageRenderer2D.cpp
-        lib/Renderer/ImageRenderer2D.cpp
-        lib/Renderer/ImageRenderer3D.cpp
         lib/Renderer/ImageRenderer4D.cpp
         )
 

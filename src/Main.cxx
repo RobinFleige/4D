@@ -1,11 +1,8 @@
 #include <vtkNew.h>
-#include <vtkImageData.h>
-#include <vtkImageMapper3D.h>
 #include <vtkXMLImageDataWriter.h>
 #include <vtkSliderRepresentation3D.h>
 #include <vtkSliderWidget.h>
 #include <Renderer/DoubleImageRenderer2D.h>
-#include <Renderer/ImageRenderer3D.h>
 #include <Filter/PointSetToScalarField.h>
 #include <Filter/VectorFieldToImageData.h>
 #include <Filter/PointSetSubspace.h>
@@ -13,13 +10,9 @@
 #include <DataTypeFilter/GetPointsSet.h>
 #include <Renderer/ImageRenderer4D.h>
 #include <Filter/CalculateFFField.h>
-#include <vtkSimplePointsReader.h>
-#include <DataTypeFilter/GetVectorField.h>
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
 #include "./Slider/Slider.h"
-#include "Filter/Subspace.h"
-#include "Filter/CalculateCriticalPoints.h"
 #include "Source/PointSource.h"
 #include "Filter/DrawPointsOnImage.h"
 #include "Filter/CalculateBifurcationPoints.h"
@@ -35,7 +28,7 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage(2,3);
-    auto* critical_points = new CalculateCriticalPoints(5);
+    auto* critical_points = new CalculateBifurcationPoints(0,5);
     auto* point_set = new GetPointsSet();
     auto* scalar_field = new PointSetToScalarField(size);
     auto* point_source = new PointSource();
