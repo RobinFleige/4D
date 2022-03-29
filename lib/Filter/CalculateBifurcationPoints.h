@@ -4,7 +4,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkPoints.h>
 #include "../PipelineDefs/Filter.h"
-#include "../DataType/CriticalPoint.h"
+#include "../DataType/Point.h"
 #include "../DataType/ParameterDependentVectorField.h"
 
 class CalculateBifurcationPoints : public Filter<ParameterDependentVectorField*,ParameterDependentVectorField*> {
@@ -13,7 +13,7 @@ private:
     int subdivision_depth_;
     int param_subdivision_depth_ = 0;
 
-    std::vector<CriticalPoint*> Subdivide(int max_param_iterations, int max_iterations, std::vector<std::vector<double>> ids);
+    std::vector<Point*> Subdivide(int max_param_iterations, int max_iterations, std::vector<std::vector<double>> ids);
     void InternalUpdate() override;
 
     bool OnRightBorder(std::vector<int> ids);

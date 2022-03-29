@@ -101,6 +101,9 @@ std::vector<int> ParameterDependentVectorField::ParameterIDsFromID(int id) {
     for(int i = 0; i < parameter_dimensions_; i++){
         ids.push_back(id%(int)pow(size_,parameter_dimensions_-i)/(int)pow(size_,parameter_dimensions_-i-1));
     }
+    if(ids.size() == 0){
+        ids.push_back(0);
+    }
     return ids;
 }
 
@@ -117,6 +120,9 @@ std::vector<int> ParameterDependentVectorField::SpaceIDsFromID(int id) {
     ids.reserve(space_dimensions_);
     for(int i = 0; i < space_dimensions_; i++){
         ids.push_back(id%(int)pow(size_,space_dimensions_-i)/(int)pow(size_,space_dimensions_-i-1));
+    }
+    if(ids.size() == 0){
+        ids.push_back(0);
     }
     return ids;
 }
@@ -143,6 +149,9 @@ std::vector<int> ParameterDependentVectorField::IDsFromID(int id) {
     for(int i = 0; i < GetDimensions(); i++){
         ids.push_back(id%(int)pow(size_,GetDimensions()-i)/(int)pow(size_,GetDimensions()-i-1));
     }
+    if(ids.size() == 0){
+        ids.push_back(0);
+    }
     return ids;
 }
 
@@ -150,11 +159,11 @@ int ParameterDependentVectorField::GetSpaceDimensions() {
     return space_dimensions_;
 }
 
-std::vector<CriticalPoint*> ParameterDependentVectorField::GetCriticalPoints() {
+std::vector<Point*> ParameterDependentVectorField::GetCriticalPoints() {
     return critical_points_;
 }
 
-void ParameterDependentVectorField::AppendCriticalPoints(std::vector<CriticalPoint *> critical_points) {
+void ParameterDependentVectorField::AppendCriticalPoints(std::vector<Point *> critical_points) {
     for(int i = 0; i < critical_points.size(); i++){
         critical_points_.push_back(critical_points[i]);
     }

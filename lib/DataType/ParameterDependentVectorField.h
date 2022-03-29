@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VectorField.h"
-#include "CriticalPoint.h"
+#include "Point.h"
 #include <utility>
 #include <valarray>
 #include <iostream>
@@ -14,7 +14,7 @@ private:
 
     std::vector<VectorField*>  vector_fields;
     std::vector<VectorField*> fffs_;
-    std::vector<CriticalPoint*> critical_points_;
+    std::vector<Point*> critical_points_;
     //Parameterrichtung,s,t,x,y,fff
 
 public:
@@ -29,8 +29,8 @@ public:
     Vector GetFFF(std::vector<int> ids, int d);
     Vector GetInterpolatedFFF(std::vector<double> ids, int d);
 
-    void AppendCriticalPoints(std::vector<CriticalPoint*> critical_points);
-    std::vector<CriticalPoint*> GetCriticalPoints();
+    void AppendCriticalPoints(std::vector<Point*> critical_points);
+    std::vector<Point*> GetCriticalPoints();
 
     int GetSize();
     int GetDimensions();

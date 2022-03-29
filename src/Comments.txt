@@ -14,6 +14,7 @@ MEETING
 
 
 
+
     Backlog
         FFF von FFF
         Zacken aus BifurcationCurve rausbekommen (vermutlich nur wegen niedriger Subdivision Tiefe)
@@ -60,3 +61,13 @@ Vektorfelder:
 //7. (yd+1)*(yd-1)
 //8. (yd+1)*(yd-1)
 //9. yd+xd+sd
+
+
+
+Statt kopieren entweder Move oder Pointer
+Bei permanenten Referenzen use reference instead of pointer
+Objekt mit new ...() erstellen um Pointer auf Heap zu erstellen und Pointer zu bekommen
+nur lokal genutzte Objekte müssen am Ende abgeräumt werden
+Werden die Objekte später lokal nicht mehr benötigt können sie mit Move übertragen werden
+
+Wenn ich Funktion mit Objekt aufrufe, wird das Objekt dann einmal beim Aufruf und einmal beim ausführen kopiert?

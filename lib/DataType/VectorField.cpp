@@ -76,5 +76,8 @@ std::vector<int> VectorField::IDsFromID(int id) {
     for(int i = 0; i < dimensions_; i++){
         ids.push_back(id%(int)pow(size_,dimensions_-i)/(int)pow(size_,dimensions_-i-1));
     }
+    if(ids.size() == 0){
+        ids.push_back(0);
+    }
     return ids;
 }

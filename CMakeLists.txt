@@ -35,9 +35,8 @@ add_library(prototype_lib STATIC )
 target_sources(prototype_lib PRIVATE
         lib/Slider/Slider.cpp
 
-        lib/DataType/CriticalPoint.cpp
-        lib/DataType/ParameterDependentVectorField.cpp
         lib/DataType/Point.cpp
+        lib/DataType/ParameterDependentVectorField.cpp
         lib/DataType/Vector.cpp
         lib/DataType/VectorField.cpp
 

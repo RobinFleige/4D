@@ -6,6 +6,11 @@
 void CalculateBifurcationPoints::InternalUpdate() {
     output_ = input_;
     for(int i = 0; i < pow(input_->GetSize(),input_->GetDimensions()); i++){
+
+        if(i%100==0){
+            std::cout<<i<<std::endl;
+        }
+
         std::vector<int> ids = input_->IDsFromID(i);
         if(!OnRightBorder(ids)){
             std::vector<std::vector<double>> min_max_set = CalculateMinMaxSet(ids);
@@ -14,7 +19,7 @@ void CalculateBifurcationPoints::InternalUpdate() {
     }
 }
 
-std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_iterations, int max_iterations, std::vector<std::vector<double>> min_max_set) {
+std::vector<Point*> CalculateBifurcationPoints::Subdivide(int max_param_iterations, int max_iterations, std::vector<std::vector<double>> min_max_set) {
     //Setup
     int count = pow(2,input_->GetDimensions());
     std::vector<int> positive_counts;
@@ -38,9 +43,9 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
             std::vector<std::vector<std::vector<double>>> next_min_max_sets = CalculateNextMinMaxSets(min_max_set, max_param_iterations > 0);
 
             //Call Subdivision and return their returns
-            std::vector<CriticalPoint*> critical_points;
+            std::vector<Point*> critical_points;
             for(int i = 0; i < next_min_max_sets.size(); i++){
-                std::vector<CriticalPoint*> temp_critical_points;
+                std::vector<Point*> temp_critical_points;
                 temp_critical_points = Subdivide(max_param_iterations-1,max_iterations-1,next_min_max_sets[i]);
                 for(int j = 0; j < temp_critical_points.size(); j++){
                     critical_points.push_back(temp_critical_points[j]);
@@ -56,18 +61,18 @@ std::vector<CriticalPoint*> CalculateBifurcationPoints::Subdivide(int max_param_
             }
             //If FFF Changed it is a Bifurcation
             if(fff_change){
-                return {new CriticalPoint(mid,CriticalPointType::bifurcation)};
+                return {new Point(mid,CriticalPointType::bifurcation)};
             }else{
                 //Else check for Vector Direction
                 int positive_dimensions = CalculateDimensionDirection(mid, min_max_set);
 
                 //If all dimensions show towards, it is a sink; If al dimensions show away it is a source; Else it is a saddle
                 if(positive_dimensions == 0){
-                    return {new CriticalPoint(mid,CriticalPointType::sink)};
+                    return {new Point(mid,CriticalPointType::sink)};
                 }else if(positive_dimensions == input_->GetSpaceDimensions()){
-                    return {new CriticalPoint(mid,CriticalPointType::source)};
+                    return {new Point(mid,CriticalPointType::source)};
                 }else{
-                    return {new CriticalPoint(mid,CriticalPointType::saddle)};
+                    return {new Point(mid,CriticalPointType::saddle)};
                 }
             }
         }

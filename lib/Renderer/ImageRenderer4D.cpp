@@ -2,7 +2,7 @@
 #include <vtkSimplePointsReader.h>
 #include "ImageRenderer4D.h"
 void ImageRenderer4D::InternalUpdate() {
-    std::vector<CriticalPoint*> critical_points = input_->GetCriticalPoints();
+    std::vector<Point*> critical_points = input_->GetCriticalPoints();
 
     vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
     vtkSmartPointer<vtkPolyData> polyData = vtkSmartPointer<vtkPolyData>::New();

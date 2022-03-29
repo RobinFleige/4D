@@ -21,6 +21,11 @@ void CalculateFFField::InternalUpdate() {
     }
 
     for(int i = 0; i < (int)pow(size,input_->GetDimensions()); i++){
+
+        if(i%100==0){
+            std::cout<<i<<std::endl;
+        }
+
         std::vector<Vector> derivatives;
         std::vector<int> ids = input_->IDsFromID(i);
 

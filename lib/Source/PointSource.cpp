@@ -9,7 +9,7 @@ void PointSource::SetCoordinates(std::vector<double> coordinates) {
 
 void PointSource::InternalUpdate() {
     output_.clear();
-    output_.push_back(new Point(coordinates_));
+    output_.push_back(new Point(coordinates_,CriticalPointType::none));
 }
 
 PointSource::PointSource() {

@@ -113,10 +113,10 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     return EXIT_SUCCESS;
 }
 
-int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
+int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int param_subdivision_depth, int subdivision_depth, bool use_transparency, RenderType render_type){
     auto source = new VectorFieldSource(size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
-    auto bifurcation = new CalculateBifurcationPoints(2,subdivision_depth);
+    auto bifurcation = new CalculateBifurcationPoints(param_subdivision_depth,subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type,used_dimensions,additional_dimension,false,use_transparency);
 
     feature_flow_field->SetInputConnection(source);
@@ -132,8 +132,8 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
 }
 
 int main(int argc, char* argv[]){
-    int size = 4;
+    int size = 10;
     int min = -2;
     int max = 2;
-    return render_general(size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3, 4, false, RenderType::point);
+    return render_general(size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3,0, 2, false, RenderType::point);
 }
