@@ -22,7 +22,7 @@ void CalculateFFField::InternalUpdate() {
 
     for(int i = 0; i < (int)pow(size,input_->GetDimensions()); i++){
 
-        if(i%100==0){
+        if(i%1000==0){
             std::cout<<i<<std::endl;
         }
 
@@ -54,12 +54,23 @@ void CalculateFFField::InternalUpdate() {
 
         for(int d = 0; d < input_->GetParameterDimensions(); d++){
             std::vector<double> fff;
+
+            std::vector<int> ids;
+            for(int d2 = 0; d2 < input_->GetSpaceDimensions()*2+input_->GetParameterDimensions()-1; d2++){
+                if(d2==input_->GetSpaceDimensions()){
+                    ids.push_back(d);
+                    d2+=input_->GetParameterDimensions()-1;
+                }else{
+                    ids.push_back(d2+input_->GetParameterDimensions());
+                }
+            }
+
             for(int d2 = 0; d2< input_->GetParameterDimensions(); d2++){
                 if(d == d2){
                     std::vector<std::vector<double>> matrix;
                     matrix.reserve(input_->GetSpaceDimensions());
                     for(int d3 = 0; d3< input_->GetSpaceDimensions(); d3++){
-                        matrix.push_back(derivatives[input_->GetParameterDimensions()+d3].values_);
+                        matrix.push_back(derivatives[ids[d3]].values_);
                     }
                     fff.push_back(Determinant(matrix));
                 }else{
@@ -67,20 +78,10 @@ void CalculateFFField::InternalUpdate() {
                 }
             }
 
-            std::vector<int> ids;
-            for(int d2 = 0; d2 < input_->GetSpaceDimensions()+input_->GetParameterDimensions()+1; d2++){
-                if(d2==input_->GetSpaceDimensions()){
-                    ids.push_back(d);
-                    d2+=input_->GetParameterDimensions()-1;
-                }else{
-                    ids.push_back(d2+input_->GetParameterDimensions()+1);
-                }
-            }
-
-            for(int d2 = 0; d2 < input_->GetSpaceDimensions(); d2++){
+            for(int d2 = 1; d2 < input_->GetSpaceDimensions()+1; d2++){
                 std::vector<std::vector<double>> matrix;
                 matrix.reserve(input_->GetSpaceDimensions());
-                for(int d3 = 0; d3< input_->GetSpaceDimensions(); d3++){
+                for(int d3 = 0; d3 < input_->GetSpaceDimensions(); d3++){
                     matrix.push_back(derivatives[ids[d2+d3]%input_->GetDimensions()].values_);
                 }
                 fff.push_back(Determinant(matrix));
@@ -116,7 +117,7 @@ double CalculateFFField::Determinant(std::vector<std::vector<double>> matrix) {
                 }
                 next_matrix.push_back(next_vector);
             }
-            value += matrix[0][i]*pow(-1,i)*Determinant(next_matrix);
+            value += matrix[0][i]*pow(-1,i+1)*Determinant(next_matrix);
         }
         return value;
     }

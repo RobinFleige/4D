@@ -10,6 +10,7 @@
 #include <DataTypeFilter/GetPointsSet.h>
 #include <Renderer/ImageRenderer4D.h>
 #include <Filter/CalculateFFField.h>
+#include <Filter/ReformDimension.h>
 #include "Source/VectorFieldSource.h"
 #include "Filter/LIC.h"
 #include "./Slider/Slider.h"
@@ -131,9 +132,33 @@ int render_general(int size, int min, int max,VectorFieldExampleType type,std::v
     return EXIT_SUCCESS;
 }
 
+int reduced_dimensions(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int param_subdivision_depth, int subdivision_depth, bool use_transparency, RenderType render_type){
+    auto source = new VectorFieldSource(size,min,max,type);
+    auto feature_flow_field = new CalculateFFField();
+    auto reform_dimension = new ReformDimension();
+    auto feature_flow_field_2 = new CalculateFFField();
+    auto bifurcation = new CalculateBifurcationPoints(param_subdivision_depth,subdivision_depth);
+    auto renderer = new ImageRenderer4D(render_type, {0,1,3},2,true,false);
+
+    feature_flow_field->SetInputConnection(source);
+    feature_flow_field->Update();
+    reform_dimension->SetInputConnection(feature_flow_field);
+    reform_dimension->Update();
+    feature_flow_field_2->SetInputConnection(reform_dimension);
+    feature_flow_field_2->Update();
+    bifurcation->SetInputConnection(feature_flow_field_2);
+    bifurcation->SetCalculateCriticalPoints(false);
+    bifurcation->Update();
+    renderer->SetInputConnection(bifurcation);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char* argv[]){
     int size = 10;
     int min = -2;
     int max = 2;
-    return render_general(size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3,0, 2, false, RenderType::point);
+    return reduced_dimensions(size, min, max, VectorFieldExampleType::circle2d2d, {0, 1, 2}, 3,2, 6, false, RenderType::line);
 }

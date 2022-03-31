@@ -7,7 +7,7 @@ void CalculateBifurcationPoints::InternalUpdate() {
     output_ = input_;
     for(int i = 0; i < pow(input_->GetSize(),input_->GetDimensions()); i++){
 
-        if(i%100==0){
+        if(i%1000==0){
             std::cout<<i<<std::endl;
         }
 
@@ -21,7 +21,8 @@ void CalculateBifurcationPoints::InternalUpdate() {
 
 std::vector<Point*> CalculateBifurcationPoints::Subdivide(int max_param_iterations, int max_iterations, std::vector<std::vector<double>> min_max_set) {
     //Setup
-    int count = pow(2,input_->GetDimensions());
+    int count = (int)pow(2,input_->GetDimensions());
+    int space_count = (int)pow(2,input_->GetSpaceDimensions());
     std::vector<int> positive_counts;
 
     //Check for positive and non-positive values for every corner
@@ -31,11 +32,11 @@ std::vector<Point*> CalculateBifurcationPoints::Subdivide(int max_param_iteratio
     //Calculate if sign change happens
     bool value_change = true;
     for(int d = 0; d < input_->GetSpaceDimensions(); d++){
-        if(positive_counts[d] == 0 || positive_counts[d] == count){
+        if(positive_counts[d] == 0 || positive_counts[d] == space_count){
             value_change = false;
         }
     }
-    bool fff_change = positive_counts[input_->GetSpaceDimensions()] != 0 && positive_counts[input_->GetSpaceDimensions()] != count;
+    bool fff_change = positive_counts[input_->GetSpaceDimensions()] != 0 && positive_counts[input_->GetSpaceDimensions()] != space_count;
 
     //If Sign change happened -> Subdivide further
     if(value_change && (fff_change || calculate_critical_points_)){
@@ -63,6 +64,8 @@ std::vector<Point*> CalculateBifurcationPoints::Subdivide(int max_param_iteratio
             if(fff_change){
                 return {new Point(mid,CriticalPointType::bifurcation)};
             }else{
+                //std::cout<<input_->GetInterpolatedFFF(mid,0).values_[0]<<" "<<input_->GetInterpolatedFFF(mid,0).values_[1]<<" "<<input_->GetInterpolatedFFF(mid,0).values_[2]<<" "<<input_->GetInterpolatedFFF(mid,0).values_[3]<<" "<<std::endl;
+                //std::cout<<mid[0]<<" "<<mid[1]<<" "<<mid[2]<<" "<<mid[3]<<" "<<std::endl;
                 //Else check for Vector Direction
                 int positive_dimensions = CalculateDimensionDirection(mid, min_max_set);
 
@@ -114,14 +117,17 @@ std::vector<std::vector<double>> CalculateBifurcationPoints::CalculateMinMaxSet(
 
 std::vector<std::vector<double>> CalculateBifurcationPoints::CalculateMinMaxCorners(std::vector<std::vector<double>> min_max_set) {
     std::vector<std::vector<double>> min_max_corners;
-    for(int i = 0; i < (int)pow(2,input_->GetDimensions()); i++){
+    for(int i = 0; i < (int)pow(2,input_->GetSpaceDimensions()); i++){
         std::vector<double> ids;
         ids.reserve(input_->GetDimensions());
-        for(int d = 0; d < input_->GetDimensions(); d++){
+        for(int d = 0; d < input_->GetParameterDimensions(); d++){
+            ids.push_back((min_max_set[d][0]+min_max_set[d][1])/2);
+        }
+        for(int d = 0; d < input_->GetSpaceDimensions(); d++){
             if((i%(int)pow(2,d+1))<pow(2,d)){
-                ids.push_back(min_max_set[d][0]);
+                ids.push_back(min_max_set[d+input_->GetParameterDimensions()][0]);
             }else{
-                ids.push_back(min_max_set[d][1]);
+                ids.push_back(min_max_set[d+input_->GetParameterDimensions()][1]);
             }
         }
         min_max_corners.push_back(ids);
@@ -136,7 +142,7 @@ std::vector<int> CalculateBifurcationPoints::CalculatePositiveCounts(std::vector
     for(int i = 0; i < positive_type_count; i++){
         positive_counts.push_back(0);
     }
-    for(int i = 0; i < (int)pow(2,input_->GetDimensions()); i++){
+    for(int i = 0; i < (int)pow(2,input_->GetSpaceDimensions()); i++){
         for(int d = 0; d < input_->GetSpaceDimensions(); d++){
             if(input_->GetInterpolated(min_max_corners[i]).values_[d] > 0){
                 positive_counts[d]+=1;
@@ -194,33 +200,30 @@ std::vector<std::vector<std::vector<double>>> CalculateBifurcationPoints::Calcul
 int CalculateBifurcationPoints::CalculateDimensionDirection(std::vector<double> mid, std::vector<std::vector<double>> min_max_set) {
     std::vector<double> dimension_sum;
     dimension_sum.reserve(input_->GetSpaceDimensions());
+
+
     for(int d = 0; d < input_->GetSpaceDimensions(); d++){
         dimension_sum.push_back(0);
-        for(int d2 = 0; d2 < pow(2,input_->GetSpaceDimensions()); d2++){
-            std::vector<double> ids;
-            bool plus;
-            for(int d3 = 0; d3 < input_->GetParameterDimensions(); d3++){
-                ids.push_back(mid[d3]);
-            }
-            for(int d3 = 0; d3 < input_->GetSpaceDimensions(); d3++){
-                if((d2%(int)pow(2,d3+1))<pow(2,d3)){
-                    ids.push_back(min_max_set[d3+input_->GetParameterDimensions()][0]);
-                    if(d3 == d){
-                        plus = true;
-                    }
-                }else{
-                    ids.push_back(min_max_set[d3+input_->GetParameterDimensions()][1]);
-                    if(d3 == d){
-                        plus = false;
-                    }
-                }
+
+        for(int i = 0; i < input_->GetSpaceDimensions(); i++){
+            std::vector<double> ids1;
+            std::vector<double> ids2;
+            for(int d2 = 0; d2 < input_->GetParameterDimensions(); d2++){
+                ids1.push_back(mid[d2]);
+                ids2.push_back(mid[d2]);
             }
 
-            if(plus){
-                dimension_sum[d]+=input_->GetInterpolated(ids).values_[d];
-            }else{
-                dimension_sum[d]-=input_->GetInterpolated(ids).values_[d];
+            for(int d2 = 0; d2 < input_->GetSpaceDimensions(); d2++){
+                if(i == d2){
+                    ids1.push_back(min_max_set[d2+input_->GetParameterDimensions()][0]);
+                    ids2.push_back(min_max_set[d2+input_->GetParameterDimensions()][1]);
+                }else{
+                    ids1.push_back(mid[d2+input_->GetParameterDimensions()]);
+                    ids2.push_back(mid[d2+input_->GetParameterDimensions()]);
+                }
             }
+            dimension_sum[d]+=input_->GetInterpolated(ids1).values_[d];
+            dimension_sum[d]-=input_->GetInterpolated(ids2).values_[d];
         }
     }
 

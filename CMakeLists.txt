@@ -52,6 +52,7 @@ target_sources(prototype_lib PRIVATE
         lib/Filter/LIC.cpp
         lib/Filter/PointSetSubspace.cpp
         lib/Filter/PointSetToScalarField.cpp
+        lib/Filter/ReformDimension.cpp
         lib/Filter/Subspace.cpp
         lib/Filter/VectorFieldToImageData.cpp
 

@@ -8,7 +8,7 @@ MEETING
 
 
     ToDo
-        Viele Sachen in Funktionen auslagern um Lesbarkeit und Struktur zu verbessern
+        Meta-FFF hat Vorzeichenfehler (vielleicht liegt das an 3D Determinante)
         5D Double Renderer (Wie Double2D, aber mit der 3D Visualisierung für 3 Parameter)
         c++ aufbessern (Referenz vs Pointer; Copy statt Pointer; Erstellen von Objekten aus Schleifen auslagern wenn möglich)
 

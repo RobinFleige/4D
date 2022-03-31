@@ -12,10 +12,12 @@ void ImageRenderer4D::InternalUpdate() {
     vtkNew<vtkUnsignedCharArray> cellData;
     cellData->SetNumberOfComponents(4);
 
-    if(type_ == RenderType::line || type_ == RenderType::triangle) {
+    if(type_ == RenderType::triangle) {
         cellData->SetNumberOfTuples(2 * critical_points.size());
-    }else{
+    }else if(type_ == RenderType::point){
         cellData->SetNumberOfTuples(critical_points.size());
+    }else if(type_ == RenderType::line){
+        cellData->SetNumberOfTuples(input_->GetParameterDimensions() * critical_points.size());
     }
 
     for(int i = 0; i < critical_points.size(); i++){
@@ -48,11 +50,15 @@ void ImageRenderer4D::InternalUpdate() {
         if(rgba[3] < 0){
             rgba[3] = 0;
         }
-        if(type_ == RenderType::line || type_ == RenderType::triangle) {
+        if(type_ == RenderType::triangle) {
             cellData->InsertTuple(2*i,rgba);
             cellData->InsertTuple(2*i+1,rgba);
-        }else{
+        }else if(type_ == RenderType::point){
             cellData->InsertTuple(i,rgba);
+        }else if(type_ == RenderType::line){
+            for(int j = 0; j < input_->GetParameterDimensions() ; j++){
+                cellData->InsertTuple(2*i+j,rgba);
+            }
         }
 
 
@@ -64,24 +70,21 @@ void ImageRenderer4D::InternalUpdate() {
         }
 
         if(type_ == RenderType::line) {
+            for(int d = 0; d < input_->GetParameterDimensions(); d++){
+                //TODO eine Linie pro FFF(Parameterdimension)
+            }
             Vector fff1 = input_->GetInterpolatedFFF({critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]},0);
-            Vector fff2 = input_->GetInterpolatedFFF({critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]},1);
-            double p0[3] = {critical_points[i]->GetCoordinates()[0]-fff1.values_[0]  ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]-fff1.values_[2]};
-            double p1[3] = {critical_points[i]->GetCoordinates()[0]+fff1.values_[0]   ,critical_points[i]->GetCoordinates()[1]                                                ,critical_points[i]->GetCoordinates()[2]+fff1.values_[2]};
-            double p2[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]-fff2.values_[1]  ,critical_points[i]->GetCoordinates()[2]-fff2.values_[2]};
-            double p3[3] = {critical_points[i]->GetCoordinates()[0]                                                 ,critical_points[i]->GetCoordinates()[1]+fff2.values_[1]  ,critical_points[i]->GetCoordinates()[2]+fff2.values_[2]};
+            double p0[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]]-fff1.values_[used_dimensions_[0]]  ,critical_points[i]->GetCoordinates()[used_dimensions_[1]]-fff1.values_[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]-fff1.values_[used_dimensions_[2]]};
+            double p1[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]]+fff1.values_[used_dimensions_[0]]   ,critical_points[i]->GetCoordinates()[used_dimensions_[1]]+fff1.values_[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]+fff1.values_[used_dimensions_[2]]};
             points->InsertNextPoint(p0);
             points->InsertNextPoint(p1);
-            points->InsertNextPoint(p2);
-            points->InsertNextPoint(p3);
             vtkNew<vtkLine> line1;
-            line1->GetPointIds()->SetId(0, 4*i);
-            line1->GetPointIds()->SetId(1, 4*i+1);
-            lines->InsertNextCell(line1);
-            vtkNew<vtkLine> line2;
-            line2->GetPointIds()->SetId(0, 4*i+2);
-            line2->GetPointIds()->SetId(1, 4*i+3);
-            lines->InsertNextCell(line2);
+            line1->GetPointIds()->SetId(0, 2*i);
+            line1->GetPointIds()->SetId(1, 2*i+1);
+
+            for(int d = 0; d < input_->GetParameterDimensions(); d++){
+                lines->InsertNextCell(line1);
+            }
         }
 
         if(type_ == RenderType::triangle) {
@@ -141,9 +144,9 @@ ImageRenderer4D::ImageRenderer4D(RenderType type, std::vector<int> used_dimensio
     if(show_axes){
         vtkNew<vtkAxesActor> axes;
         axes->SetNormalizedShaftLength(80,80,80);
-        axes->SetXAxisLabelText("X");
-        axes->SetYAxisLabelText("Y");
-        axes->SetZAxisLabelText("T");
+        axes->SetXAxisLabelText("s");
+        axes->SetYAxisLabelText("x");
+        axes->SetZAxisLabelText("z");
         //axes->AxisLabelsOff();
         renderer_->AddActor(axes);
     }
