@@ -117,7 +117,7 @@ double CalculateFFField::Determinant(std::vector<std::vector<double>> matrix) {
                 }
                 next_matrix.push_back(next_vector);
             }
-            value += matrix[0][i]*pow(-1,i+1)*Determinant(next_matrix);
+            value += matrix[0][i]*pow(-1,i)*Determinant(next_matrix);
         }
         return value;
     }

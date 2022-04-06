@@ -47,6 +47,7 @@ target_sources(prototype_lib PRIVATE
         lib/Source/VectorFieldSource.cpp
 
         lib/Filter/CalculateBifurcationPoints.cpp
+        lib/Filter/CalculateCriticalPoints.cpp
         lib/Filter/CalculateFFField.cpp
         lib/Filter/DrawPointsOnImage.cpp
         lib/Filter/LIC.cpp

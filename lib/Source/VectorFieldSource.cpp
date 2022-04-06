@@ -47,6 +47,11 @@ void VectorFieldSource::InternalUpdate(){
                 vector.push_back(Normalize(ids[3])*Normalize(ids[3])-Normalize(ids[0])-Normalize(ids[1])-Normalize(ids[2]));
                 vector.push_back(Normalize(ids[4]));
             }
+            if(type_ == VectorFieldExampleType::circle3d2d){
+                vector.reserve(2);
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[4]));
+            }
             auto vec = new Vector();
             vec->values_ = vector;
             vectors.push_back(*vec);
@@ -78,7 +83,7 @@ VectorFieldSource::VectorFieldSource(int size, double min, double max, VectorFie
         parameter_dimensions_ = 2;
         space_dimensions_ = 3;
     }
-    if(type_ == VectorFieldExampleType::simple3d2d){
+    if(type_ == VectorFieldExampleType::simple3d2d || type_ == VectorFieldExampleType::circle3d2d){
         parameter_dimensions_ = 3;
         space_dimensions_ = 2;
     }

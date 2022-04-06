@@ -1,6 +1,7 @@
 #include "ReformDimension.h"
 
 ReformDimension::ReformDimension() {
+    name_ = "ReformDimension";
     Invalidate();
 }
 

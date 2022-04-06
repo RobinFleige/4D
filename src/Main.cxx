@@ -17,8 +17,9 @@
 #include "Source/PointSource.h"
 #include "Filter/DrawPointsOnImage.h"
 #include "Filter/CalculateBifurcationPoints.h"
+#include "Filter/CalculateCriticalPoints.h"
 
-int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
+int two_in_one_image(int size, double min, double max,VectorFieldExampleType type){
 
     int s = size / 2;
     int t = size / 2;
@@ -29,7 +30,7 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     auto* lic = new LIC();
     auto* point_subspace = new PointSetSubspace();
     auto* draw_points1 = new DrawPointsOnImage(2,3);
-    auto* critical_points = new CalculateBifurcationPoints(0,5);
+    auto* critical_points = new CalculateBifurcationPoints(5);
     auto* point_set = new GetPointsSet();
     auto* scalar_field = new PointSetToScalarField(size);
     auto* point_source = new PointSource();
@@ -114,31 +115,34 @@ int two_in_one_image(int size, int min, int max,VectorFieldExampleType type){
     return EXIT_SUCCESS;
 }
 
-int render_general(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int param_subdivision_depth, int subdivision_depth, bool use_transparency, RenderType render_type){
+int render_general(int size, double min, double max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
     auto source = new VectorFieldSource(size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
-    auto bifurcation = new CalculateBifurcationPoints(param_subdivision_depth,subdivision_depth);
+    auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
+    auto critical = new CalculateCriticalPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type,used_dimensions,additional_dimension,false,use_transparency);
 
     feature_flow_field->SetInputConnection(source);
     feature_flow_field->Update();
     bifurcation->SetInputConnection(feature_flow_field);
-    bifurcation->SetCalculateCriticalPoints(true);
     bifurcation->Update();
-    renderer->SetInputConnection(bifurcation);
+    critical->SetInputConnection(bifurcation);
+    critical->Update();
+    renderer->SetInputConnection(critical);
     renderer->Update();
     renderer->GetInteractor()->Start();
 
     return EXIT_SUCCESS;
 }
 
-int reduced_dimensions(int size, int min, int max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int param_subdivision_depth, int subdivision_depth, bool use_transparency, RenderType render_type){
+int reduced_dimensions(int size, double min, double max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
     auto source = new VectorFieldSource(size,min,max,type);
     auto feature_flow_field = new CalculateFFField();
     auto reform_dimension = new ReformDimension();
     auto feature_flow_field_2 = new CalculateFFField();
-    auto bifurcation = new CalculateBifurcationPoints(param_subdivision_depth,subdivision_depth);
-    auto renderer = new ImageRenderer4D(render_type, {0,1,3},2,true,false);
+    auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
+    auto critical = new CalculateCriticalPoints(subdivision_depth);
+    auto renderer = new ImageRenderer4D(render_type, used_dimensions,additional_dimension,true,use_transparency);
 
     feature_flow_field->SetInputConnection(source);
     feature_flow_field->Update();
@@ -147,9 +151,68 @@ int reduced_dimensions(int size, int min, int max,VectorFieldExampleType type,st
     feature_flow_field_2->SetInputConnection(reform_dimension);
     feature_flow_field_2->Update();
     bifurcation->SetInputConnection(feature_flow_field_2);
-    bifurcation->SetCalculateCriticalPoints(false);
     bifurcation->Update();
-    renderer->SetInputConnection(bifurcation);
+    critical->SetInputConnection(bifurcation);
+    critical->Update();
+    renderer->SetInputConnection(critical);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
+}
+
+int double_reduced(int size, double min, double max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
+    auto source = new VectorFieldSource(size,min,max,type);
+    auto feature_flow_field = new CalculateFFField();
+    auto reform_dimension = new ReformDimension();
+    auto feature_flow_field_2 = new CalculateFFField();
+    auto reform_dimension_2 = new ReformDimension();
+    auto critical = new CalculateCriticalPoints(subdivision_depth);
+    auto renderer = new ImageRenderer4D(render_type, used_dimensions,additional_dimension,true,use_transparency);
+
+    feature_flow_field->SetInputConnection(source);
+    feature_flow_field->Update();
+    reform_dimension->SetInputConnection(feature_flow_field);
+    reform_dimension->Update();
+    feature_flow_field_2->SetInputConnection(reform_dimension);
+    feature_flow_field_2->Update();
+    reform_dimension_2->SetInputConnection(feature_flow_field_2);
+    reform_dimension_2->Update();
+    critical->SetInputConnection(reform_dimension_2);
+    critical->Update();
+    renderer->SetInputConnection(critical);
+    renderer->Update();
+    renderer->GetInteractor()->Start();
+
+    return EXIT_SUCCESS;
+}
+
+int triple_reduced(int size, double min, double max,VectorFieldExampleType type,std::vector<int> used_dimensions, int additional_dimension, int subdivision_depth, bool use_transparency, RenderType render_type){
+    auto source = new VectorFieldSource(size,min,max,type);
+    auto feature_flow_field = new CalculateFFField();
+    auto reform_dimension = new ReformDimension();
+    auto feature_flow_field_2 = new CalculateFFField();
+    auto reform_dimension_2 = new ReformDimension();
+    auto feature_flow_field_3 = new CalculateFFField();
+    auto reform_dimension_3 = new ReformDimension();
+    auto critical = new CalculateCriticalPoints(subdivision_depth);
+    auto renderer = new ImageRenderer4D(render_type, used_dimensions,additional_dimension,true,use_transparency);
+
+    feature_flow_field->SetInputConnection(source);
+    feature_flow_field->Update();
+    reform_dimension->SetInputConnection(feature_flow_field);
+    reform_dimension->Update();
+    feature_flow_field_2->SetInputConnection(reform_dimension);
+    feature_flow_field_2->Update();
+    reform_dimension_2->SetInputConnection(feature_flow_field_2);
+    reform_dimension_2->Update();
+    feature_flow_field_3->SetInputConnection(reform_dimension_2);
+    feature_flow_field_3->Update();
+    reform_dimension_3->SetInputConnection(feature_flow_field_3);
+    reform_dimension_3->Update();
+    critical->SetInputConnection(reform_dimension_3);
+    critical->Update();
+    renderer->SetInputConnection(critical);
     renderer->Update();
     renderer->GetInteractor()->Start();
 
@@ -157,8 +220,8 @@ int reduced_dimensions(int size, int min, int max,VectorFieldExampleType type,st
 }
 
 int main(int argc, char* argv[]){
-    int size = 10;
-    int min = -2;
-    int max = 2;
-    return reduced_dimensions(size, min, max, VectorFieldExampleType::circle2d2d, {0, 1, 2}, 3,2, 6, false, RenderType::line);
+    int size = 5;
+    double min = -1.3;
+    double max = 1.3;
+    return triple_reduced(size, min, max, VectorFieldExampleType::circle3d2d, {0, 1, 2}, 3, 3, false, RenderType::point);
 }
