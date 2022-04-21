@@ -24,7 +24,7 @@ void ReformDimension::InternalUpdate() {
         std::vector<int> old_ids = input_->IDsFromID(i);
         Vector vector = input_->GetData(old_ids);
         Vector fff = input_->GetFFF(old_ids,0);
-        vector.values_.push_back(fff.values_[0]);
+        vector.values_.insert(vector.values_.begin(),fff.values_[0]);
         vector_field_data.push_back(vector);
     }
     vector_fields[vector_fields.size()-1]->SetData(vector_field_data);

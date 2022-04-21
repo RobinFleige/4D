@@ -167,6 +167,8 @@ int double_reduced(int size, double min, double max,VectorFieldExampleType type,
     auto reform_dimension = new ReformDimension();
     auto feature_flow_field_2 = new CalculateFFField();
     auto reform_dimension_2 = new ReformDimension();
+    auto feature_flow_field_3 = new CalculateFFField();
+    auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
     auto critical = new CalculateCriticalPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type, used_dimensions,additional_dimension,true,use_transparency);
 
@@ -178,7 +180,11 @@ int double_reduced(int size, double min, double max,VectorFieldExampleType type,
     feature_flow_field_2->Update();
     reform_dimension_2->SetInputConnection(feature_flow_field_2);
     reform_dimension_2->Update();
-    critical->SetInputConnection(reform_dimension_2);
+    feature_flow_field_3->SetInputConnection(reform_dimension_2);
+    feature_flow_field_3->Update();
+    bifurcation->SetInputConnection(feature_flow_field_3);
+    bifurcation->Update();
+    critical->SetInputConnection(bifurcation);
     critical->Update();
     renderer->SetInputConnection(critical);
     renderer->Update();
@@ -195,6 +201,8 @@ int triple_reduced(int size, double min, double max,VectorFieldExampleType type,
     auto reform_dimension_2 = new ReformDimension();
     auto feature_flow_field_3 = new CalculateFFField();
     auto reform_dimension_3 = new ReformDimension();
+    auto feature_flow_field_4 = new CalculateFFField();
+    auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
     auto critical = new CalculateCriticalPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type, used_dimensions,additional_dimension,true,use_transparency);
 
@@ -210,7 +218,11 @@ int triple_reduced(int size, double min, double max,VectorFieldExampleType type,
     feature_flow_field_3->Update();
     reform_dimension_3->SetInputConnection(feature_flow_field_3);
     reform_dimension_3->Update();
-    critical->SetInputConnection(reform_dimension_3);
+    feature_flow_field_4->SetInputConnection(reform_dimension_3);
+    feature_flow_field_4->Update();
+    bifurcation->SetInputConnection(feature_flow_field_4);
+    bifurcation->Update();
+    critical->SetInputConnection(bifurcation);
     critical->Update();
     renderer->SetInputConnection(critical);
     renderer->Update();
@@ -220,8 +232,8 @@ int triple_reduced(int size, double min, double max,VectorFieldExampleType type,
 }
 
 int main(int argc, char* argv[]){
-    int size = 5;
-    double min = -1.3;
-    double max = 1.3;
-    return triple_reduced(size, min, max, VectorFieldExampleType::circle3d2d, {0, 1, 2}, 3, 3, false, RenderType::point);
+    int size = 10;
+    double min = -2;
+    double max = 2;
+    return reduced_dimensions(size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3, 2, false, RenderType::line);
 }

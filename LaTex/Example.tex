@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+
+\usepackage{sectsty}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\title{ Title}
+\author{ Author }
+\date{\today}
+
+\begin{document}
+\maketitle	
+\pagebreak
+
+\section{Beweis Dimensionalität und Form von Bifurcation-Structures}
+Angenommen ist ein 1-Parameterabhängiges Vektorfeld v(x,y,t). Für t = x tritt im Vektorfeld eine Bifurkation auf.
+Erstellen wir zwei Parameter r und s und definieren t = f(r,s). Dann tritt im Vektorfeld v(x,y,f(r,s)) eine Bifurkation auf wenn f(r,s)-x = 0. Da wir zwei Unbekannte r und s, jedoch nur eine Gleichung haben, gibt es keine Eindeutige Lösung, es können nur Lösungen in Abhängigkeit von einer der Unbekannten entstehen und somit eine Linie an Parameterkombinationen von r und s, für die diese Gleichung aufgeht.
+Da die Funktion f nicht weiter definiert ist, können folgende Eigenschaften für r und s auftreten.
+Für ein bestimmtes r/s, kann es sowohl keine, eine oder mehrere s/r geben, für die die Gleichung aufgeht.
+Gibt es für jedes s/r genau ein r/s, für das die gleichung aufgeht, ist es eine offene endlose Linie.
+Gibt es für ein r/s mehrere s/r, folgt daraus, dass es für andere r/s keine s/r gibt, für die die Gleichung aufgeht und umgekehrt. Trifft dies sowohl auf s, als auch auf r zu, so ist die Linie geschlossen. Trifft dies nur auf einen der Parameter zu, so ist die Linie parabolisch gebogen.
+
+\section{Eigenschaften von Bifurcation-Structures}
+Pro Dimension der Bifurcations Struktur kann diese entweder offen oder geschlossen sein.
+Höherdimensionale Bifurcationsstrukturen können daher Gesamt-Offen, Gesamt-Geschlossen oder Teil-Offen sein.
+
+
+\section{Klassifizierung von Bifurcation Structures}
+Die Klassifizierung von Bifurcation Structures ist nicht so einfach wie die von Bifurcation Points.
+Bifurcation Points existieren an einem Punkt entlang eines Parameters. Sie werden dadurch klassifiziert, dass bei Erhöhen des Parameterwertes entweder Kritische Punkte entstehen (Birth) oder verschwinden (Death).
+Da Bifurcation Curves entlang von 2 Parametern entstehen oder verschwinden können, müssten sie entlang dieser beider Parameter klassifiziert werden.
+Sie könnten entlang von s Birth und entlang von t Death Bifurcations sein.
+Das Problem ist, dass diese Klassifizierung nicht für die gesamte Bifurcation Structure erstellt werden kann, da in einigen Fällen (geschlossene Bifurcation Structures; oszilierende Bifurcation Structures) bei Erhöhung von einem Parameter zuerst ein Birth und später ein Death und anschließend weitere Birth und Death Events auftreten können.
+
+Möglicherweise sind Klassifizierungen für die ganze Bifurcationsstruktur möglich, ansonsten müsste sie aber auch pro Punkt klassifiziert werden, was ein sehr aufwändiger und unpraktischer Prozess ist.
+Mein Vorschlag für eine Klassifizierung wäre eine Senkrechte auf das Meta-FFF (in höheren Dimensionen ein Kreuzprodukt auf alle Meta-FFFs) in der Parameter-Projektion. Klassifiziert wird die Bifurcation Structure dann durch die Entscheidung, ob diese Senkrechte in den Parameterraum mit mehr oder mit weniger kritischen Punkten zeigt.
+Da wir aktuell noch kein Meta-FFF berechnet haben, könnte es 2 Probleme geben. Möglicherweise ist das Meta-FFF ambig was die Richtung betrifft, dann wäre diese Klassifizierung gar nicht möglich. Alternativ könnte es sein, dass ein Meta-FFF immer in die Richtung zeigt, dass die so berechnete Senkrechte IMMER ein Birth (oder Death) klassifiziert.
+
+Auf der Bifurcation Curve die Stellen finden, an denen sich die Klassifizierung der Punkte von Birth zu Death oder von Sattel+Quelle zu Sattel+Senke ändert.
+
+\section{Projektion von Bifurcation Structures auf Parameter-Dimensionen}
+Bei der Projektion des Vektorfeldes auf die Parameter-Dimensionen, werden lediglich die Raum-Komponenten der Topologie entfernt. Somit bleibt lediglich der Parameterraum, in dem Aussagen über das Verhalten der Vektorfelder getroffen werden kann.
+Die Projektion der Bifurcation-Structure auf das Parameterfeld entspricht der Isolinie (1) der kritischen Punkte im Vektorfeld für die Parameter-Kombination.
+
+\section{Verhalten von Bifurcation Structures}
+Es kann in einem (multi-)parameterabhängigen Vektorfeld mehrere Bifurkationen/Bifurkationsstrukturen geben.
+Diese können sich nicht schneiden, da sich die kritischen Punkte der Bifurkationen bei Kontakt gegenseitig auslöschen, jedoch unendlich nahe kommen, wenn die Auflösung unendlich genau ist. Bifurkationsstrukturen liegen somit windschief im Raum. 
+In der Parameterprojektion hingegen können sich Bifurkationsstrukturen schneiden. Das Vektorfeld am Punkt in dem sich die Bifurkationsstrukturen schneiden, hat (vermutlich) keinerlei besondere Eigenschaften, außer, dass sich in diesem Vektorfeld gleich 2 (oder mehr) Bifurkationen befinden.
+Dieses Vektorfeld ist somit besonders interessant für die generierenden Strukturen.
+In der Parameterprojektion sorgt dies außerdem dafür, dass die Bifurkationen nicht mehr den Isolinien (1) entsprechen, da im Schnittpunkt 2 (oder mehr) kritische Punkte existieren.
+Sich (in der Projektion) schneidene Bifurkationsstrukturen lassen jedoch zu, sehr einfache Aussagen über das Verhalten der Vektorfelder, die sie voneinander trennen, zu treffen.
+
+Bifurcation Structures sind für Vektorfelder das, was Separatritzen für Vektoren in einem Vektorfeld sind. Sie trennen den Parameterabhängigen Vektorraum in Bereiche, in denen sich das Verhalten der Vektorfelder ähnelt. Dies trifft nicht nur auf die Anzahl der kritischen Punkte, sondern auch auf die grundlegende Struktur der Vektorfelder zu. Gleichzeitig verändert sich die Form eines Vektorfeldes sehr stark, wenn die Parameter über die Bifurcation Struktur hinauslaufen.
+
+\section{Meta-FFF}
+Das Meta-FFF funktioniert für Bifurcation-Points, wie das FFF für kritische Punkte.
+Dafür benötigt das Meta-FFF neben allen Raum-Dimensionen auch 2 Parameter-Dimensionen.
+Bei höheren Parameter-Dimensionen, werden somit mehrere Meta-FFFs benötigt.
+Im 3-Parameter-Raum sind 3 Meta-FFFs (st,su,tu) möglich, wobei 2 davon reichen müssten, um eine Bifurcation-Plane aufzuspannen.
+
+Das Meta-FFF wird berechnet, indem es die in 10 bescgriebene Umwandlung von Parameter in Raumdimensionen nutzt.
+Das Meta-FFF entspricht somit dem FFF des einmalig umgewandelten Vektorfeldes.
+
+Anmerkung: Wir nutzen eine etwas angepasste Variante des FFFs, bei dem mit der Parameter-Komponente gestartet wird und anschließend die Raum-Komponenten folgen, statt umgekehrt. 
+\newpage
+Originales Vektorfeld:
+\begin{align}
+\begin{pmatrix}x\\y\end{pmatrix}
+\end{align}
+FFF:
+\begin{align}
+\begin{pmatrix}\det(\Delta x_2,\Delta y_2)\\\det(\Delta y_2,\Delta t_2)\\\det(\Delta t_2,\Delta x_2)\end{pmatrix}
+\end{align}
+Umgewandeltes Vektorfeld:
+\begin{align}
+\begin{pmatrix}x\\y\\z = \det(\Delta x,\Delta y)\end{pmatrix}
+\end{align}
+Meta-FFF:
+\begin{align}
+\begin{pmatrix}\det(\Delta x_3,\Delta y_3,\Delta z_3)\\\det(\Delta y_3,\Delta z_3,\Delta s_3)\\\det(\Delta z_3,\Delta s_3,\Delta x_3)\\\det(\Delta s_3,\Delta x_3,\Delta y_3)\end{pmatrix} =
+\begin{pmatrix}\det(\Delta x_3,\Delta y_3,\Delta \det(\Delta x_2,\Delta y_2))\\\det(\Delta y_3,\Delta \det(\Delta x_2,\Delta y_2),\Delta s_3)\\\det(\Delta \det(\Delta x_2,\Delta y_2),\Delta s_3,\Delta x_3)\\\det(\Delta s_3,\Delta x_3,\Delta y_3)\end{pmatrix}
+\end{align}
+
+
+
+
+
+\section{Triviale Extraktion von Punkten auf der Bifurcation Structure}
+Berechne das FFF (die Dritte Komponente reicht) für jede Zelle.
+Für jede Zelle, teste auf Vorzeichenwechsel von allen Raum-Dimensionen, sowie der dritten Komponente des FFF. Gibt es einen Vorzeichenwechsel, teile die Zelle in kleinere Zellen und wiederhole das Verfahren für weniger False Positives (Subdivisions-Verfahren).
+
+\section{Extraktion einer zusammenhängenden Bifurcation Structure}
+Pro Bifurcation-Structure, finde einen Punkt auf dieser Struktur. Anschließend berechne das Meta-FFF und verfolge diese Struktur in jede Dimension und verbinde die berechneten Punkte auf dieser Bifurcation-Structure.
+
+\section{Optimierte Analyse von Multiparameterabhängigen Vektorfeldern}
+Eine Möglichkeit für höherdimensionale parameterabhängige Vektorfelder wäre es, zuerst die Eckpunkte des Parameterraums zu berechnen und für diese Parameterkombinationen eine komplette Vektorfeldanalyse zu erstellen.
+Sollte es Ecken geben, an denen die Anzahl der kritischen Punkte sich unterscheidet, bedeutet dies, dass dazwischen eine Bifurkation stattfindet (ausgenommen kritische Punkte, die den beobachteten Raum verlassen). Erzeugt man nun eine Linie zwischen diesen Parameterkombinationen und folgt ihr (oder binäre Suche), findet man eine Bifurcation. Diese Bifurcation kann zu einer Bifurcation Structure erweitert werden. Dies wird wiederholt, bis sich alle Kritischen Punkte durch gefundene Bifurcation Structures erklären lassen. (mehrere Parallele Bifurkationen werden auch gefunden). Sollten noch unerklärte kritische Punkte vorhanden sein, können Seeds zufällig im Parameterfeld verteilt werden, bis auch diese gefunden werden.
+Diese Methode findet nicht zwangsmäßig alle Strukturen. Nicht gefunden werden Bifurcation Structures, die in mindestens einer Dimension geschlossen sind und ihr Birth Event im inneren der geschlossenen Dimension haben. Es lässt sich jedoch für geschlossene und teilgeschlossene Strukturen anhand der Größe die Wahrscheinlichkeit berechnen, mit der sie gefunden werden. Ist die Wahrscheinlichkeit zum nicht-finden zu hoch, kann weiter gesewedet werden, bis die gewünschte Wahrscheinlichkeit für eine bestimmte Größe erreicht wurde. 
+
+\section{Parameterdimension in Raumdimension umwandeln}
+Die Überlegung eine Parameterdimension in eine Raumdimension umzuwandeln, basiert auf dem generellen Extraktionsalgorithmus für die Bifurkationsstrukturen.
+Hierbei wird eine weitere Komponente an Raum-Komponenten angehangen, die auf einen Vorzeichenwechsel geprüft wird.
+Hierfür wird ein Parameter genommen und die dritte Komponente des FFF berechnet. Diese Komponente wird dann als eine weitere Raumkomponente betrachtet und die genutzte Parameterdimension wird als Raumdimension betrachtet. Somit wird ein 2 Parameterabhängiges 2D Vektorfeld zu einem 1 Parameterabhängigen 3D Vektorfeld.
+Die Kritischen Punkte des umgewandelten Feldes entsprechen somit den Bifurkationspunkten des Urpsrungsfeldes.
+Die Überlegung ist, ob es so vielleicht möglich ist die Bifurkationen der Bifurkationen zu berechnen (generierene Strukturen), indem dieses Verfahren doppelt angewandt wird.
+Dabei würden die Raum-Komponenten dann wie folgt aussehen:
+
+\begin{align}
+	\begin{pmatrix}x\\y\\det(x_2,y_2)\\det(x_3,y_3,z_3)\end{pmatrix}
+	z_3 = det(x_2,y_2)
+\end{align}
+
+\pagebreak
+\section{Links}
+%https://conferences.eg.org/eurovis2022/full-papers/
+
+%https://conferences.eg.org/eurovis2023/
+
+%https://vcwiki.iwr.uni-heidelberg.de/viscompwiki/doku.php?id=internal:roadmap_for_your_phd&s[]=paper
+
+%https://vcwiki.iwr.uni-heidelberg.de/viscompwiki/doku.php?id=internal:vis-papers-2018:procedure_regarding_vis-papers
+
+%https://vcwiki.iwr.uni-heidelberg.de/viscompwiki/doku.php?id=internal:paper_submission_process
+
+%https://vcwiki.iwr.uni-heidelberg.de/viscompwiki/doku.php?id=internal:how_to_write_papers_with_filip
+
+%https://vcwiki.iwr.uni-heidelberg.de/viscompwiki/doku.php?id=internal:i_am_a_new_phd&s[]=paper
+
+
+\end{document}

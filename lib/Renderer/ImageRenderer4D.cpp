@@ -29,11 +29,11 @@ void ImageRenderer4D::InternalUpdate() {
         }
 
         double rgba[4];
-        if(critical_points[i]->GetCriticalPointType() == CriticalPointType::saddle){
+        if(critical_points[i]->GetCriticalPointType() == CriticalPointType::source){
             rgba[0] = 255;
             rgba[1] = 0;
             rgba[2] = 0;
-        }else if (critical_points[i]->GetCriticalPointType() == CriticalPointType::source){
+        }else if (critical_points[i]->GetCriticalPointType() == CriticalPointType::saddle){
             rgba[0] = 0;
             rgba[1] = 255;
             rgba[2] = 0;
@@ -74,8 +74,8 @@ void ImageRenderer4D::InternalUpdate() {
                 //TODO eine Linie pro FFF(Parameterdimension)
             }
             Vector fff1 = input_->GetInterpolatedFFF({critical_points[i]->GetCoordinates()[0],critical_points[i]->GetCoordinates()[1],critical_points[i]->GetCoordinates()[2],critical_points[i]->GetCoordinates()[3]},0);
-            double p0[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]]+fff1.values_[used_dimensions_[0]]  ,critical_points[i]->GetCoordinates()[used_dimensions_[1]]-fff1.values_[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]-fff1.values_[used_dimensions_[2]]};
-            double p1[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]]-fff1.values_[used_dimensions_[0]]   ,critical_points[i]->GetCoordinates()[used_dimensions_[1]]+fff1.values_[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]+fff1.values_[used_dimensions_[2]]};
+            double p0[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]]-fff1.values_[used_dimensions_[0]]  ,critical_points[i]->GetCoordinates()[used_dimensions_[1]]-fff1.values_[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]-fff1.values_[used_dimensions_[2]]};
+            double p1[3] = {critical_points[i]->GetCoordinates()[used_dimensions_[0]]+fff1.values_[used_dimensions_[0]]   ,critical_points[i]->GetCoordinates()[used_dimensions_[1]]+fff1.values_[used_dimensions_[1]],critical_points[i]->GetCoordinates()[used_dimensions_[2]]+fff1.values_[used_dimensions_[2]]};
             points->InsertNextPoint(p0);
             points->InsertNextPoint(p1);
             vtkNew<vtkLine> line1;
