@@ -52,6 +52,52 @@ void VectorFieldSource::InternalUpdate(){
                 vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
                 vector.push_back(Normalize(ids[4]));
             }
+            if(type_ == VectorFieldExampleType::simple3d2dr){
+                vector.reserve(3);
+                vector.push_back(2*Normalize(ids[3]));
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])-Normalize(ids[0])-Normalize(ids[1])-Normalize(ids[2]));
+                vector.push_back(Normalize(ids[4]));
+            }
+            if(type_ == VectorFieldExampleType::circle3d2dr){
+                vector.reserve(3);
+                vector.push_back(2*Normalize(ids[3]));
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[4]));
+            }
+            if(type_ == VectorFieldExampleType::simple2d2dr){
+                vector.reserve(3);
+                vector.push_back(2*Normalize(ids[2]));
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
+                vector.push_back(Normalize(ids[3])+Normalize(ids[0]));
+            }
+            if(type_ == VectorFieldExampleType::circle2d2dr){
+                vector.reserve(3);
+                vector.push_back(2*Normalize(ids[2]));
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[3]));
+            }
+            if(type_ == VectorFieldExampleType::circle2d2drr){
+                vector.reserve(4);
+                vector.push_back(-4*Normalize(1));
+                vector.push_back(2*Normalize(ids[2]));
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[3]));
+            }
+            if(type_ == VectorFieldExampleType::circle3d2drr){
+                vector.reserve(4);
+                vector.push_back(-4*Normalize(2));
+                vector.push_back(2*Normalize(ids[3]));
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[4]));
+            }
+            if(type_ == VectorFieldExampleType::circle3d2drrr){
+                vector.reserve(5);
+                vector.push_back(16*Normalize(1));
+                vector.push_back(-4*Normalize(2));
+                vector.push_back(2*Normalize(ids[3]));
+                vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+                vector.push_back(Normalize(ids[4]));
+            }
             auto vec = new Vector();
             vec->values_ = vector;
             vectors.push_back(*vec);
@@ -79,13 +125,29 @@ VectorFieldSource::VectorFieldSource(int size, double min, double max, VectorFie
         parameter_dimensions_ = 2;
         space_dimensions_ = 2;
     }
-    if(type_ == VectorFieldExampleType::simple2d3d){
+    if(type_ == VectorFieldExampleType::simple2d3d || type_ == VectorFieldExampleType::simple3d2dr || type_ == VectorFieldExampleType::circle3d2dr){
         parameter_dimensions_ = 2;
         space_dimensions_ = 3;
     }
     if(type_ == VectorFieldExampleType::simple3d2d || type_ == VectorFieldExampleType::circle3d2d){
         parameter_dimensions_ = 3;
         space_dimensions_ = 2;
+    }
+    if(type_ == VectorFieldExampleType::simple2d2dr || type_ == VectorFieldExampleType::circle2d2dr || type_ == VectorFieldExampleType::double2d2dr){
+        parameter_dimensions_ = 1;
+        space_dimensions_ = 3;
+    }
+    if(type_ == VectorFieldExampleType::circle2d2drr){
+        parameter_dimensions_ = 0;
+        space_dimensions_ = 4;
+    }
+    if(type_ == VectorFieldExampleType::circle3d2drr){
+        parameter_dimensions_ = 1;
+        space_dimensions_ = 4;
+    }
+    if(type_ == VectorFieldExampleType::circle3d2drrr){
+        parameter_dimensions_ = 0;
+        space_dimensions_ = 5;
     }
 
     Invalidate();

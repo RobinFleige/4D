@@ -5,7 +5,7 @@
 #include "../DataType/ParameterDependentVectorField.h"
 #include <vtkPointData.h>
 
-enum VectorFieldExampleType{simple2d2d_without_y,simple2d2d,circle2d2d,double2d2d,simple2d3d,simple3d2d,circle3d2d,simple3d3d,simple2d4d,simple4d2d};
+enum VectorFieldExampleType{simple2d2d_without_y,simple2d2d,simple2d2dr,circle2d2d,circle2d2dr,circle2d2drr,double2d2d,double2d2dr,simple2d3d,simple3d2d,simple3d2dr,circle3d2d,circle3d2dr,circle3d2drr,circle3d2drrr};
 
 class VectorFieldSource : public Source<ParameterDependentVectorField*>{
 private:

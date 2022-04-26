@@ -1,0 +1,44 @@
+                s   t   u   x   y
+simple
+x²-s-t-u        -1  -1  -1  2x  0
+y               0   0   0   0   1
+
+circle
+x²+s²+t²+u²-1   2s  2t  2u  2x  0
+y               0   0   0   0   1
+
+simple_r
+x²-s-t-u        -1  -1  -1  2x  0
+y               0   0   0   0   1
+2x              0   0   0   2   0
+
+circle_r
+x²+s²+t²+u²-1   2s  2t  2u  2x  0
+y               0   0   0   0   1
+2x              0   0   0   2   0
+
+simple_rr       
+x²-s-t-u        -1  -1  -1  2x  0
+y               0   0   0   0   1
+2x              0   0   0   2   0
+2               0   0   0   0   0
+
+circle_rr       
+x²+s²+t²+u²-1   2s  2t  2u  2x  0
+y               0   0   0   0   1
+2x              0   0   0   2   0
+-4u             0   0   -4  0   0
+
+simple_rrr
+x²-s-t-u        -1  -1  -1  2x  0
+y               0   0   0   0   1
+2x              0   0   0   2   0
+2               0   0   0   0   0
+0               0   0   0   0   0
+
+circle_rrr       
+x²+s²+t²+u²-1   2s  2t  2u  2x  0
+y               0   0   0   0   1
+2x              0   0   0   2   0
+-4u             0   0   -4  0   0
+16t             0   16  0   0   0
