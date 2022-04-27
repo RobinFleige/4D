@@ -21,6 +21,12 @@ void VectorFieldSource::InternalUpdate(){
                 vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
                 vector.push_back(Normalize(ids[3])+Normalize(ids[0]));
             }
+            if(type_ == VectorFieldExampleType::simple2d2dr){
+                vector.reserve(3);
+                vector.push_back(2*Normalize(ids[2]));
+                vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
+                vector.push_back(Normalize(ids[3])+Normalize(ids[0]));
+            }
             if(type_ == VectorFieldExampleType::double2d2d){
                 vector.reserve(2);
                 vector.push_back((Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1]))*((Normalize(ids[3])-1))-(Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[0]))*((Normalize(ids[3])+1)));
@@ -63,12 +69,6 @@ void VectorFieldSource::InternalUpdate(){
                 vector.push_back(2*Normalize(ids[3]));
                 vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
                 vector.push_back(Normalize(ids[4]));
-            }
-            if(type_ == VectorFieldExampleType::simple2d2dr){
-                vector.reserve(3);
-                vector.push_back(2*Normalize(ids[2]));
-                vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
-                vector.push_back(Normalize(ids[3])+Normalize(ids[0]));
             }
             if(type_ == VectorFieldExampleType::circle2d2dr){
                 vector.reserve(3);

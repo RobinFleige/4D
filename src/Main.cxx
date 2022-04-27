@@ -122,11 +122,11 @@ int render_general(int size, double min, double max,VectorFieldExampleType type,
     auto critical = new CalculateCriticalPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type,used_dimensions,additional_dimension,false,use_transparency);
 
-    feature_flow_field->SetInputConnection(source);
-    feature_flow_field->Update();
-    bifurcation->SetInputConnection(feature_flow_field);
-    bifurcation->Update();
-    critical->SetInputConnection(bifurcation);
+    //feature_flow_field->SetInputConnection(source);
+    //feature_flow_field->Update();
+    //bifurcation->SetInputConnection(feature_flow_field);
+    //bifurcation->Update();
+    critical->SetInputConnection(source);
     critical->Update();
     renderer->SetInputConnection(critical);
     renderer->Update();
@@ -231,9 +231,46 @@ int triple_reduced(int size, double min, double max,VectorFieldExampleType type,
     return EXIT_SUCCESS;
 }
 
+int test(){
+    int length = 5;
+    auto source1 = new VectorFieldSource(length,-2,2,VectorFieldExampleType::simple2d2d);
+    auto feature_flow_field = new CalculateFFField();
+    auto reform_dimension = new ReformDimension();
+    auto source2 = new VectorFieldSource(length,-2,2,VectorFieldExampleType::simple2d2dr);
+
+    source1->Update();
+    feature_flow_field->SetInputConnection(source1);
+    feature_flow_field->Update();
+    reform_dimension->SetInputConnection(feature_flow_field);
+    reform_dimension->Update();
+    source2->Update();
+
+    for(int s = 0; s < length; s++){
+        for(int t = 0; t < length; t++){
+            for(int x = 0; x < length; x++){
+                for(int y = 0; y < length; y++){
+                    std::cout<<s<<" "<<t<<" "<<x<<" "<<y<<std::endl;
+                    for(int i = 0; i < 3; i++){
+                        double a = reform_dimension->GetOutput()->GetData({s,t,x,y}).values_[i];
+                        double b = source2->GetOutput()->GetData({s,t,x,y}).values_[i];
+                        double c = a-b;
+                        std::cout<<a<<" "<<b<<" "<<c<<std::endl;
+                    }
+                    std::cout<<std::endl;
+                }
+            }
+        }
+    }
+
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char* argv[]){
+    test();
+    return 0;
     int size = 10;
     double min = -2;
     double max = 2;
-    return reduced_dimensions(size, min, max, VectorFieldExampleType::simple2d2d, {0, 1, 2}, 3, 2, false, RenderType::line);
+    return render_general(size, min, max, VectorFieldExampleType::simple2d2dr, {0, 1, 2}, 3, 2, false, RenderType::point);
 }
