@@ -20,26 +20,20 @@ class VectorField:
         self.data_ = np.zeros(a)
 
     def critical_points(self):
-        shape = np.shape(self.data_)
-        zeros = np.zeros(shape)
-        filter = [[1, 0, 1], [0, 0, 0], [1, 0, 1]]
+        #TODO filter only works for nD2D yet
+        filter = [[1, 1], [1, 1]]#not symmetric, so all critical points are shifted a little
+        filter = [[1, 0, 1], [0, 0, 0], [1, 0, 1]]#is too big, detects zero crossings multiple times
 
-        signed = np.sign(self.data_)
-        binary_signed = np.maximum(signed, 0)
-
+        binary_signed = np.where(self.data_ > 0, 1, 0)
+        #TODO positive_sum only works for 2DnD yet
         positive_sum = np.array([[[ndimage.convolve(binary_signed[s, t, ..., i], filter, mode='nearest') for t in range(self.size_)] for s in range(self.size_)] for i in range(self.space_dimensions_)])
-        positive_sum=np.mod(positive_sum,4)
-        sign_change = np.where(positive_sum == 0, 0, 1)
-        sign_change_sum = np.sum(sign_change, axis=0)
+        positive_sum = np.mod(positive_sum, pow(2, self.space_dimensions_))
+        zero_crossings = np.where(positive_sum == 0, 0, 1)
 
-        print(sign_change_sum)
-
-
-        #summed = np.convolve(binary_signed, [[1,0,1],[0,0,0],[1,0,1]], 'valid')
-        #https: // numpy.org / doc / stable / reference / generated / numpy.diff.html
-        #https: // docs.scipy.org / doc / scipy / reference / generated / scipy.ndimage.convolve.html
-        #https: // stackoverflow.com / questions / 43123334 / multidimensional - convolution - in -python
-        #https: // codereview.stackexchange.com / questions / 45458 / finding - a - zero - crossing - in -a - matrix
+        zero_crossings_sum = np.sum(zero_crossings, axis=0)
+        critical_points_ids = np.swapaxes(np.where(zero_crossings_sum == 2), 0, 1)
+        print(critical_points_ids)
+        return critical_points_ids
 
     def derivative(self):
         #TODO
@@ -86,8 +80,9 @@ class Source:
             self.vector_field_.data_[iterator.multi_index] = return_values
             #print(self.vector_field_.data_[iterator.multi_index])
 
+#TODO Visualization
 
-s = Source(5, "2D2D")
+s = Source(20, "2D2D")
 s.generate()
 s.vector_field_.critical_points()
 
