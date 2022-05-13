@@ -1,11 +1,11 @@
 MEETING
     ToDo
-        symbolisch differenzieren; analytische Ableitung; Philipp fragen;
         Bifurcations für periodic Orbits
         Meta-FFF hat Vorzeichenfehler (vielleicht liegt das an 3D Determinante)
-        c++ aufbessern (Referenz vs Pointer; Copy statt Pointer; Erstellen von Objekten aus Schleifen auslagern wenn möglich)
-
-
+        Sattelpunkt auf Bifurcation Structure finden, wo es von Birth auf Death wechselt (Falls es das gibt)(vermutlich die Bifurcation-Bifurcation des anderen Parameters)
+        Analytisch lösen und visualisieren für bessere Ergebnisse
+        Beweis für Dimensionalität nach beiden Ansätzen machen
+        Klassifizierung machen
 
 
     Backlog

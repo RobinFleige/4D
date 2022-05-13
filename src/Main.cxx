@@ -122,11 +122,11 @@ int render_general(int size, double min, double max,VectorFieldExampleType type,
     auto critical = new CalculateCriticalPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type,used_dimensions,additional_dimension,false,use_transparency);
 
-    //feature_flow_field->SetInputConnection(source);
-    //feature_flow_field->Update();
-    //bifurcation->SetInputConnection(feature_flow_field);
-    //bifurcation->Update();
-    critical->SetInputConnection(source);
+    feature_flow_field->SetInputConnection(source);
+    feature_flow_field->Update();
+    bifurcation->SetInputConnection(feature_flow_field);
+    bifurcation->Update();
+    critical->SetInputConnection(bifurcation);
     critical->Update();
     renderer->SetInputConnection(critical);
     renderer->Update();
@@ -201,8 +201,6 @@ int triple_reduced(int size, double min, double max,VectorFieldExampleType type,
     auto reform_dimension_2 = new ReformDimension();
     auto feature_flow_field_3 = new CalculateFFField();
     auto reform_dimension_3 = new ReformDimension();
-    auto feature_flow_field_4 = new CalculateFFField();
-    auto bifurcation = new CalculateBifurcationPoints(subdivision_depth);
     auto critical = new CalculateCriticalPoints(subdivision_depth);
     auto renderer = new ImageRenderer4D(render_type, used_dimensions,additional_dimension,true,use_transparency);
 
@@ -218,11 +216,7 @@ int triple_reduced(int size, double min, double max,VectorFieldExampleType type,
     feature_flow_field_3->Update();
     reform_dimension_3->SetInputConnection(feature_flow_field_3);
     reform_dimension_3->Update();
-    feature_flow_field_4->SetInputConnection(reform_dimension_3);
-    feature_flow_field_4->Update();
-    bifurcation->SetInputConnection(feature_flow_field_4);
-    bifurcation->Update();
-    critical->SetInputConnection(bifurcation);
+    critical->SetInputConnection(reform_dimension_3);
     critical->Update();
     renderer->SetInputConnection(critical);
     renderer->Update();
@@ -267,10 +261,10 @@ int test(){
 }
 
 int main(int argc, char* argv[]){
-    test();
-    return 0;
-    int size = 10;
+    //test();
+    //return 0;
+    int size = 11;
     double min = -2;
     double max = 2;
-    return render_general(size, min, max, VectorFieldExampleType::simple2d2dr, {0, 1, 2}, 3, 2, false, RenderType::point);
+    return render_general(size, min, max, VectorFieldExampleType::circle2d2d, {0, 1, 2}, 3, 2, false, RenderType::point);
 }

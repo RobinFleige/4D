@@ -20,43 +20,48 @@
 \maketitle	
 \pagebreak
 
-\section{Parameterdependent Vectorfield}
 \subsection{FFF}
 Einschub:
 Sowie ein 2-parameterabhängiges Vektor-Feld 2 FFFs hat, so hat es auch 2 Meta-FFFs (Erklärung(stimmt das? Sind die identisch?))
 
-\section{Multiparameterdependent Vectorfield}
-Multiparameterabhängige Vektorfelder
 
+\section{Parameterdependent Vectorfield}
+TRIVIAL
+
+\section{Multiparameterdependent Vectorfield}
 Während 1-parameterabhängige Vektorfelder meist also zeitabhängige Vektorfelder gesehen werden, ist dies bei Multiparameterabhängige Vektorfeldern weniger anwendbar. Zwar können simulierte Vektorfelder zum gleichen Zeitpunkt mit unterschiedlichen Parametern simuliert werden, bei tatsächlichen Vektorfeldern ist dies aber nicht möglich. Die Parameter bei Multiparameterabhängigen Vektorfeldern entsprechen also eher abstrakten Parametern. In der Praxis könnten sie bei Magnetfeldern etwa die Stärke von Elektromagneten oder bei Strömungsfeldern die Eigenschaften eines Objektes im Strömungsfeld beschreiben.
 
-Struktur von Multiparameterabhängigen Vektorfeldern
-
+\subsection{Dimensionalität von Bifurcation-Structures durch Parameterfeld}
 Während das Parameterfeld bei 1-parameterabhängigen Vektorfeldern 1-dimensional ist und somit durch einen 0-dimensionalen Punkt in 2 Teile getrennt werden kann, ist das Feld bei multiparameterabhängigen Vektorfeldern n-dimensional.
 Vergleich anderes Paper.
-Angenommen zwei Punkte im Parameterfeld auf unterschiedlichen Seiten einer Bifurcation, so muss auf jedem Pfad zwischen den Punkten im Parameterfeld eine Bifurcation existieren. Während dies bei 1-parameterabhänhigen Vektorfeldern ein Bifurcation Point ist, muss diese Trennstruktur im Parameterfeld bei 2-parameterabhängigen Vektorfeldern eine Linie sein. Um diese Struktur nicht mit den Bifurcation Lines (Vergleich) zu verwechseln, nennen wir diese Struktur Bifurcation Curve oder 1D-Bifurcation, wobei der Bifurcation Point eine 0D-Bifurcarion ist.
-Eine Trennstruktur im n-dimensionalen Raum muss (n-1)-dimensional sein, somit besitzen n-parameterabhanhige Vektorfelder (n-1)D-Bifurcations.
+Angenommen zwei Punkte im Parameterfeld auf unterschiedlichen Seiten einer Bifurcation, so muss auf jedem Pfad zwischen den Punkten im Parameterfeld eine Bifurcation existieren. Während dies bei 1-parameterabhängigen Vektorfeldern ein Bifurcation Point ist, muss diese Trennstruktur im Parameterfeld bei 2-parameterabhängigen Vektorfeldern eine Linie sein. Um diese Struktur nicht mit den Bifurcation Lines (Vergleich) zu verwechseln, nennen wir diese Struktur Bifurcation Curve oder 1D-Bifurcation, wobei der Bifurcation Point eine 0D-Bifurcation ist.
+Eine Trennstruktur im n-dimensionalen Raum muss (n-1)-dimensional sein, somit besitzen n-parameterabhängige Vektorfelder (n-1)D-Bifurcations.
 
-\subsection{Projektion von Bifurcation Structures auf Parameter-Dimensionen}
-Bei der Projektion des Vektorfeldes auf die Parameter-Dimensionen, werden lediglich die Raum-Komponenten der Topologie entfernt. Somit bleibt lediglich der Parameterraum, in dem Aussagen über das Verhalten der Vektorfelder getroffen werden kann.
-Die Projektion der Bifurcation-Structure auf das Parameterfeld entspricht der Isolinie (1) der kritischen Punkte im Vektorfeld für die Parameter-Kombination.
-\section{Critical Point}
-\section{Bifurcation Point}
-\section{Bifurcation Curve}
-\subsection{Beweis Dimensionalität und Form von Bifurcation-Structures}
+\subsection{Dimensionalität und von Bifurcation-Structures durch Projektion}
 Angenommen ist ein 1-Parameterabhängiges Vektorfeld v(x,y,t). Für t = x tritt im Vektorfeld eine Bifurkation auf.
 Erstellen wir zwei Parameter r und s und definieren t = f(r,s). Dann tritt im Vektorfeld v(x,y,f(r,s)) eine Bifurkation auf wenn f(r,s)-x = 0. Da wir zwei Unbekannte r und s, jedoch nur eine Gleichung haben, gibt es keine Eindeutige Lösung, es können nur Lösungen in Abhängigkeit von einer der Unbekannten entstehen und somit eine Linie an Parameterkombinationen von r und s, für die diese Gleichung aufgeht.
 Da die Funktion f nicht weiter definiert ist, können folgende Eigenschaften für r und s auftreten.
 Für ein bestimmtes r/s, kann es sowohl keine, eine oder mehrere s/r geben, für die die Gleichung aufgeht.
 Gibt es für jedes s/r genau ein r/s, für das die gleichung aufgeht, ist es eine offene endlose Linie.
 Gibt es für ein r/s mehrere s/r, folgt daraus, dass es für andere r/s keine s/r gibt, für die die Gleichung aufgeht und umgekehrt. Trifft dies sowohl auf s, als auch auf r zu, so ist die Linie geschlossen. Trifft dies nur auf einen der Parameter zu, so ist die Linie parabolisch gebogen.
+
+\subsection{Projektion von Bifurcation Structures auf Parameter-Dimensionen}
+Bei der Projektion des Vektorfeldes auf die Parameter-Dimensionen, werden lediglich die Raum-Komponenten der Topologie entfernt. Somit bleibt lediglich der Parameterraum, in dem Aussagen über das Verhalten der Vektorfelder getroffen werden kann.
+Die Projektion der Bifurcation-Structure auf das Parameterfeld entspricht der Isolinie (1) der Anzahl der kritischen Punkte im Vektorfeld für die Parameter-Kombination.
+\section{Critical Point}
+TRIVIAL
+\section{Bifurcation Point}
+TRIVIAL
+\section{Bifurcation Curve}
 \subsection{Closed Bifurcation-Structures}
 Pro Dimension der Bifurcations Struktur kann diese entweder offen oder geschlossen sein.
 Höherdimensionale Bifurcationsstrukturen können daher Gesamt-Offen, Gesamt-Geschlossen oder Teil-Offen sein.
+Offene Strukturen existieren vermutlich in der Realität nicht, da die Konstanz in der Unendlichkeit in der Realität nicht existiert.
 
 \section{Properties}
 Bifurcation Curves haben die gleichen Bedingungen wie Bifurcation Curves. Der Punkt muss im Vektor-Feld ein kritischer Punkt sein, die Länge des Vektors im Punkt also 0 entsprechen und die dritte Komponente des FFF muss 0 entsprechen, dieser kritische Punkt also entlang des Parameters an dieser Stelle entstehen.
 (Vergleich) ein 2-parameterabhängiges Vektor-Feld besitzt 2 FFFs, die dritte Komponente ist aber unabhängig von der Parameterrichtung, eine Bifurcation in einer Parameterrichtung ist also auch eine Bifurcation in der anderen Parameterrichtung.
+
 \section{Extraction}
 Die triviale Extraktion, über jede Zelle im parameterabhängigen Vektor-Feld zu iterieren und nach einer Schnittstelle in der 0-Iso-Struktur der Vektorkomponenten und in der 0-Iso-Struktur der dritten Komponente des FFF zu prüfen, funktioniert für Bifurcation Curves genau wie für Bifurcation Points, jedoch kann damit nicht die Kurve, sondern nur die Punkte auf der Kurve extrahiert werden.
 
