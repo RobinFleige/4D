@@ -70,16 +70,39 @@ class VectorField:
             matrix.append(list(jac[f](vars)))
         return matrix
 
-    def fff_3(self, vars):
+    def fff(self, vars):
         jac = self.jacobi()
-        return jac[0](vars)[2] * jac[1](vars)[3] - jac[0](vars)[3] * jac[1](vars)[2]
 
-    def fff_4(self, vars):
-        jac = self.jacobi()
-        #TODO (Either create for many dimensions as fff_3 and fff_4 or create a single one for all(harder)
+        matrix = []
+        for x in range(self.space_dimensions):
+            line = []
+            values = jac[x](vars)
+            for y in range(self.space_dimensions):
+                line.append(values[self.parameter_dimensions+y])
+            matrix.append(line)
+
+        return self.determinant(matrix)
+
+    def determinant(self, matrix):
+        if len(matrix) == 1:
+            return matrix[0][0]
+        else:
+            value = 0
+            for i in range(len(matrix)):
+                next_matrix = []
+                for x in range(1, len(matrix)):
+                    next_line = []
+                    for y in range(len(matrix)):
+                        if y != i:
+                            next_line.append(matrix[x][y])
+                    next_matrix.append(next_line)
+                value += matrix[0][i] * pow(-1, i) * self.determinant(next_matrix)
+        return value
 
 
 vf = VectorField(f_3p3d_circle, 3, 3)
-print(vf.jacobi_values((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
-artificial_vf = VectorField([f_2p2d_simple_x, f_2p2d_simple_y, vf.fff_3], 3, 1)
-#print(artificial_vf.fff_4((0.0, 0.0, 0.0, 0.0)))
+print(vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+m_vf = VectorField([vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 2, 4)
+print(m_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+mm_vf = VectorField([m_vf.fff, vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 1, 5)
+print(mm_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
