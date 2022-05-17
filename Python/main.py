@@ -1,90 +1,85 @@
 import numpy as np
-from scipy import ndimage
+from jax import grad, jacfwd
 
 
-def deform_vector_field(vector_field):
-    #TODO
-    a = 0
+def f_2p2d_simple_x(vars):
+    s, t, x, y = vars
+    return x**2-s-t
+
+
+def f_2p2d_simple_y(vars):
+    s, t, x, y = vars
+    return y+s
+
+
+f_2p2d_simple = [f_2p2d_simple_x, f_2p2d_simple_y]
+
+
+def f_2p2d_double_x(vars):
+    s, t, x, y = vars
+    return (x**2+t)*(y-1)-(x**2+s)*(y+1)
+
+
+def f_2p2d_double_y(vars):
+    s, t, x, y = vars
+    return (y-1)*(y+1)
+
+
+f_2p2d_double = [f_2p2d_double_x, f_2p2d_double_y]
+
+
+def f_3p3d_circle_x(vars):
+    s, t, u, x, y, z = vars
+    return x**2+s**2+t**2+u**2
+
+
+def f_3p3d_circle_y(vars):
+    s, t, u, x, y, z = vars
+    return y
+
+
+def f_3p3d_circle_z(vars):
+    s, t, u, x, y, z = vars
+    return z
+
+
+f_3p3d_circle = [f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z]
 
 
 class VectorField:
 
-    def __init__(self, size, parameter_dimensions, space_dimensions):
-        self.size_ = size
-        self.dimensions_ = parameter_dimensions+space_dimensions
-        self.space_dimensions_ = space_dimensions
-        a = []
-        for i in range(self.dimensions_):
-            a.append(size)
-        a.append(space_dimensions)
-        self.data_ = np.zeros(a)
+    def __init__(self, base_function, parameter_dimensions, space_dimensions):
+        self.base_function = base_function
+        self.parameter_dimensions = parameter_dimensions
+        self.space_dimensions = space_dimensions
+        self.dimensions = parameter_dimensions + space_dimensions
 
-    def critical_points(self):
-        #TODO filter only works for nD2D yet
-        filter = [[1, 1], [1, 1]]#not symmetric, so all critical points are shifted a little
-        filter = [[1, 0, 1], [0, 0, 0], [1, 0, 1]]#is too big, detects zero crossings multiple times
+    def jacobi(self):
+        # outer = function; inner = parameter
+        jac_matrix = []
+        for f in self.base_function:
+            derivatives = grad(f)
+            jac_matrix.append(derivatives)
+        return jac_matrix
 
-        binary_signed = np.where(self.data_ > 0, 1, 0)
-        #TODO positive_sum only works for 2DnD yet
-        positive_sum = np.array([[[ndimage.convolve(binary_signed[s, t, ..., i], filter, mode='nearest') for t in range(self.size_)] for s in range(self.size_)] for i in range(self.space_dimensions_)])
-        positive_sum = np.mod(positive_sum, pow(2, self.space_dimensions_))
-        zero_crossings = np.where(positive_sum == 0, 0, 1)
+    def jacobi_values(self, vars):
+        # outer = function; inner = parameter
+        jac = self.jacobi()
+        matrix = []
+        for f in range(self.space_dimensions):
+            matrix.append(list(jac[f](vars)))
+        return matrix
 
-        zero_crossings_sum = np.sum(zero_crossings, axis=0)
-        critical_points_ids = np.swapaxes(np.where(zero_crossings_sum == 2), 0, 1)
-        print(critical_points_ids)
-        return critical_points_ids
+    def fff_3(self, vars):
+        jac = self.jacobi()
+        return jac[0](vars)[2] * jac[1](vars)[3] - jac[0](vars)[3] * jac[1](vars)[2]
 
-    def derivative(self):
-        #TODO
-        a = 0
-
-    def jacobian(self):
-        #TODO
-        a = 0
-
-    def feature_flow_field(self):
-        #TODO
-        a = 0
+    def fff_4(self, vars):
+        jac = self.jacobi()
+        #TODO (Either create for many dimensions as fff_3 and fff_4 or create a single one for all(harder)
 
 
-class Source:
-
-    min_ = -2
-    max_ = 2
-
-    def __init__(self, size, source_type):
-        self.source_type_ = source_type
-        self.step_ = (self.max_-self.min_)/(size-1)
-        if self.source_type_ == "2D2D":
-            self.vector_field_ = VectorField(size, 2, 2)
-        if self.source_type_ == "2D2DR":
-            self.vector_field_ = VectorField(size, 1, 3)
-
-    def normalize(self, index):
-        return index*self.step_+self.min_
-
-    def generate(self):
-        iterator = np.nditer(self.vector_field_.data_[..., 0], flags=['multi_index'])
-        for value in iterator:
-            return_values = []
-            if self.source_type_ == "2D2D":
-                return_values.append(self.normalize(iterator.multi_index[2])*self.normalize(iterator.multi_index[2])-self.normalize(iterator.multi_index[0])-self.normalize(iterator.multi_index[1]))
-                return_values.append(self.normalize(iterator.multi_index[3])+self.normalize(iterator.multi_index[0]))
-
-            if self.source_type_ == "2D2DR":
-                return_values.append(2*self.normalize(iterator.multi_index[2]))
-                return_values.append(self.normalize(iterator.multi_index[2])*self.normalize(iterator.multi_index[2])-self.normalize(iterator.multi_index[0])-self.normalize(iterator.multi_index[1]))
-                return_values.append(self.normalize(iterator.multi_index[3])+self.normalize(iterator.multi_index[0]))
-
-            self.vector_field_.data_[iterator.multi_index] = return_values
-            #print(self.vector_field_.data_[iterator.multi_index])
-
-#TODO Visualization
-
-s = Source(20, "2D2D")
-s.generate()
-s.vector_field_.critical_points()
-
-
-#https://numpy.org/doc/stable/reference/generated/numpy.fromfunction.html
+vf = VectorField(f_3p3d_circle, 3, 3)
+print(vf.jacobi_values((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+artificial_vf = VectorField([f_2p2d_simple_x, f_2p2d_simple_y, vf.fff_3], 3, 1)
+#print(artificial_vf.fff_4((0.0, 0.0, 0.0, 0.0)))
