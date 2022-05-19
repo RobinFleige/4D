@@ -1,5 +1,7 @@
 import numpy as np
 from jax import grad, jacfwd
+from sympy import *
+from scipy.optimize import fsolve
 
 
 def f_2p2d_simple_x(vars):
@@ -99,6 +101,9 @@ class VectorField:
                 value += matrix[0][i] * pow(-1, i) * self.determinant(next_matrix)
         return value
 
+    def critical_points(self):
+        i = 0
+
 
 vf = VectorField(f_3p3d_circle, 3, 3)
 print(vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
@@ -106,3 +111,43 @@ m_vf = VectorField([vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 
 print(m_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
 mm_vf = VectorField([m_vf.fff, vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 1, 5)
 print(mm_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+
+min = -2
+max = 2
+size = 100
+s, t, x, y = symbols('s, t, x, y', real=True)
+eq1 = Eq(x**2-t-s, 0)
+eq2 = Eq(y, 0)
+
+solutions = solve([eq1, eq2], [x, y])
+print(solutions)
+for solution in solutions:
+    for i_s in range(100):
+        for i_t in range(100):
+            adjusted_i_s = min+((max-min)/size)*i_s
+            adjusted_i_t = min+((max-min)/size)*i_t
+            soln = tuple(v.evalf().subs({t: adjusted_i_t, s:adjusted_i_s}) for v in solution)
+            print(soln)
+#Calculates the numerical solutions in dependence of a single parameter
+
+#ignore imaginary solutions
+#    for root in y:
+#        if "I" not in str(root):
+#            print("This One:" + str(root.evalf()))
+
+
+#s, t, u, x, y, z = symbols('s, t, u, x, y, z')
+#eq1 = Eq(x**2+s**2+t**2+u**2, 0)
+#eq2 = Eq(y, 0)
+#eq3 = Eq(z, 0)
+#
+#sol = solve([eq1, eq2, eq3], [s, t, u, x, y, z])
+#print(sol)
+#Maybe Differentiation with sympy too, since it supports the system of equation
+
+
+#def test(vars):
+#    return [vf.base_function[0](vars), vf.base_function[1](vars), vf.base_function[2](vars)]
+#
+#vars = fsolve(test, (0, 0, 0, 0, 0, 0))
+#does not work, because it can only solve for single points, not parameter dependent lines

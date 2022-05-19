@@ -1,0 +1,61 @@
+
+def f_2p2d_circle(in_s,in_t,in_x,in_y):
+    #            vector.push_back(Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+    #            vector.push_back(Normalize(ids[3]));
+    out_x = 1
+    out_y = 1
+    return out_x, out_y
+
+
+def f_3p2d_simple(in_s,in_t,in_x,in_y):
+    #            vector.push_back(Normalize(ids[3])*Normalize(ids[3])-Normalize(ids[0])-Normalize(ids[1])-Normalize(ids[2]));
+    #            vector.push_back(Normalize(ids[4]));
+    out_x = 1
+    out_y = 1
+    return out_x, out_y
+
+
+def f_3p2d_circle(in_s,in_t,in_x,in_y):
+    #            vector.push_back(Normalize(ids[3])*Normalize(ids[3])+Normalize(ids[2])*Normalize(ids[2])+Normalize(ids[1])*Normalize(ids[1])+Normalize(ids[0])*Normalize(ids[0])-1);
+    #            vector.push_back(Normalize(ids[4]));
+    out_x = 1
+    out_y = 1
+    return out_x, out_y
+
+
+def f_2p3d_simple(in_s,in_t,in_x,in_y):
+    #            vector.push_back(Normalize(ids[2])*Normalize(ids[2])-Normalize(ids[0])-Normalize(ids[1]));
+    #            vector.push_back(Normalize(ids[3]));
+    #            vector.push_back(Normalize(ids[4]));
+    out_x = 1
+    out_y = 1
+    out_z = 1
+    return out_x, out_y, out_z
+
+
+def f_2p3d_circle(in_s,in_t,in_x,in_y):
+    #vector.push_back(Normalize(ids[2]) * Normalize(ids[2]) - Normalize(ids[0]) - Normalize(ids[1]));
+    #vector.push_back(Normalize(ids[3]) + Normalize(ids[0]));
+    out_x = 1
+    out_y = 1
+    out_z = 1
+    return out_x, out_y, out_z
+
+
+def f_3p3d_simple(in_s,in_t,in_x,in_y):
+    #vector.push_back(Normalize(ids[2]) * Normalize(ids[2]) - Normalize(ids[0]) - Normalize(ids[1]));
+    #vector.push_back(Normalize(ids[3]) + Normalize(ids[0]));
+    out_x = 1
+    out_y = 1
+    out_z = 1
+    return out_x, out_y, out_z
+
+
+
+
+
+
+
+
+
+
