@@ -2,7 +2,22 @@ import numpy as np
 from jax import grad, jacfwd
 from sympy import *
 from scipy.optimize import fsolve
-
+import vtkmodules.vtkInteractionStyle
+import vtkmodules.vtkRenderingOpenGL2
+from vtkmodules.vtkCommonColor import vtkNamedColors
+from vtkmodules.vtkInteractionStyle import vtkInteractorStyleTrackballCamera
+from vtkmodules.vtkCommonCore import vtkPoints, vtkUnsignedCharArray
+from vtkmodules.vtkCommonDataModel import (
+    vtkCellArray,
+    vtkPolyData
+)
+from vtkmodules.vtkRenderingCore import (
+    vtkActor,
+    vtkPolyDataMapper,
+    vtkRenderWindow,
+    vtkRenderWindowInteractor,
+    vtkRenderer
+)
 
 def f_2p2d_simple_x(vars):
     s, t, x, y = vars
@@ -105,29 +120,92 @@ class VectorField:
         i = 0
 
 
-vf = VectorField(f_3p3d_circle, 3, 3)
-print(vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
-m_vf = VectorField([vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 2, 4)
-print(m_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
-mm_vf = VectorField([m_vf.fff, vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 1, 5)
-print(mm_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+crits = []
+bifurcations = []
+for s in np.arange(-2, 2, 0.04):
+    bifurcations.append((s, -s, 0, 0))
+    for t in np.arange(-2, 2, 0.04):
+        if s + t > 0:
+            crits.append((s, t,  sqrt(s + t), 0))
+            crits.append((s, t, -sqrt(s + t), 0))
 
-min = -2
-max = 2
-size = 100
-s, t, x, y = symbols('s, t, x, y', real=True)
-eq1 = Eq(x**2-t-s, 0)
-eq2 = Eq(y, 0)
+#TODO Show Points with VTK
+points = vtkPoints()
+vertices = vtkCellArray()
+polydata = vtkPolyData()
+colors = vtkUnsignedCharArray()
+colors.SetNumberOfComponents(4)
+colors.SetNumberOfTuples(len(crits)+len(bifurcations))
 
-solutions = solve([eq1, eq2], [x, y])
-print(solutions)
-for solution in solutions:
-    for i_s in range(100):
-        for i_t in range(100):
-            adjusted_i_s = min+((max-min)/size)*i_s
-            adjusted_i_t = min+((max-min)/size)*i_t
-            soln = tuple(v.evalf().subs({t: adjusted_i_t, s:adjusted_i_s}) for v in solution)
-            print(soln)
+for i in range(len(crits)):
+    rgba = [255, 0, 0, 255]
+    colors.InsertTuple(i, rgba)
+    p = [crits[i][0], crits[i][1], crits[i][2]]
+    pid = points.InsertNextPoint(p)
+    vertices.InsertNextCell(1)
+    vertices.InsertCellPoint(pid)
+
+for i in range(len(bifurcations)):
+    rgba = [0, 255, 0, 255]
+    colors.InsertTuple(i+len(crits), rgba)
+    p = [crits[i][0], crits[i][1], crits[i][2]]
+    pid = points.InsertNextPoint(p)
+    vertices.InsertNextCell(1)
+    vertices.InsertCellPoint(pid)
+
+
+polydata.SetPoints(points)
+polydata.SetVerts(vertices)
+polydata.GetCellData().SetScalars(colors);
+mapper = vtkPolyDataMapper()
+mapper.SetInputData(polydata)
+actor = vtkActor()
+actor.SetMapper(mapper)
+actor.GetProperty().SetPointSize(10)
+renderer = vtkRenderer()
+renderer.AddActor(actor)
+renderWindow = vtkRenderWindow()
+renderWindow.AddRenderer(renderer)
+renderer.SetBackground([0, 0, 255])
+interactor = vtkRenderWindowInteractor()
+interactor.SetRenderWindow(renderWindow)
+style = vtkInteractorStyleTrackballCamera()
+interactor.SetInteractorStyle(style)
+renderWindow.Render()
+interactor.Start()
+
+
+#vf = VectorField(f_3p3d_circle, 3, 3)
+#print(vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+#m_vf = VectorField([vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 2, 4)
+#print(m_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+#mm_vf = VectorField([m_vf.fff, vf.fff, f_3p3d_circle_x, f_3p3d_circle_y, f_3p3d_circle_z], 1, 5)
+#print(mm_vf.fff((0.1, 0.2, 0.3, 0.4, 0.5, 0.6)))
+
+#min = -2
+#max = 2
+#size = 100
+#s, t, x, y = symbols('s, t, x, y', real=True)
+#eq1 = Eq(x**2-t-s, 0)
+#eq2 = Eq(y, 0)
+#eq3 = Eq(x*2, 0)
+
+#solutions_c = solve([eq1, eq2], [x, y])
+#print(solutions_c)
+#for solution in solutions_c:
+#    for i_s in range(100):
+#        for i_t in range(100):
+#            adjusted_i_s = min+((max-min)/size)*i_s
+#            adjusted_i_t = min+((max-min)/size)*i_t
+#            soln = tuple(v.evalf().subs({t: adjusted_i_t, s: adjusted_i_s}) for v in solution)
+#            print(soln)
+
+#solutions_b = solve([eq1, eq2, eq3], [t, x, y])
+#print(solutions_b)
+#for i_s in range(100):
+#    adjusted_i_s = min + ((max - min) / size) * i_s
+#    soln = tuple(v.evalf().subs({s: adjusted_i_s}) for v in solutions_b)
+#    print(soln)
 #Calculates the numerical solutions in dependence of a single parameter
 
 #ignore imaginary solutions
