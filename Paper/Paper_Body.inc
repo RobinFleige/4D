@@ -86,14 +86,32 @@
 \end{abstract}  
 %-------------------------------------------------------------------------
 \section{Introduction}
+Topology Introduction as in 2P2D Paper
 
-TODO
+While the main interest of topology is to partition vector fields into regions of similar flow behavior, this paper will work on partitioning parameter-dependent vector fields into regions of similar vector fields via meta-topology.
+
+One-Parameter dependent vector fields described(critical points form lines along t; fold bifurcations)
+Two-Parameter dependent vector fields described in similar matter (critical points form planes; bifurcations form lines; 2-bifurcations exist)
+Multi-Parameter dependent vector fields described
+
+Anwendungsfälle/Auftauchen von Multi-Parameter dependent vector fields
+
+Recall Extraction of topological structures of One-parameter dependent vector fields in Research
+Feature Floe Field Approach
+
+Start with Two-Parameter, to Update Extraction/Classification/Behaviour/Properties in general way
+Improve Algorithm and Extraction/Classification/Behaviour/Properties for arbitrary parameters
+Since we only look for the parameter-space, the space-dimensions are arbitrary for this paper, but we use 2 for a better visualization
+
+Einleitung in die restlichen Kapitel
+
+
 %-------------------------------------------------------------------------
-\section{Related Works}
+\section{Related Works/Fundamentals}
 %http://www.isg.cs.uni-magdeburg.de/visual/files/publications/Archive/Weinkauf_2006_CGF.pdf
 %http://wwwisg.cs.uni-magdeburg.de/visual/files/publications/Archive/Theisel_2003_VisSym.pdf
 %http://isgwww.cs.uni-magdeburg.de/visual/files/publications/2010/weinkauf_2010_IEEE.pdf
-
+%https://www.fer.unizg.hr/_download/repository/Guckenheimer,_J._-_Nonlinear_Oscillations_Dynamical_Systems_and_Bifurcations_of_Vector_Fields_(1986).pdf
 
 \begin{figure}[htb]
 \centering
@@ -104,17 +122,31 @@ TODO
 Bifurcation Curve instead of Bifurcation Point in 2P}
 \end{figure}
 
-%-------------------------------------------------------------------------
-\section{Fundamentals}
+Eingehen auf 2P2D Paper
+Eingehen auf FFF und Stable FFF Paper
+Eingehen auf 2-Bifurcation Buch
+Recall 1P2D
+Recall 2P2D
+Recall FFF für 2P2D
+Recall M-FFF für 2P2D
+Recall 2-Bifurcation for 2P2D
+Seeding in all Bifurcations and critical points on boundaries
 
+Alles beschreiben und erläutern, was ich übernehmen will; Einige Punkte die ich überarbeiten will ansprechen; Dinge, die ich für falsch halte oder anders machen will überspringen
+
+
+%-------------------------------------------------------------------------
 \subsection{Critical points}
 Quelle, Senke, Sattel, Bifurcation (degeneriert)
+
+%-------------------------------------------------------------------------
 \subsection{Parameter dependent vector fields}
 Normalerweise Time Dependent
 Bei mehreren Parametern eher Position, Orientierung, Stärke von Elektromagnet/Luftstrom/Wasserstrom
 
 Unterschied in Vektorfeldeigenschaften von Luft, Wasser, Magnetfeld ausarbeiten
 
+%-------------------------------------------------------------------------
 \subsection{Feature flow field}
 p n+1 dimensionale Vektorfelder, die Veränderung/Verschiebung von Vektorfeld entlang des Parameters beschreiben
 
@@ -137,26 +169,27 @@ FFF:
 \end{align}
 
 
+%-------------------------------------------------------------------------
 \subsection{Bifurcations}
 Entstehung von zwei kritischen Punkten aus dem Nichts (Birth) oder auflösung zweier sich treffender kritischer Punkte (Death)
 
 Hopf/Fold Bifurkation
+
+%-------------------------------------------------------------------------
 \subsection{Streamlines}
 Integralkurve des stationären Feldes
-\subsection{Meta Topology}
-Anstatt sich die Topologie eines Vektorfeldes anzusehen, sehen wir uns hier die Topologie des Parameterfeldes an 
 
 
+%-------------------------------------------------------------------------
 \subsection{Line of critical points from Bifurcation through parameter values}
 Streamline über FFF mit Start in Bifurcation
 
 
-\subsection{Artificial Vectorfield}
-Anpassung des originalen Vektorfeldes mit einer weiteren Komponente, die die Bifurkationsbedingung enthält
-
-Kritischer Punkt des angepassten Vektorfeldes ist Bifurkation des originalen
+%-------------------------------------------------------------------------
 \subsection{Meta-Bifurcation/Fold-fold Bifurcations}
 Bifurkation des angepassten Vektorfeldes ist Meta-Bifurkation des originalen Vektorfeldes
+
+%-------------------------------------------------------------------------
 \subsection{Meta-FFF/FFF for Tracking Fold Bifurcation}
 FFF des angepassten Vektorfeldes ist Meta-FFF des originalen Vektorfeldes
 
@@ -182,22 +215,64 @@ Meta-FFF:
 \begin{pmatrix}\det(\Delta x_3,\Delta y_3,\Delta z_3)\\\det(\Delta y_3,\Delta z_3,\Delta s_3)\\\det(\Delta z_3,\Delta s_3,\Delta x_3)\\\det(\Delta s_3,\Delta x_3,\Delta y_3)\end{pmatrix} =
 \begin{pmatrix}\det(\Delta x_3,\Delta y_3,\Delta \det(\Delta x_2,\Delta y_2))\\\det(\Delta y_3,\Delta \det(\Delta x_2,\Delta y_2),\Delta s_3)\\\det(\Delta \det(\Delta x_2,\Delta y_2),\Delta s_3,\Delta x_3)\\\det(\Delta s_3,\Delta x_3,\Delta y_3)\end{pmatrix}
 \end{align}
+
+%-------------------------------------------------------------------------
 \subsection{Bifurcation Curve}
 Streamline über M-FFF mit Start in M-Bifurcation
 
-\subsection{Bifurcation Manifold}
-Stream-manifold über alle M-FFF mit Start in M-Bifurcation
+%-------------------------------------------------------------------------
+\section{Two-Parameter-Dependent Vector Fields}
 
-Ein n-parameterabhängiges Vektorfeld besitzt n-1 dimensionale Bifurkationsstrukturen
+%-------------------------------------------------------------------------
+\subsection{Meta Topology}
+Anstatt sich die Topologie eines Vektorfeldes anzusehen, sehen wir uns hier die Topologie des Parameterfeldes an 
 
-Ein n-parameterabhängiges Vektorfeld besitzt n-1-a dimensionale Bifurkationsstrukturen von Grad a
 
+%-------------------------------------------------------------------------
+\subsection{Artificial Vectorfield}
+Anpassung des originalen Vektorfeldes mit einer weiteren Komponente, die die Bifurkationsbedingung enthält
+
+Kritischer Punkt des angepassten Vektorfeldes ist Bifurkation des originalen
+%-------------------------------------------------------------------------
 \subsection{Eigenschaften Bifurcation Curve}
 Verhält sich im Parameterfeld wie Separatrix im Vektorfeld
 
 Teilt Parameterfeld in Bereiche von Vektorfeldern mit identischer Topologie
 
 Mehrere Bifurcatrion Curves können sich in Parameterprojektion schneiden
+
+
+
+Meta-Bifurcation:
+Es "entstehen" nicht wirklich 2 Bifurkationen an einer 2-Bifurkation; es entsteht eine 1-dimensionale Bifurkation; Das lässt sich daran erkennen, dass trotzdem nur 2 kritische Punkte existieren; Eine seite ist Birth, die andere Death, daher dazwischen 2 kritische Punkte
+
+Classification:
+BD Classification only works for single points on the bifurcation structure; 
+Instead have an inner/outer BD
+
+Extraction:
+Angepasste Extraktion über Seeding statt Ränder (Ränder sind n-1 dimensional; im 2P2D Paper nutzen sie analytisch berechnete Seeds; Auf angepasstem Feld wären Ränder kleiner, aber Vektorfelder entsprechend größer); 
+Kritische Punkte sind nicht unendlich stabil, daher werden sie irgendwann entstehen und irgendwann wieder verschwinden. Daher sollte in der Natur die Birth Seite immer im inneren der Bifurkation sein
+Daher sollten alle Bifurkationen, die eine Ecke umschließen durch das Abtasten aller Ecken gefunden werden. Alle Bifurkationen können gefunden werden, wenn nur ein kritischer Punkt der zur Bifurkation gehört im inneren der Bifurkationsstruktur existiert
+
+Visualization;Meta:
+Fokus besonders auf der Meta-Ebene; Vereinfacht Visualisierung und gibt ähnlich viele Infos
+Identische Topologie innerhalb eines Bereichs auf einer Seite von Bifurkationen
+
+
+%-------------------------------------------------------------------------
+\section{Multi-Parameter-Dependent Vector Fields}
+
+
+Erweiterung der Bifurcations in beliebige Dimensionen
+Allgemeines FFF in beliebigen Dimensionen
+%-------------------------------------------------------------------------
+\subsection{Bifurcation Manifold}
+Stream-manifold über alle M-FFF mit Start in M-Bifurcation
+
+Ein n-parameterabhängiges Vektorfeld besitzt n-1 dimensionale Bifurkationsstrukturen
+
+Ein n-parameterabhängiges Vektorfeld besitzt n-1-a dimensionale Bifurkationsstrukturen von Grad a
 
 
 
@@ -209,300 +284,22 @@ Mehrere Bifurcatrion Curves können sich in Parameterprojektion schneiden
 
 %-------------------------------------------------------------------------
 \section{Implementation}
+
+%-------------------------------------------------------------------------
 \subsection{Extraction}
 Extraktion von Bifurcation Manifolds über Verfolgung von 1D Strukturen zu Strukturen höheren Grades
 
 n-D field has 2*n (n-1)-D Oberflächen, diese werden schnell zu groß fürs Seede, stattdessen Random Seeds(Wahrscheinlichkeit berechnen, dass Strukturen über Größe x gefunden werden)
 
+Analytical Solutions
+
+%-------------------------------------------------------------------------
 \subsection{Analyzation}
 Analyse des Vektorfeldes anhand der Strukturen höheren Grades
 
 %-------------------------------------------------------------------------
 \section{Results}
 
-
-
-
-%-------------------------------------------------------------------------
-\section{Type-style and fonts}
-
-
-\ref{fig:firstExample}.
-
-\noindent Long captions should be set as in Figure~\ref{fig:ex1} or
-Figure~\ref{fig:ex3}.
-
-\begin{figure}[htb]
-   % an empty figure just consisting of the caption lines
-   \caption{\label{fig:ex1}
-     'Empty' figure only to serve as an example of long caption requiring 
-     more than one line. It is not typed centered but aligned on both sides.}
-\end{figure}
-
-\noindent
-Figures which need the full textwidth can be typeset as Figure~\ref{fig:ex3}.
-
-\noindent Callouts should be 9-point Times, non-boldface type. Initially
-capitalize only the first word of section titles and first-, second-, and
-third-order headings.
-
-FIRST-ORDER HEADINGS. (For example, \textbf{1. Introduction}) should be Times
-9-point boldface, initially capitalized, flush left, with one blank line
-before, and one blank line after.
-
-SECOND-ORDER HEADINGS. (For example, \textbf{2.1. Language}) should be Times
-9-point boldface, initially capitalized, flush left, with one blank line
-before, and one after. If you require a third-order heading (we discourage
-it), use 9-point Times, boldface, initially capitalized, flush left, preceded
-by one blank line, followed by a period and your text on the same line.
-
-The headline \emph{(authors / title)} must be shortened if it uses the full 
-two column width of the main text.
-There must be enough space for the page numbers. Please use ``et al.'' if 
-there are more than three authors and specify a shortened version for your title.
-
-
-%-------------------------------------------------------------------------
-\subsection{References}
-
-List all bibliographical references in 9-point Times, single-spaced, at the
-end of your paper in alphabetical order. When referenced in the text, enclose
-the citation index in square brackets, for example~\cite{Lous90}. Where
-appropriate, include the name(s) of editors of referenced books.
-
-For your references please use the following algorithm:
-\begin{itemize} 
-\item \textbf{one} author: first 3 chars plus year -- 
-      e.g.\ \cite{Lous90}
-\item \textbf{two}, \textbf{three} or \textbf{four} authors: first char
-      of each family name plus year --  e.g.\ \cite{Fellner-Helmberg93} 
-      or \cite{Kobbelt97-USHDR} or \cite{Lafortune97-NARF}
-\item \textbf{more than 4} authors: first char of family name from 
-      first 3 authors followed by a '*' followed by the year -- 
-      e.g.\ \cite{Buhmann:1998:DCQ} or \cite{FolDamFeiHug.etal93} 
-\end{itemize}
-
-For BibTeX users a style file \ \texttt{eg-alpha.bst} and 
-\texttt{eg-alpha-doi.bst} \ is available which uses the above algorithm.
-
-For Biber users a style file \ \texttt{EG.bbx} \ is available which uses the above algorithm.
-%  Store EG.bbx in the LaTeX distribution, for TeXLive in Windows: C:\texlive\2018\texmf-dist\tex\latex\biblatex\bbx  
-%  and update filename database.
-%-------------------------------------------------------------------------
-\subsection{Illustrations, graphs, and photographs}
-
-All graphics should be centered.
-
-%%%
-%%% Figure 1
-%%%
-\begin{figure}[htb]
-  \centering
-  % the following command controls the width of the embedded PS file
-  % (relative to the width of the current column)
-  \includegraphics[width=.8\linewidth]{sampleFig}
-  % replacing the above command with the one below will explicitly set
-  % the bounding box of the PS figure to the rectangle (xl,yl),(xh,yh).
-  % It will also prevent LaTeX from reading the PS file to determine
-  % the bounding box (i.e., it will speed up the compilation process)
-  % \includegraphics[width=.95\linewidth, bb=39 696 126 756]{sampleFig}
-  %
-  \parbox[t]{.9\columnwidth}{\relax
-           For all figures please keep in mind that you \textbf{must not}
-           use images with transparent background! 
-           }
-  %
-  \caption{\label{fig:firstExample}
-           Here is a sample figure.}
-\end{figure}
-
-If your paper includes images, it is very important that they are of
-sufficient resolution to be faithfully reproduced.
-
-To determine the optimum size (width and height) of an image, measure
-the image's size as it appears in your document (in millimeters), and
-then multiply those two values by 12. The resulting values are the
-optimum $x$ and $y$ resolution, in pixels, of the image. Image quality
-will suffer if these guidelines are not followed.
-
-Example 1: 
-%
-An image measures 50\,mm by 75\,mm when placed in a document. This
-image should have a resolution of no less than 600 pixels by 900
-pixels in order to be reproduced faithfully.
-
-Example 2: 
-%
-Capturing a screenshot of your entire $1024 \times 768$ pixel display
-monitor may be useful in illustrating a concept from your research. In
-order to be reproduced faithfully, that $1024 \times 768$ image should
-be no larger than 85 mm by 64 mm (approximately) when placed in your
-document.
-
-
-%-------------------------------------------------------------------------
-\subsection{Color}
-
-\textbf{Please observe:} as of 2003 publications in the proceedings of the
-Eurographics Conference can use color images throughout the paper. No
-separate color tables are necessary.
-
-However, workshop proceedings might have different agreements! 
-Figure~\ref{fig:ex3} is an example for creating color plates.
-
-%------------------------------------------------------------------------
-\subsection{Embedding of Hyperlinks / Typesetting of URLs}
-
-Due to the use of the package \texttt{hyperref} the original behavior
-of the command $\backslash$\texttt{url} from the package \texttt{url}
-is not available. To circumvent this problem we either recommend to
-use the command $\backslash$\texttt{httpAddr} from the 
-included package \texttt{egweblnk} (see below) or to replace the
-command $\backslash$\texttt{url} by the command $\backslash$\texttt{webLink} 
--- e.g. in cases where $\backslash$\texttt{url} has been used
-widely in BibTeX-References. In the latter case we suggest to run
-BibTeX as usual and then replace all occurences of $\backslash$\texttt{url}  by
-$\backslash$\texttt{webLink}
-
-\noindent
-The provided commands for hyperlinks, in a nutshell, are:
-
-\begin{description} \itemsep 1ex
-\item [\webLinkFont $\backslash$httpAddr \{URL without leading 'http:'\}]
-      \mbox{}\\
-      e.g. \  \httpAddr{//diglib.eg.org/handle/10.2312/306}
-
-\item [\webLinkFont $\backslash$httpsAddr \{URL without leading 'https:'\}]
-      \mbox{}\\
-      e.g. \  \httpsAddr{//diglib.eg.org/handle/10.2312/306}      
-
-\item[\webLinkFont $\backslash$ftpAddr \{URL without leading 'ftp:'\}]
-      \mbox{}\\
-      e.g. \  \ftpAddr{//www.eg.org/EG/DL/ftpupload}   %
-
-\item[\webLinkFont $\backslash$URL \{url\}]
-      \mbox{}\\
-      e.g. \  \URL{http://diglib.eg.org/handle/10.2312/306}
-
-\item[\webLinkFont $\backslash$MailTo \{Email addr\}]
-      \mbox{}\\
-      e.g. \  \MailTo{publishing@eg.org}
-
-\item[\webLinkFont $\backslash$MailToNA \{emailName\}\{@emailSiteAddress\}]
-      \mbox{}\\
-      e.g. \  \MailToNA{publishing}{@eg.org}
-
-\item[\webLinkFont $\backslash$webLink\{URL without hyperlink creation\}]
-      \mbox{}\\
-      e.g. \  \webLink{http://www.eg.org/some_arbitrary_long/but_useless/URL}
-
-\end{description}
-
-
-%------------------------------------------------------------------------
-\subsection{PDF Generation}
-
-Your final paper should be delivered as a PDF document with all typefaces
-embedded. \LaTeX{} users should use \texttt{dvips} and \texttt{ps2pdf} to
-create this PDF document. Adobe Acrobat Distiller may be used in place of
-\texttt{ps2pdf}.
-
-Adobe PDFWriter is \emph{not} acceptable for use. Documents created with
-PDFWriter will be returned to the author for revision. \texttt{pdftex} and
-\texttt{pdflatex} (and its variants) can be used only if the author can
-make certain that all typefaces are embedded and images are not downsampled
-or subsampled during the PDF creation process.
-
-Users with no access to these PDF creation tools should make available a
-PostScript file and we will make a PDF document from it.
-
-
-The PDF file \emph{must not} be change protected.
-
-%------------------------------------------------------------------------
-\subsubsection*{Configuration Notes: dvips / ps2pdf / etc.}
-
-\noindent
-\texttt{dvips} should be invoked with the \texttt{-Ppdf} and \texttt{-G0}
-flags in order to use Type 1 PostScript typefaces:
-
-\begin{verbatim}
-    dvips -t a4 -Ppdf -G0 -o my.ps my.dvi
-\end{verbatim}
-
-
-\noindent
-If you are using version 7.x of GhostScript, please use the following method of invoking \texttt{ps2pdf}, in
-order to embed all typefaces and ensure that images are not downsampled or subsampled in the PDF
-creation process:
-
-\begin{verbatim}
-  ps2pdf -dMaxSubsetPct=100 \
-         -dCompatibilityLevel=1.3 \
-         -dSubsetFonts=true \
-         -dEmbedAllFonts=true \
-         -dAutoFilterColorImages=false \
-         -dAutoFilterGrayImages=false \
-         -dColorImageFilter=/FlateEncode \
-         -dGrayImageFilter=/FlateEncode \
-         -dMonoImageFilter=/FlateEncode \
-         mypaper.ps mypaper.pdf
-\end{verbatim}
-
-
-If you are using version 8.x of GhostScript, please use this method in place of the example above:
-\begin{verbatim}
-  ps2pdf -dPDFSETTINGS=/prepress \
-         -dCompatibilityLevel=1.3 \
-         -dAutoFilterColorImages=false \
-         -dAutoFilterGrayImages=false \
-         -dColorImageFilter=/FlateEncode \
-         -dGrayImageFilter=/FlateEncode \
-         -dMonoImageFilter=/FlateEncode \
-         -dDownsampleColorImages=false \
-         -dDownsampleGrayImages=false \
-         mypaper.ps mypaper.pdf
-\end{verbatim}
-
-%------------------------------------------------------------------------
-\subsubsection*{Configuration Notes: pdftex / pdflatex / etc.}
-
-\noindent
-Configuration of these tools to embed all typefaces can be accomplished by editing the \texttt{updmap.cfg} file
-to enable inclusion of the standard (or base) 14 typefaces.
-
-Linux users can run the \texttt{updmap} script to do this:
-\begin{verbatim}
-updmap --setoption pdftexDownloadBase14 true
-\end{verbatim}
-
-Windows users should edit the \texttt{updmap.cfg} files found in their TeX installation directories (one or both
-of the following may be present):
-\begin{verbatim}
-  INSTALLDIR\texmf\web2c\updmap.cfg
-  INSTALLDIR\localtexmf\miktex\config\updmap.cfg
-\end{verbatim}
-
-Ensure the value for \texttt{pdftexDownloadBase14} is "true," and then follow the instructions found here:
-\httpAddr{//docs.miktex.org/manual/} to update your MikTeX installation.
-
-%------------------------------------------------------------------------
-\subsubsection*{Configuration Notes: Acrobat Distiller}
-
-We recommend to use a Distiller job options file that embeds
-all typefaces and does not downsample or subsample images when creating the PDF document.
-%------------------------------------------------------------------------
-\subsection{Exclusive License Form}
-
-You must include your signed Eurographics Exclusive License Form 
-when you submit your finished paper. We MUST have this form before
-your paper can be published in the proceedings.
-
-%-------------------------------------------------------------------------
-\subsection{Conclusions}
-
-Please direct any questions to the production editor in charge of
-these proceedings.
 
 %-------------------------------------------------------------------------
 % bibtex
@@ -515,31 +312,6 @@ these proceedings.
 %-------------------------------------------------------------------------
 \newpage
 
-
-\begin{figure*}[tbp]
-  \centering
-  \mbox{} \hfill
-  % the following command controls the width of the embedded PS file
-  % (relative to the width of the current column)
-  \includegraphics[width=.3\linewidth]{sampleFig}
-  % replacing the above command with the one below will explicitly set
-  % the bounding box of the PS figure to the rectangle (xl,yl),(xh,yh).
-  % It will also prevent LaTeX from reading the PS file to determine
-  % the bounding box (i.e., it will speed up the compilation process)
-  % \includegraphics[width=.3\linewidth, bb=39 696 126 756]{sampleFig}
-  \hfill
-  \includegraphics[width=.3\linewidth]{sampleFig}
-  \hfill \mbox{}
-  \caption{\label{fig:ex3}%
-           For publications with color tables (i.e., publications not offering
-           color throughout the paper) please \textbf{observe}: 
-           for the printed version -- and ONLY for the printed
-           version -- color figures have to be placed in the last page.
-           \newline
-           For the electronic version, which will be converted to PDF before
-           making it available electronically, the color images should be
-           embedded within the document. Optionally, other multimedia
-           material may be attached to the electronic version. }
-\end{figure*}
+%TODO: Schreibweise übernehmen: Two-Parameter-Dependent Vector Fields
 
 \end{document}
