@@ -3,8 +3,8 @@
 % D.Fellner, v2.03, Dec 14, 2018
 
 
-\title[Meta topology for multi-parameter dependent vector fields]%
-      {Meta topology for multi-parameter dependent vector fields}
+\title[Meta Topology for Multi-Parameter-Dependent Vector Fields]%
+      {Meta Topology for Multi-Parameter-Dependent Vector Fields}
 
 % for anonymous conference submission please enter your SUBMISSION ID
 % instead of the author's name (and leave the affiliation blank) !!
@@ -85,24 +85,55 @@
 \printccsdesc   
 \end{abstract}  
 %-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 \section{Introduction}
-Topology Introduction as in 2P2D Paper
+% TODO Rework Others
+Topological methods have become a standard tool in vector field visualization. Initially introduced as a visualization tool in, topological methods have been extended to higher order critical points, boundary switch points, and closed separatrices. In addition, topological methods have been applied to smooth, compress and model vector fields. The topology of 3D vector fields is visualized in.
 
+% TODO Rework Others
+The main idea of topological methods is to segment the domain into areas of different flow behavior. To do so, critical points are extracted and classified. Starting from saddle points, separation curves/surfaces are integrated. The union of critical points and separatrices is called topological skeleton. 
+
+% TODO Rework Others
+Concerning vector fields v(x,t), x $\in$ IRn depending on one parameter t (like e.g. time-dependent flows), critical points move with changing t. In fact, they form line structures in IRn+1. Furthermore, critical points might appear or disappear at some t. Those births and deaths of critical points are called fold bifurcations and their occurence changes the topological behavior of the field abruptly: two critical points of opposite index collapse and disappear (or the other way around: a critical point appears and splits up into two critical points immediately). Knowing the locations of these events is a key to understanding the dynamics of the data. Another important structural change is denoted by a spiraling source changing to a spiraling sink or vice versa. This is called a Hopf bifurcation. Other types of local bifurcations (Transcritical and Pitchfork bifurcation) are possible, but structurally unstable - we therefore do not treat them here.
+
+% TODO Vector fields v(x, s,t)
+% TODO Rework Others
+Critical points move with changing s and t and form surface structures now. Consequently, bifurcation points move  as well and form line structures in IRn+2. This creates new types of structurally stable bifurcations: births and deaths of fold or Hopf bifurcations themselves. We call them fold-fold and Hopf-fold bifurcations. Those events are isolated points in IRn+2.
+
+% TODO Rework Own
+With increasing number of parameters the dimensionality of bifurcation structures increases and new structures emerge, birth and death of fold-fold and Hopf-fold bifurcations and recursively birth and death of these structures.
+
+% TODO Rework Own
 While the main interest of topology is to partition vector fields into regions of similar flow behavior, this paper will work on partitioning parameter-dependent vector fields into regions of similar vector fields via meta-topology.
+For this purpose, the topology of a vector field is considered as a simple information and the focus is placed on the parameter field.
+% Nicht nur Vector Fields
+% Nicht nur Aufteilung (Separatritzen)
 
-One-Parameter dependent vector fields described(critical points form lines along t; fold bifurcations)
-Two-Parameter dependent vector fields described in similar matter (critical points form planes; bifurcations form lines; 2-bifurcations exist)
-Multi-Parameter dependent vector fields described
+% TODO Rework Own
+There are many use cases for multiparameter dependent vector fields in simulations. In flow simulations, parameters can describe the number, shape, or size of an object in the airflow. Also the strength, orientation and position of the source can be seen as parameters.
+In electromagnetic fields, parameters define the position and strength of electromagnets.
 
-Anwendungsfälle/Auftauchen von Multi-Parameter dependent vector fields
+The use case that inspired this work is that the parameters correspond to the electromagnets in an MRI.
 
-Recall Extraction of topological structures of One-parameter dependent vector fields in Research
-Feature Floe Field Approach
+% TODO
+Recall Extraction of topological structures of One-parameter dependent vector fields in Research\\
+% TODO
+Feature Flow Field Approach
 
-Start with Two-Parameter, to Update Extraction/Classification/Behaviour/Properties in general way
-Improve Algorithm and Extraction/Classification/Behaviour/Properties for arbitrary parameters
-Since we only look for the parameter-space, the space-dimensions are arbitrary for this paper, but we use 2 for a better visualization
+% TODO
+Start with Two-Parameter, to Update Extraction/Classification/Behaviour/Properties in general way\\
+% TODO
+Improve Algorithm and Extraction/Classification/Behaviour/Properties for arbitrary parameters\\
+% TODO
+Since we only look for the parameter-space, the space-dimensions are arbitrary for this paper, but we use 2 for a better visualization\\
 
+% TODO
 Einleitung in die restlichen Kapitel
 
 
@@ -122,41 +153,43 @@ Einleitung in die restlichen Kapitel
 Bifurcation Curve instead of Bifurcation Point in 2P}
 \end{figure}
 
-Eingehen auf 2P2D Paper
-Eingehen auf FFF und Stable FFF Paper
-Eingehen auf 2-Bifurcation Buch
-Recall 1P2D
-Recall 2P2D
-Recall FFF für 2P2D
-Recall M-FFF für 2P2D
-Recall 2-Bifurcation for 2P2D
-Seeding in all Bifurcations and critical points on boundaries
+Eingehen auf 2P2D Paper\\
+Eingehen auf FFF und Stable FFF Paper\\
+Eingehen auf 2-Bifurcation Buch\\
+Recall 1P2D\\
+Recall 2P2D\\
+Recall FFF für 2P2D\\
+Recall M-FFF für 2P2D\\
+Recall 2-Bifurcation for 2P2D\\
+Seeding in all Bifurcations and critical points on boundaries\\
 
-Alles beschreiben und erläutern, was ich übernehmen will; Einige Punkte die ich überarbeiten will ansprechen; Dinge, die ich für falsch halte oder anders machen will überspringen
+Alles beschreiben und erläutern, was ich übernehmen will; \\
+Einige Punkte die ich überarbeiten will ansprechen; \\
+Dinge, die ich für falsch halte oder anders machen will überspringen\\
 
 
 %-------------------------------------------------------------------------
 \subsection{Critical points}
-Quelle, Senke, Sattel, Bifurcation (degeneriert)
+Quelle, Senke, Sattel, Bifurcation (degeneriert)\\
 
 %-------------------------------------------------------------------------
 \subsection{Parameter dependent vector fields}
-Normalerweise Time Dependent
-Bei mehreren Parametern eher Position, Orientierung, Stärke von Elektromagnet/Luftstrom/Wasserstrom
+Normalerweise Time Dependent\\
+Bei mehreren Parametern eher Position, Orientierung, Stärke von Elektromagnet/Luftstrom/Wasserstrom\\
 
-Unterschied in Vektorfeldeigenschaften von Luft, Wasser, Magnetfeld ausarbeiten
+Unterschied in Vektorfeldeigenschaften von Luft, Wasser, Magnetfeld ausarbeiten\\
 
 %-------------------------------------------------------------------------
 \subsection{Feature flow field}
-p n+1 dimensionale Vektorfelder, die Veränderung/Verschiebung von Vektorfeld entlang des Parameters beschreiben
+p n+1 dimensionale Vektorfelder, die Veränderung/Verschiebung von Vektorfeld entlang des Parameters beschreiben\\
 
-Wird genbutzt um kritische Punkte entlang eines Parameters zu tracken
+Wird genbutzt um kritische Punkte entlang eines Parameters zu tracken\\
 
-Lineare Näherung, nicht exakt
+Lineare Näherung, nicht exakt\\
 
-Orthogonal zu allen Gradienten
+Orthogonal zu allen Gradienten\\
 
-Ein FFF pro Parameter
+Ein FFF pro Parameter\\
 
 Vektorfeld:
 \begin{align}
@@ -171,23 +204,23 @@ FFF:
 
 %-------------------------------------------------------------------------
 \subsection{Bifurcations}
-Entstehung von zwei kritischen Punkten aus dem Nichts (Birth) oder auflösung zweier sich treffender kritischer Punkte (Death)
+Entstehung von zwei kritischen Punkten aus dem Nichts (Birth) oder auflösung zweier sich treffender kritischer Punkte (Death)\\
 
-Hopf/Fold Bifurkation
+Hopf/Fold Bifurkation\\
 
 %-------------------------------------------------------------------------
 \subsection{Streamlines}
-Integralkurve des stationären Feldes
+Integralkurve des stationären Feldes\\
 
 
 %-------------------------------------------------------------------------
 \subsection{Line of critical points from Bifurcation through parameter values}
-Streamline über FFF mit Start in Bifurcation
+Streamline über FFF mit Start in Bifurcation\\
 
 
 %-------------------------------------------------------------------------
 \subsection{Meta-Bifurcation/Fold-fold Bifurcations}
-Bifurkation des angepassten Vektorfeldes ist Meta-Bifurkation des originalen Vektorfeldes
+Bifurkation des angepassten Vektorfeldes ist Meta-Bifurkation des originalen Vektorfeldes\\
 
 %-------------------------------------------------------------------------
 \subsection{Meta-FFF/FFF for Tracking Fold Bifurcation}
@@ -218,46 +251,46 @@ Meta-FFF:
 
 %-------------------------------------------------------------------------
 \subsection{Bifurcation Curve}
-Streamline über M-FFF mit Start in M-Bifurcation
+Streamline über M-FFF mit Start in M-Bifurcation\\
 
 %-------------------------------------------------------------------------
 \section{Two-Parameter-Dependent Vector Fields}
 
 %-------------------------------------------------------------------------
 \subsection{Meta Topology}
-Anstatt sich die Topologie eines Vektorfeldes anzusehen, sehen wir uns hier die Topologie des Parameterfeldes an 
+Anstatt sich die Topologie eines Vektorfeldes anzusehen, sehen wir uns hier die Topologie des Parameterfeldes an \\
 
 
 %-------------------------------------------------------------------------
 \subsection{Artificial Vectorfield}
-Anpassung des originalen Vektorfeldes mit einer weiteren Komponente, die die Bifurkationsbedingung enthält
+Anpassung des originalen Vektorfeldes mit einer weiteren Komponente, die die Bifurkationsbedingung enthält\\
 
-Kritischer Punkt des angepassten Vektorfeldes ist Bifurkation des originalen
+Kritischer Punkt des angepassten Vektorfeldes ist Bifurkation des originalen\\
 %-------------------------------------------------------------------------
 \subsection{Eigenschaften Bifurcation Curve}
-Verhält sich im Parameterfeld wie Separatrix im Vektorfeld
+Verhält sich im Parameterfeld wie Separatrix im Vektorfeld\\
 
-Teilt Parameterfeld in Bereiche von Vektorfeldern mit identischer Topologie
+Teilt Parameterfeld in Bereiche von Vektorfeldern mit identischer Topologie\\
 
-Mehrere Bifurcatrion Curves können sich in Parameterprojektion schneiden
+Mehrere Bifurcatrion Curves können sich in Parameterprojektion schneiden\\
 
 
 
 Meta-Bifurcation:
-Es "entstehen" nicht wirklich 2 Bifurkationen an einer 2-Bifurkation; es entsteht eine 1-dimensionale Bifurkation; Das lässt sich daran erkennen, dass trotzdem nur 2 kritische Punkte existieren; Eine seite ist Birth, die andere Death, daher dazwischen 2 kritische Punkte
+Es "entstehen" nicht wirklich 2 Bifurkationen an einer 2-Bifurkation; es entsteht eine 1-dimensionale Bifurkation; Das lässt sich daran erkennen, dass trotzdem nur 2 kritische Punkte existieren; Eine seite ist Birth, die andere Death, daher dazwischen 2 kritische Punkte\\
 
 Classification:
-BD Classification only works for single points on the bifurcation structure; 
-Instead have an inner/outer BD
+BD Classification only works for single points on the bifurcation structure; \\
+Instead have an inner/outer BD\\
 
 Extraction:
-Angepasste Extraktion über Seeding statt Ränder (Ränder sind n-1 dimensional; im 2P2D Paper nutzen sie analytisch berechnete Seeds; Auf angepasstem Feld wären Ränder kleiner, aber Vektorfelder entsprechend größer); 
-Kritische Punkte sind nicht unendlich stabil, daher werden sie irgendwann entstehen und irgendwann wieder verschwinden. Daher sollte in der Natur die Birth Seite immer im inneren der Bifurkation sein
-Daher sollten alle Bifurkationen, die eine Ecke umschließen durch das Abtasten aller Ecken gefunden werden. Alle Bifurkationen können gefunden werden, wenn nur ein kritischer Punkt der zur Bifurkation gehört im inneren der Bifurkationsstruktur existiert
+Angepasste Extraktion über Seeding statt Ränder (Ränder sind n-1 dimensional; im 2P2D Paper nutzen sie analytisch berechnete Seeds; Auf angepasstem Feld wären Ränder kleiner, aber Vektorfelder entsprechend größer); \\
+Kritische Punkte sind nicht unendlich stabil, daher werden sie irgendwann entstehen und irgendwann wieder verschwinden. Daher sollte in der Natur die Birth Seite immer im inneren der Bifurkation sein\\
+Daher sollten alle Bifurkationen, die eine Ecke umschließen durch das Abtasten aller Ecken gefunden werden. Alle Bifurkationen können gefunden werden, wenn nur ein kritischer Punkt der zur Bifurkation gehört im inneren der Bifurkationsstruktur existiert\\
 
 Visualization;Meta:
-Fokus besonders auf der Meta-Ebene; Vereinfacht Visualisierung und gibt ähnlich viele Infos
-Identische Topologie innerhalb eines Bereichs auf einer Seite von Bifurkationen
+Fokus besonders auf der Meta-Ebene; Vereinfacht Visualisierung und gibt ähnlich viele Infos\\
+Identische Topologie innerhalb eines Bereichs auf einer Seite von Bifurkationen\\
 
 
 %-------------------------------------------------------------------------
@@ -268,11 +301,11 @@ Erweiterung der Bifurcations in beliebige Dimensionen
 Allgemeines FFF in beliebigen Dimensionen
 %-------------------------------------------------------------------------
 \subsection{Bifurcation Manifold}
-Stream-manifold über alle M-FFF mit Start in M-Bifurcation
+Stream-manifold über alle M-FFF mit Start in M-Bifurcation\\
 
-Ein n-parameterabhängiges Vektorfeld besitzt n-1 dimensionale Bifurkationsstrukturen
+Ein n-parameterabhängiges Vektorfeld besitzt n-1 dimensionale Bifurkationsstrukturen\\
 
-Ein n-parameterabhängiges Vektorfeld besitzt n-1-a dimensionale Bifurkationsstrukturen von Grad a
+Ein n-parameterabhängiges Vektorfeld besitzt n-1-a dimensionale Bifurkationsstrukturen von Grad a\\
 
 
 
@@ -287,11 +320,11 @@ Ein n-parameterabhängiges Vektorfeld besitzt n-1-a dimensionale Bifurkationsstr
 
 %-------------------------------------------------------------------------
 \subsection{Extraction}
-Extraktion von Bifurcation Manifolds über Verfolgung von 1D Strukturen zu Strukturen höheren Grades
+Extraktion von Bifurcation Manifolds über Verfolgung von 1D Strukturen zu Strukturen höheren Grades\\
 
-n-D field has 2*n (n-1)-D Oberflächen, diese werden schnell zu groß fürs Seede, stattdessen Random Seeds(Wahrscheinlichkeit berechnen, dass Strukturen über Größe x gefunden werden)
+n-D field has 2*n (n-1)-D Oberflächen, diese werden schnell zu groß fürs Seede, stattdessen Random Seeds(Wahrscheinlichkeit berechnen, dass Strukturen über Größe x gefunden werden)\\
 
-Analytical Solutions
+Analytical Solutions\\
 
 %-------------------------------------------------------------------------
 \subsection{Analyzation}
